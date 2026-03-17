@@ -1,0 +1,171 @@
+/* Add Admin page specific styles */
+
+.riden-addadmin-wrap{
+    max-width: 980px;
+    margin: 0 auto;
+}
+
+.riden-addadmin-head{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.riden-addadmin-back{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    color: #111;
+    text-decoration: none;
+}
+
+.riden-addadmin-title{
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.riden-addadmin-card{
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(16,24,40,.06);
+    padding: 18px;
+}
+
+.riden-addadmin-section{
+    background: #ff161f;
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 14px;
+    margin: 0 0 14px;
+}
+
+.riden-field-label{
+    font-size: 12px;
+    color: #111;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.riden-input{
+    border-radius: 10px;
+    border: 1px solid #d9d9d9;
+    height: 42px;
+    font-size: 13px;
+}
+
+.riden-phone{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.riden-flag{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px;
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid #d9d9d9;
+    background: #fff;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.riden-flag img{
+    width: 22px;
+    height: 14px;
+    border-radius: 2px;
+    object-fit: cover;
+}
+
+.riden-modules{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px 24px;
+}
+
+.riden-check{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #111;
+}
+
+.riden-check input{
+    width: 14px;
+    height: 14px;
+}
+
+.riden-password-row{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.riden-password{
+    position: relative;
+}
+
+.riden-password .riden-eye{
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #111;
+    opacity: .7;
+}
+
+.riden-actions{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.btn-riden-outline{
+    border: 1px solid #111;
+    background: #fff;
+    color: #111;
+    border-radius: 10px;
+    height: 40px;
+    padding: 0 20px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+@media (max-width: 991.98px){
+    .riden-modules{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 575.98px){
+    .riden-addadmin-card{
+        padding: 14px;
+    }
+    .riden-modules{
+        grid-template-columns: 1fr;
+    }
+    .riden-phone{
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .riden-password-row{
+        grid-template-columns: 1fr;
+    }
+    .riden-actions{
+        justify-content: center;
+    }
+}
+

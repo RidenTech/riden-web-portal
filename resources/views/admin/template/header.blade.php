@@ -3,11 +3,15 @@
     $headerTitle = 'Profile';
     $showHeaderSearch = false;
 
-    if ($path === 'adminprofile') {
+    if ($path === 'detailadmin') {
         $headerTitle = 'Admin Roles';
         $showHeaderSearch = true;
     } elseif ($path === 'profile') {
         $headerTitle = 'Profile';
+    }elseif ($path === 'addadmin') {
+        $headerTitle = 'Admin Roles';
+    }elseif ($path === 'adminprofile') {
+        $headerTitle = 'Admin Roles';
     }
 @endphp
 
@@ -30,7 +34,7 @@
                     </div>
                 @else
                     <div class="mt-1">
-                        <form class="riden-header-search">
+                        <form class="riden-header-search col-lg-5">
                             <span class="riden-header-search-icon-circle">
                                 <i class="bi bi-search"></i>
                             </span>

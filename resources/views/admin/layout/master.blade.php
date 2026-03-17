@@ -7,6 +7,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="Riden Admin" />
 
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
         <!-- Bootstrap 5 -->
         <link href="{{ asset('/') }}assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <!-- Bootstrap Icons -->
@@ -14,6 +19,7 @@
 
         <!-- App CSS -->
         <link href="{{ asset('/') }}assets/css/admin.css" rel="stylesheet" type="text/css" />
+        @stack('styles')
 
     </head>
     <body class="riden-body">
@@ -47,6 +53,7 @@
         <!-- Bootstrap 5 JS -->
         <script src="{{ asset('/') }}assets/js/bootstrap.bundle.min.js"></script>
         <script src="{{ asset('/') }}assets/js/admin.js"></script>
+        @stack('scripts')
 
     </body>
 </html>

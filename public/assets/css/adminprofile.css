@@ -1,0 +1,102 @@
+/* Admin Roles page specific styles */
+
+.riden-adminroles-top{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.riden-adminroles-title{
+    font-weight: 800;
+    font-size: 30px;
+    color: #111;
+    margin: 0;
+}
+
+.riden-adminroles-card{
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(16,24,40,.06);
+}
+
+.riden-adminroles-table{
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0;
+}
+
+.riden-adminroles-table thead th{
+    background: #fdebed;
+    font-weight: 700;
+    color: #111;
+    font-size: 13px;
+    padding: 14px 18px;
+}
+
+.riden-adminroles-table thead th:first-child{
+    border-top-left-radius: 999px;
+    border-bottom-left-radius: 999px;
+}
+
+.riden-adminroles-table thead th:last-child{
+    border-top-right-radius: 999px;
+    border-bottom-right-radius: 999px;
+    text-align: center;
+}
+
+.riden-adminroles-table tbody td{
+    padding: 14px 18px;
+    font-size: 13px;
+    border-bottom: 1px solid #f1f1f1;
+    color: #111;
+    vertical-align: middle;
+}
+
+.riden-adminroles-table tbody tr:last-child td{
+    border-bottom: 0;
+}
+
+.riden-adminroles-actions{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.riden-icon-action{
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    background: transparent;
+}
+
+.riden-icon-action--edit{
+    color: #16a34a;
+}
+
+.riden-icon-action--delete{
+    color: #ff161f;
+}
+
+.riden-adminroles-footer{
+    padding: 14px 18px;
+}
+
+@media (max-width: 575.98px){
+    .riden-adminroles-title{
+        font-size: 22px;
+    }
+    .riden-adminroles-table thead th,
+    .riden-adminroles-table tbody td{
+        padding: 12px 12px;
+    }
+}
+
