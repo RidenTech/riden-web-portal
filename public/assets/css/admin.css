@@ -306,7 +306,7 @@ input, button, select, textarea{
 
 /* Page background like the design */
 .riden-body{
-    background: #f3f4f6;
+    background: white;
 }
 
 /* Main layout offsets so content never overlaps sidebar/topbar */
@@ -676,7 +676,7 @@ input, button, select, textarea{
     color: #fff;
     padding: 10px 14px;
     border-radius: 10px;
-    font-weight: 700;
+    /* font-weight: 700; */
     font-size: 14px;
     margin: 14px 0 12px;
 }

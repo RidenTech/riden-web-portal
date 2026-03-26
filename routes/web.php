@@ -12,15 +12,23 @@ Route::get('/profile', function () {
 
 Route::get('/detailadmin', function () {
     return view('admin.adminrole.admindetail');
-});
+})->name('detailadmin');
 
 Route::get('/addadmin', function () {
     return view('admin.adminrole.addadmin');
-});
+})->name('addadmin');
 
 Route::get('/adminprofile', function () {
     return view('admin.adminrole.adminprofile');
-});
+})->name('adminprofile');
+
+Route::get('/promocode', function () {
+    return view('admin.promo.detail');
+})->name('promocode');
+
+Route::get('/promocode/new', function () {
+    return view('admin.promo.newpromo');
+})->name('promocode.new');
 
 Route::get('/index', function () {
     return view('admin.auth.index');

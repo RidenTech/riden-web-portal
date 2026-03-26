@@ -2,7 +2,7 @@
     $menu = [
         ['label' => 'Dashboard', 'icon' => 'bi bi-house-door', 'url' => url('/')],
         ['label' => 'Analytics/Stats', 'icon' => 'bi bi-bar-chart', 'url' => '#'],
-        ['label' => 'Admin Roles', 'icon' => 'bi bi-person', 'url' => '#'],
+        ['label' => 'Admin Roles', 'icon' => 'bi bi-person', 'url' => route('detailadmin')],
         ['label' => 'Driver Management', 'icon' => 'bi bi-person-badge', 'url' => '#'],
         ['label' => 'Passenger Management', 'icon' => 'bi bi-people', 'url' => '#'],
         ['label' => 'Vehicles Type Management', 'icon' => 'bi bi-truck', 'url' => '#'],
@@ -59,7 +59,7 @@
     </div>
 </aside>
 
-<!-- Mobile offcanvas sidebar -->
+{{-- <!-- Mobile offcanvas sidebar -->
 <div class="offcanvas offcanvas-start riden-sidebar__offcanvas d-md-none" tabindex="-1" id="ridenSidebarOffcanvas" aria-labelledby="ridenSidebarOffcanvasLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="ridenSidebarOffcanvasLabel">RIDEN</h5>
@@ -83,4 +83,4 @@
             </div>
         </nav>
     </div>
-</div>
+</div> --}}

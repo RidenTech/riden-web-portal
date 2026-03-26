@@ -1,0 +1,507 @@
+/* Driver Management Module Styles - Senior UI Refinement */
+.drivers-wrapper {
+    padding: 30px;
+    background: #fff;
+    min-height: calc(100vh - 72px);
+}
+
+.drivers-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+}
+
+.drivers-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #000;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-download-excel {
+    background: #FF161F;
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-download-excel:hover {
+    background: #e0141b;
+    color: #fff;
+}
+
+.date-picker-drivers {
+    border: 1.5px solid #111;
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #111;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    font-weight: 600;
+}
+
+.date-picker-drivers i {
+    color: #ff161f;
+    font-size: 16px;
+}
+
+/* Tabs Styling - Pixel Perfect Pill Shape */
+.drivers-tabs {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 40px;
+    position: relative;
+    border-bottom: 1.5px solid #CBCBCB;
+    padding-bottom: 5px;
+}
+
+.btn-tab-driver {
+    border: none;
+    background: none;
+    padding: 14px 60px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-tab-driver.active {
+    background: #FF161F;
+    color: #fff;
+    border-radius: 20px; /* High radius for pill shape */
+    box-shadow: 0 4px 12px rgba(255, 22, 31, 0.2);
+    transform: translateY(-2px);
+}
+
+.btn-tab-driver .count {
+    color: #FF161F;
+    margin-left: 5px;
+}
+
+.btn-tab-driver.active .count {
+    color: #fff;
+}
+
+/* Table Styling - High Fidelity */
+.drivers-table-container {
+    background: #fff;
+    border: 1px solid #E5E7EB;
+    border-radius: 35px;
+    overflow: hidden;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.03);
+}
+
+.drivers-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.drivers-table thead tr {
+    background: #FFEEEE; /* Soft pink exactly as in Figma */
+}
+
+.drivers-table th {
+    padding: 22px 30px;
+    text-align: left;
+    font-weight: 800;
+    font-size: 14px;
+    color: #222;
+    text-transform: capitalize;
+}
+
+.drivers-table td {
+    padding: 18px 30px;
+    font-size: 14px;
+    color: #4B5563;
+    border-bottom: 1px solid #F3F4F6;
+    vertical-align: middle;
+}
+
+.drivers-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.driver-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.driver-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Status Badges - Pill Shape */
+.status-badge {
+    padding: 6px 20px;
+    border-radius: 30px; /* Pill shape */
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-badge.online {
+    background: #D1F8D3;
+    color: #065F46;
+}
+
+.status-badge.offline {
+    background: #FFE4E6;
+    color: #9F1239;
+}
+
+.status-badge.blocked {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.status-badge.suspended {
+    background: #FFE4E6;
+    color: #9F1239;
+}
+
+.suspended-time {
+    font-size: 11px;
+    color: #6B7280;
+    margin-left: 8px;
+    font-weight: 500;
+}
+
+/* Pagination - Circular Design */
+.pagination-drivers {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 35px;
+    list-style: none;
+    padding: 0 30px 40px 0;
+    gap: 10px;
+}
+
+.page-btn-drivers {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #E5E7EB;
+    border-radius: 50%; /* Perfect circles */
+    color: #374151;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.page-btn-drivers:hover:not(.active) {
+    background: #F9FAFB;
+    border-color: #D1D5DB;
+}
+
+.page-btn-drivers.active {
+    background: #fff;
+    border-color: #FF161F;
+    color: #FF161F;
+}
+
+.page-btn-drivers.arrow {
+    background: #F1F1F1;
+    border: none;
+    font-size: 16px;
+}
+
+.page-btn-drivers.arrow-next {
+    background: #FF161F;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(255, 22, 31, 0.3);
+}
+
+/* --- DETAIL VIEW (Driver View) STYLES --- */
+
+.driver-detail-wrapper {
+    padding: 30px;
+}
+
+.profile-row-driver {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    padding: 0 10px;
+}
+
+.profile-card-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.back-btn-driver {
+    width: 38px;
+    height: 38px;
+    background: #fff;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.driver-avatar-view-wrapper {
+    position: relative;
+    width: 65px;
+    height: 65px;
+}
+
+.driver-avatar-view-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.driver-identity h4 {
+    font-weight: 800;
+    font-size: 26px;
+    margin-bottom: 2px;
+    color: #000;
+}
+
+.driver-rating-line {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    color: #4B5563;
+}
+
+.since-date-view {
+    font-weight: 700;
+    font-size: 15px;
+    color: #000;
+}
+
+/* Stats Banner */
+.driver-stats-banner {
+    background: #FFEEEE !important;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    padding: 22px 35px;
+    margin-bottom: 30px;
+}
+
+.driver-stat-unit {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: center;
+    gap: 20px;
+}
+
+.driver-stat-circle {
+    width: 55px;
+    height: 55px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    position: relative;
+}
+
+.driver-stat-circle i {
+    font-size: 24px;
+    color: #FF161F;
+}
+
+.driver-stat-data label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 2px;
+}
+
+.driver-stat-data .stat-value {
+    font-size: 30px;
+    font-weight: 900;
+    line-height: 1;
+    color: #000;
+}
+
+.driver-divider {
+    width: 1.5px;
+    height: 45px;
+    background: #FFB7B7;
+    margin: 0 15px;
+}
+
+/* Sidebar Nav */
+.driver-nav-list {
+    background: #fff;
+    border-radius: 30px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+}
+
+.driver-nav-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 18px;
+    margin-bottom: 8px;
+    text-decoration: none;
+    color: #111;
+    font-weight: 700;
+    position: relative;
+    border-radius: 15px;
+    transition: all 0.2s;
+}
+
+.driver-nav-item .icon-wrapper {
+    width: 42px;
+    height: 42px;
+    background: #F3F4F6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 18px;
+    color: #111;
+    font-size: 20px;
+}
+
+.driver-nav-item.active {
+    background: #F9FAFB;
+}
+
+.driver-nav-item.active .icon-wrapper {
+    background: #fff;
+    color: #FF161F;
+}
+
+.driver-nav-item.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 38px;
+    background: #FF161F;
+    border-radius: 0 5px 5px 0;
+}
+
+/* Action Buttons */
+.driver-action-buttons {
+    margin-top: 30px;
+}
+
+.btn-driver-action {
+    width: 100%;
+    padding: 16px;
+    border-radius: 18px;
+    font-weight: 800;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    transition: all 0.2s;
+}
+
+.btn-driver-solid-red {
+    background: #FF161F !important;
+    color: #fff !important;
+    border: none;
+}
+
+.btn-driver-outline-red {
+    background: #fff !important;
+    color: #111 !important;
+    border: 2px solid #FF161F !important;
+}
+
+/* Info Card */
+.driver-info-card {
+    background: #fff;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.03);
+    height: 100%;
+}
+
+.driver-info-card-header {
+    background: #FF161F !important;
+    padding: 20px 30px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.driver-info-card-header h5 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.driver-info-grid {
+    padding: 40px;
+}
+
+.label-view {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #6B7280;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.value-view {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 0;
+}
+
+.value-view.red-text {
+    color: #FF161F;
+}

@@ -1,0 +1,427 @@
+/* Admin Roles Module Styles */
+
+.roles-wrapper {
+    padding: 20px 30px;
+    background: #fff;
+    border-radius: 30px;
+    min-height: calc(100vh - 150px);
+}
+
+.roles-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.roles-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #111;
+    margin: 0;
+}
+
+.btn-add-admin {
+    background: #FF161F;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    border: none;
+}
+.btn-add-admin:hover {
+    background: #e6141b;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 22, 31, 0.2);
+}
+
+/* Search Area */
+.roles-search-container {
+    margin-bottom: 25px;
+    position: relative;
+    max-width: 450px;
+}
+
+.roles-search-input {
+    width: 100%;
+    padding: 14px 20px 14px 50px;
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 15px;
+    font-size: 15px;
+    color: #111;
+    transition: all 0.3s ease;
+}
+.roles-search-input:focus {
+    outline: none;
+    border-color: #FF161F;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(255, 22, 31, 0.05);
+}
+
+.roles-search-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #FF161F;
+    font-size: 18px;
+}
+
+/* Table Design */
+.roles-table-container {
+    border: 1px solid #F3F4F6;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.roles-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.roles-table thead th {
+    background: #FFF1F2 !important; /* Light Pink/Red */
+    color: #111;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 16px 20px;
+    border: none;
+    text-align: left;
+}
+
+.roles-table tbody td {
+    padding: 20px;
+    font-size: 14px;
+    color: #4B5563;
+    font-weight: 500;
+    border-bottom: 1px solid #F3F4F6;
+    vertical-align: middle;
+}
+
+.roles-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.roles-table tbody tr:hover {
+    background: #FDFDFD;
+}
+
+.admin-name-cell {
+    color: #111;
+    font-weight: 700;
+}
+
+/* Actions */
+.role-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-role-edit, .btn-role-delete {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-role-edit {
+    background: #EBFDF5; /* Light Green */
+    color: #10B981;
+}
+.btn-role-edit:hover {
+    background: #10B981;
+    color: #fff;
+}
+
+.btn-role-delete {
+    background: #FEF2F2; /* Light Red */
+    color: #EF4444;
+}
+.btn-role-delete:hover {
+    background: #EF4444;
+    color: #fff;
+}
+
+/* Pagination */
+.pagination-roles {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 30px;
+    gap: 8px;
+}
+
+.page-btn-roles {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #4B5563;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.page-btn-roles:hover {
+    background: #F3F4F6;
+    color: #111;
+}
+
+.page-btn-roles.active {
+    background: #FFF1F2;
+    color: #FF161F;
+}
+
+.page-btn-roles.arrow {
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+}
+
+/* Add New Admin Form Styles */
+
+.roles-subheader {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.btn-back-roles {
+    color: #111;
+    font-size: 22px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.2s;
+}
+.btn-back-roles:hover {
+    transform: translateX(-4px);
+    color: #FF161F;
+}
+
+.roles-subheader-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+    margin: 0;
+}
+
+.form-section-header {
+    background: #FF161F;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.roles-form-group {
+    margin-bottom: 20px;
+}
+
+.roles-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 8px;
+}
+
+.roles-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: #fff;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #111;
+    transition: all 0.2s;
+}
+.roles-input:focus {
+    outline: none;
+    border-color: #FF161F;
+    box-shadow: 0 0 0 4px rgba(255, 22, 31, 0.05);
+}
+
+.phone-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 0 16px;
+    transition: border-color 0.2s;
+}
+.phone-input-wrapper:focus-within {
+    border-color: #FF161F;
+    box-shadow: 0 0 0 4px rgba(255, 22, 31, 0.05);
+}
+.phone-flag {
+    margin-right: 12px;
+    font-size: 18px;
+}
+.phone-code {
+    font-weight: 600;
+    color: #4B5563;
+    margin-right: 10px;
+}
+.phone-input-field {
+    border: none;
+    padding: 12px 0;
+    flex-grow: 1;
+    background: transparent;
+    font-size: 14px;
+}
+.phone-input-field:focus {
+    outline: none;
+}
+
+/* Permissions Grid */
+.permissions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.permission-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.permission-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 1px solid #E5E7EB;
+    border-radius: 4px;
+    cursor: pointer;
+    background: #fff;
+    appearance: none;
+    position: relative;
+    transition: all 0.2s;
+}
+.permission-checkbox:checked {
+    background: #FF161F;
+    border-color: #FF161F;
+}
+.permission-checkbox:checked::after {
+    content: '\F633';
+    font-family: 'bootstrap-icons';
+    position: absolute;
+    color: white;
+    font-size: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.permission-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #4B5563;
+    cursor: pointer;
+}
+
+/* Password Layout */
+.password-input-wrapper {
+    position: relative;
+}
+.password-toggle-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #9CA3AF;
+}
+
+/* Footer Actions */
+.roles-form-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 35px;
+}
+
+.btn-roles-invite {
+    background: #FF161F;
+    color: white;
+    padding: 12px 45px;
+    border-radius: 12px;
+    font-weight: 700;
+    border: none;
+    transition: background 0.2s;
+}
+.btn-roles-invite:hover {
+    background: #e6141b;
+}
+
+.btn-roles-cancel {
+    background: #fff;
+    color: #111;
+    padding: 12px 45px;
+    border-radius: 12px;
+    font-weight: 700;
+    border: 1px solid #111;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+.btn-roles-cancel:hover {
+    background: #F9FAFB;
+}
+
+/* Invitation Modal Styling */
+.invitation-success-icon {
+    font-size: 80px;
+    color: #10B981;
+    line-height: 1;
+}
+
+.modal-title-roles {
+    font-size: 24px;
+    font-weight: 800;
+    color: #111;
+}
+
+.modal-subtitle-roles {
+    font-size: 16px;
+    color: #4B5563;
+    font-weight: 500;
+}
+
+.btn-modal-okay {
+    background: #FF161F;
+    color: white;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    transition: background 0.2s;
+}
+
+.btn-modal-okay:hover {
+    background: #e6141b;
+    color: white;
+}

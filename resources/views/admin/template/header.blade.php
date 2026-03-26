@@ -2,6 +2,7 @@
     $path = request()->path();
     $headerTitle = 'Profile';
     $showHeaderSearch = false;
+    $headerSearchPlaceholder = 'Search by name, email, phone number';
 
     if ($path === 'detailadmin') {
         $headerTitle = 'Admin Roles';
@@ -12,6 +13,10 @@
         $headerTitle = 'Admin Roles';
     }elseif ($path === 'adminprofile') {
         $headerTitle = 'Admin Roles';
+    } elseif ($path === 'promocode') {
+        $headerTitle = 'Promo Code Management';
+        $showHeaderSearch = true;
+        $headerSearchPlaceholder = 'Search by code and date';
     }
 @endphp
 
@@ -40,7 +45,7 @@
                             </span>
                             <input type="text"
                                    class="form-control form-control-sm"
-                                   placeholder="Search by name, email, phone number">
+                                   placeholder="{{ $headerSearchPlaceholder }}">
                         </form>
                     </div>
                 @endif
