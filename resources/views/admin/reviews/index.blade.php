@@ -10,7 +10,7 @@
 
 @section('content')
 <div class="col-12">
-    <div class="reviews-wrapper px-3 px-md-4">
+    <div class="reviews-wrapper">
         @php
             $tab = request('tab', 'drivers');
         @endphp

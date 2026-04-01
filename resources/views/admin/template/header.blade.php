@@ -35,7 +35,11 @@
             <div class="riden-topbar__title flex-grow-1 d-none d-sm-block">
                 @if(!$showHeaderSearch)
                     <div class="riden-topbar__h1">
-                        {{ $headerTitle }}
+                        @hasSection('title')
+                            @yield('title')
+                        @else
+                            {{ $headerTitle }}
+                        @endif
                     </div>
                 @else
                     <div class="mt-1">

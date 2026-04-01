@@ -9,7 +9,7 @@
 @endpush
 
 @section('content')
-<div class="col-12 mt-2 mt-md-3">
+<div class="col-12 px-0">
     <div class="passenger-management-container">
         
         <!-- 1. Profile Identity Row -->
@@ -30,7 +30,7 @@
                         <i class="bi bi-star-fill text-warning"></i>
                         <i class="bi bi-star-fill text-warning"></i>
                         <i class="bi bi-star-fill text-warning" style="opacity: 0.3;"></i>
-                        <span class="ms-1 fw-bold">(4.5)</span>
+                        <span class="ms-1 fw-semibold">(4.5)</span>
                     </div>
                 </div>
             </div>
@@ -87,7 +87,7 @@
         </div>
 
         <!-- 3. Sidebar & Content Grid -->
-        <div class="row g-4 mt-3">
+        <div class="row g-2 mt-0">
             <!-- Sidebar -->
             <div class="col-lg-4">
                 <div class="sidebar-glass-card h-100 d-flex flex-column">
@@ -144,7 +144,7 @@
                                         @for ($i = 0; $i < 5; $i++)
                                         <tr>
                                             <td class="ps-4">22 March 2025</td>
-                                            <td class="fw-bold">#34565</td>
+                                            <td class="fw-semibold">#34565</td>
                                             <td>Jesse Showalter</td>
                                             <td class="text-muted small">123 Main Street, Suite 405, Toronto</td>
                                         </tr>
@@ -152,7 +152,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <a href="#" class="view-all-figma">View All</a>
+                           
                         </div>
                     </div>
 
@@ -163,23 +163,23 @@
                                 <i class="bi bi-person-fill"></i>
                                 <h5>Personal Information</h5>
                             </div>
-                            <div class="p-4 px-5">
+                            <div class="px-4 pt-0 pb-2">
                                 <div class="row g-4 mt-1">
                                     <div class="col-md-6">
-                                        <label class="text-muted small fw-bold text-uppercase d-block mb-1">Full Name</label>
-                                        <p class="mb-0 fw-bold">Floyd Miles</p>
+                                        <label class="text-muted small fw-semibold text-uppercase d-block mb-1">Full Name</label>
+                                        <p class="mb-0 fw-semibold">Floyd Miles</p>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="text-muted small fw-bold text-uppercase d-block mb-1">Gender</label>
-                                        <p class="mb-0 fw-bold">Male</p>
+                                        <label class="text-muted small fw-semibold text-uppercase d-block mb-1">Gender</label>
+                                        <p class="mb-0 fw-semibold">Male</p>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="text-muted small fw-bold text-uppercase d-block mb-1">Email Address</label>
-                                        <p class="mb-0 fw-bold">miles.floyd@gmail.com</p>
+                                        <label class="text-muted small fw-semibold text-uppercase d-block mb-1">Email Address</label>
+                                        <p class="mb-0 fw-semibold">miles.floyd@gmail.com</p>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="text-muted small fw-bold text-uppercase d-block mb-1">Phone Number</label>
-                                        <p class="mb-0 fw-bold">+1 123 456 7890</p>
+                                        <label class="text-muted small fw-semibold text-uppercase d-block mb-1">Phone Number</label>
+                                        <p class="mb-0 fw-semibold">+1 123 456 7890</p>
                                     </div>
                                 </div>
                             </div>
@@ -193,30 +193,30 @@
                                 <i class="bi bi-credit-card-fill"></i>
                                 <h5>Payment Methods</h5>
                             </div>
-                            <div class="p-4 px-5">
-                                <h6 class="text-danger fw-bold mb-4 mt-2">Primary Methods</h6>
+                            <div class="px-4 py-2">
+                                <h6 class="text-danger fw-semibold mb-4 mt-2">Primary Methods</h6>
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <div class="d-flex align-items-center gap-3">
                                         <div style="width:40px; text-align:center;"><img src="https://img.icons8.com/color/48/visa.png" width="26"></div>
-                                        <span class="fw-bold">Visa</span>
+                                        <span class="fw-semibold">Visa</span>
                                     </div>
-                                    <span class="fw-bold">********234</span>
+                                    <span class="fw-semibold">********234</span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <div class="d-flex align-items-center gap-3">
                                         <div style="width:40px; text-align:center;"><img src="https://img.icons8.com/color/48/apple-pay.png" width="26"></div>
-                                        <span class="fw-bold">Apple Pay</span>
+                                        <span class="fw-semibold">Apple Pay</span>
                                     </div>
-                                    <span class="fw-bold">********234</span>
+                                    <span class="fw-semibold">********234</span>
                                 </div>
 
-                                <h6 class="text-danger fw-bold mb-4 mt-5">Other Methods</h6>
+                                <h6 class="text-danger fw-semibold mb-4 mt-5">Other Methods</h6>
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <div class="d-flex align-items-center gap-3">
                                         <div style="width:40px; text-align:center;"><img src="https://img.icons8.com/color/48/mastercard.png" width="26"></div>
-                                        <span class="fw-bold">Mastercard</span>
+                                        <span class="fw-semibold">Mastercard</span>
                                     </div>
-                                    <span class="fw-bold">********234</span>
+                                    <span class="fw-semibold">********234</span>
                                 </div>
                             </div>
                         </div>

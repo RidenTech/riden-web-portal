@@ -6,8 +6,7 @@
 }
 
 .cms-container {
-    max-width: 1000px;
-    margin: 0 auto;
+    width: 100%;
 }
 
 .cms-title {
@@ -38,12 +37,12 @@
 }
 
 .btn-select-page::after {
-    color: #FF161F;
+    color: #D10000;
     border-top: .4em solid;
 }
 
 .btn-add-page-dropdown {
-    color: #FF161F !important;
+    color: #D10000 !important;
     font-weight: 700 !important;
 }
 
@@ -52,7 +51,7 @@
 }
 
 .btn-add-page-link {
-    color: #FF161F;
+    color: #D10000;
     font-weight: 700;
     text-decoration: none;
     font-size: 15px;
@@ -71,7 +70,7 @@
 
 /* Action Buttons */
 .btn-add-media {
-    background: #FF161F;
+    background: #D10000;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -90,11 +89,11 @@
     border-radius: 25px;
     overflow: hidden;
     background: #fff;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
 }
 
 .cms-editor-toolbar {
-    background: #FF161F;
+    background: #D10000;
     padding: 12px 25px;
     display: flex;
     align-items: center;
@@ -134,7 +133,7 @@
 }
 
 .modal-header-red {
-    background: #FF161F;
+    background: #D10000;
     color: #fff;
     padding: 15px 25px;
     border: none;
@@ -157,7 +156,7 @@
 }
 
 .btn-modal-save {
-    background: #FF161F;
+    background: #D10000;
     color: #fff;
     flex: 1;
     padding: 12px;
@@ -185,7 +184,7 @@
 }
 
 .btn-editor-save {
-    background: #FF161F;
+    background: #D10000;
     color: #fff;
     padding: 10px 45px;
     border-radius: 12px;

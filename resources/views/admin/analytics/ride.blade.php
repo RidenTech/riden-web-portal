@@ -20,7 +20,7 @@
                         <line x1="0" y1="35" x2="22" y2="35" stroke="#FCA5A5" stroke-width="3" stroke-linecap="round"/>
                         <line x1="0" y1="46" x2="18" y2="46" stroke="#FCA5A5" stroke-width="3" stroke-linecap="round"/>
                         {{-- Car body --}}
-                        <rect x="24" y="32" width="66" height="26" rx="7" fill="#FF161F"/>
+                        <rect x="24" y="32" width="66" height="26" rx="7" fill="#D10000"/>
                         {{-- Roof --}}
                         <path d="M 40 32 Q 43 18 53 15 L 72 15 Q 82 18 84 32 Z" fill="#CC0008"/>
                         {{-- Windows --}}
@@ -49,7 +49,7 @@
                     {{-- Inline SVG: car with checkmark --}}
                     <svg viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg" width="90" height="72">
                         {{-- Car body --}}
-                        <rect x="8" y="32" width="66" height="26" rx="7" fill="#FF161F"/>
+                        <rect x="8" y="32" width="66" height="26" rx="7" fill="#D10000"/>
                         {{-- Roof --}}
                         <path d="M 24 32 Q 27 18 37 15 L 56 15 Q 66 18 68 32 Z" fill="#CC0008"/>
                         {{-- Windows --}}
@@ -79,7 +79,7 @@
                     {{-- Inline SVG: car with cancel/no-entry circle --}}
                     <svg viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg" width="90" height="72">
                         {{-- Car body --}}
-                        <rect x="8" y="32" width="66" height="26" rx="7" fill="#FF161F"/>
+                        <rect x="8" y="32" width="66" height="26" rx="7" fill="#D10000"/>
                         {{-- Roof --}}
                         <path d="M 24 32 Q 27 18 37 15 L 56 15 Q 66 18 68 32 Z" fill="#CC0008"/>
                         {{-- Windows --}}
@@ -91,7 +91,7 @@
                         <circle cx="60" cy="58" r="10" fill="#1F2937"/>
                         <circle cx="60" cy="58" r="5" fill="#6B7280"/>
                         {{-- Red no-entry badge --}}
-                        <circle cx="82" cy="22" r="14" fill="#FF161F" stroke="#fff" stroke-width="2"/>
+                        <circle cx="82" cy="22" r="14" fill="#D10000" stroke="#fff" stroke-width="2"/>
                         <line x1="72" y1="22" x2="92" y2="22" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
                     </svg>
                 </div>
@@ -110,7 +110,7 @@
             <div class="card h-100 border shadow-sm p-4" style="border-radius: 20px;">
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="m-0" style="font-size: 15px; font-weight: 800; color: #111;">Ride Volume Over Time</h4>
+                    <h4 class="m-0" style="font-size: 15px; font-weight: 600; color: #111;">Ride Volume Over Time</h4>
                     <select class="form-select" style="width: 120px; font-size: 12px; border-radius: 8px; border-color: #e5e7eb;">
                         <option>This Week</option>
                         <option>This Month</option>
@@ -153,15 +153,15 @@
                         {{-- Gradient definition --}}
                         <defs>
                             <linearGradient id="rideGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#FF161F" stop-opacity="0.6"/>
-                                <stop offset="100%" stop-color="#FF161F" stop-opacity="0"/>
+                                <stop offset="0%" stop-color="#D10000" stop-opacity="0.6"/>
+                                <stop offset="100%" stop-color="#D10000" stop-opacity="0"/>
                             </linearGradient>
                         </defs>
 
                         {{-- Main Red Line --}}
                         <path d="M 10,80 C 50,60 80,130 150,90 C 220,50 260,100 330,120
                                    C 400,140 440,70 510,95 C 560,112 600,80 690,100"
-                              fill="none" stroke="#FF161F" stroke-width="3"
+                              fill="none" stroke="#D10000" stroke-width="3"
                               stroke-linecap="round" stroke-linejoin="round"
                               class="ride-chart-line"/>
 
@@ -169,7 +169,7 @@
                         <line x1="330" y1="0" x2="330" y2="190" stroke="#D1D5DB" stroke-width="1" stroke-dasharray="5,4"/>
 
                         {{-- Dot at peak (10 Aug) --}}
-                        <circle cx="330" cy="120" r="5" fill="#FF161F" stroke="#fff" stroke-width="2.5"/>
+                        <circle cx="330" cy="120" r="5" fill="#D10000" stroke="#fff" stroke-width="2.5"/>
                     </svg>
 
                     {{-- Floating Tooltip (10 Aug) --}}
@@ -178,7 +178,7 @@
                                 padding:7px 12px;font-size:11px;box-shadow:0 4px 14px rgba(255,22,31,0.12);
                                 white-space:nowrap;z-index:10;">
                         <div style="color:#6B7280;font-weight:600;">10 Aug</div>
-                        <div style="color:#FF161F;font-weight:700;">Rides: <strong>143</strong></div>
+                        <div style="color:#D10000;font-weight: 600;">Rides: <strong>143</strong></div>
                         {{-- Arrow --}}
                         <div style="position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);
                                     width:0;height:0;border-left:7px solid transparent;
@@ -208,18 +208,18 @@
 
                 {{-- Peak Ride Times --}}
                 <div class="card border shadow-sm p-4" style="border-radius: 20px;">
-                    <h4 class="m-0 mb-3" style="font-size: 15px; font-weight: 800; color: #111;">Peak Ride Times</h4>
+                    <h4 class="m-0 mb-3" style="font-size: 15px; font-weight: 600; color: #111;">Peak Ride Times</h4>
                     <ul class="list-unstyled m-0" style="display:flex;flex-direction:column;gap:12px;">
                         <li class="d-flex align-items-center gap-3">
-                            <span class="ride-peak-dot" style="background:#FF161F;"></span>
+                            <span class="ride-peak-dot" style="background:#D10000;"></span>
                             <span style="font-size:13px;font-weight:600;color:#374151;">8–9 AM <span style="font-weight:400;color:#6B7280;">(Mon–Fri)</span></span>
                         </li>
                         <li class="d-flex align-items-center gap-3">
-                            <span class="ride-peak-dot" style="background:#FF161F;"></span>
+                            <span class="ride-peak-dot" style="background:#D10000;"></span>
                             <span style="font-size:13px;font-weight:600;color:#374151;">5–7 PM <span style="font-weight:400;color:#6B7280;">(All Days)</span></span>
                         </li>
                         <li class="d-flex align-items-center gap-3">
-                            <span class="ride-peak-dot" style="background:#FF161F;"></span>
+                            <span class="ride-peak-dot" style="background:#D10000;"></span>
                             <span style="font-size:13px;font-weight:600;color:#374151;">9–10 PM <span style="font-weight:400;color:#6B7280;">(Weekends)</span></span>
                         </li>
                     </ul>
@@ -227,13 +227,13 @@
 
                 {{-- Ride Cancellation Rates --}}
                 <div class="card border shadow-sm p-4" style="border-radius: 20px; flex: 1;">
-                    <h4 class="m-0 mb-4" style="font-size: 15px; font-weight: 800; color: #111;">Ride Cancellation Rates</h4>
+                    <h4 class="m-0 mb-4" style="font-size: 15px; font-weight: 600; color: #111;">Ride Cancellation Rates</h4>
 
                     {{-- By Passengers --}}
                     <div class="mb-3">
                         <div class="d-flex justify-content-between mb-1">
                             <span style="font-size:12px;font-weight:600;color:#374151;">By Passengers</span>
-                            <span style="font-size:12px;font-weight:700;color:#3B82F6;">75%</span>
+                            <span style="font-size:12px;font-weight: 600;color:#3B82F6;">75%</span>
                         </div>
                         <div style="height:8px;background:#EFF6FF;border-radius:99px;overflow:hidden;">
                             <div class="ride-bar-blue" style="width:75%;"></div>
@@ -244,7 +244,7 @@
                     <div>
                         <div class="d-flex justify-content-between mb-1">
                             <span style="font-size:12px;font-weight:600;color:#374151;">By Drivers</span>
-                            <span style="font-size:12px;font-weight:700;color:#EC4899;">25%</span>
+                            <span style="font-size:12px;font-weight: 600;color:#EC4899;">25%</span>
                         </div>
                         <div style="height:8px;background:#FDF2F8;border-radius:99px;overflow:hidden;">
                             <div class="ride-bar-pink" style="width:25%;"></div>
@@ -269,7 +269,7 @@
     align-items: center;
     justify-content: space-between;
     background: #fff;
-    border: 1.5px solid #FF161F;
+    border: 1.5px solid #D10000;
     border-radius: 20px;
     padding: 22px 20px 10px 24px;
     min-height: 110px;
@@ -290,7 +290,7 @@
 }
 .ride-metric-value {
     font-size: 40px;
-    font-weight: 800;
+    font-weight: 600;
     color: #111;
     line-height: 1;
 }

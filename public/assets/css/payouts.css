@@ -1,14 +1,14 @@
 /* Drivers Payouts Styles */
 
 .payouts-wrapper {
-    padding: 20px 0;
+    padding: 0;
+    background: transparent;
 }
 
 .payouts-main-card {
     background: #fff;
     border-radius: 24px;
-    padding: 30px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    padding: 0;
 }
 
 /* Header Section */
@@ -16,7 +16,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
 }
 
 .payouts-title {
@@ -48,15 +47,15 @@
 }
 
 .date-picker-btn:hover {
-    border-color: #ff161f;
+    border-color: var(--riden-red);
 }
 
 .date-picker-btn i {
-    color: #ff161f;
+    color: var(--riden-red);
 }
 
 .btn-instant-payout {
-    background: #ff161f;
+    background: var(--riden-red);
     color: #fff;
     border: none;
     padding: 12px 20px;
@@ -97,10 +96,11 @@
 
 .payouts-tab-item.active {
     color: #fff;
-    background: #ff161f;
+    background: var(--riden-red);
     padding: 12px 30px;
     border-radius: 12px 12px 0 0;
-    top: 5px; /* Adjust for border overlap */
+    top: 5px;
+    /* Adjust for border overlap */
 }
 
 /* The Figma shows a full background for the active tab */
@@ -124,7 +124,7 @@
 }
 
 .tab-btn.active {
-    background: #ff161f;
+    background: var(--riden-red);
     color: #fff;
 }
 
@@ -135,9 +135,11 @@
 
 /* Table Section */
 .payouts-table-container {
-    border: 1.5px solid #eee;
+    background: #fff;
+    border: 1px solid #E5E7EB;
     border-radius: 20px;
     overflow: hidden;
+    box-shadow: var(--riden-shadow);
 }
 
 .payouts-table {
@@ -160,7 +162,6 @@
     vertical-align: middle;
     font-size: 14px;
     font-weight: 600;
-    color: #333;
 }
 
 .payouts-table tbody tr:last-child td {
@@ -221,14 +222,14 @@
 }
 
 .page-link-custom.active {
-    background: #ff161f;
+    background: var(--riden-red);
     color: #fff;
-    border-color: #ff161f;
+    border-color: var(--riden-red);
 }
 
 .page-link-custom.arrow {
     background: #f8f8f8;
-    color: #ff161f;
+    color: var(--riden-red);
 }
 
 .page-link-custom:hover:not(.active) {
@@ -239,7 +240,7 @@
 /* New Section Styles */
 .paid-badge {
     padding: 4px 12px;
-    background: #FF161F;
+    background: #D10000;
     color: #fff;
     border-radius: 8px;
     font-size: 11px;

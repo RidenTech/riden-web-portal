@@ -1,6 +1,6 @@
 @extends('admin.layout.master')
 
-@section('title', 'Alerts')
+@section('title', 'Manage Notifications')
 
 @push('styles')
     <link href="{{ asset('assets/css/alerts.css') }}" rel="stylesheet" type="text/css" />
@@ -9,8 +9,13 @@
 @section('content')
 <div class="col-12 alerts-wrapper">
     <!-- Alerts Header -->
-    <div class="alerts-header">
-        <h1 class="alerts-title">Alerts</h1>
+    <div class="alerts-header riden-list-header justify-content-between align-items-center">
+        <div class="riden-search-bar">
+            <div class="riden-search-icon">
+                <i class="bi bi-search"></i>
+            </div>
+            <input type="text" placeholder="Search alerts...">
+        </div>
         
         <div class="header-actions">
             <a href="{{ route('alerts.send') }}" class="btn btn-send-alert text-decoration-none">
@@ -25,7 +30,7 @@
 
     <!-- Alerts Table -->
     <div class="alerts-table-container">
-        <table class="alerts-table">
+        <table class="table alerts-table">
             <thead>
                 <tr>
                     <th style="border-top-left-radius: 30px;">Date</th>

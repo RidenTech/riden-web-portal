@@ -64,7 +64,7 @@
 
 <style>
 .payments-header-style {
-    background: #FF161F !important;
+    background: #D10000 !important;
     color: white !important;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -74,8 +74,8 @@
 }
 
 .payment-category-title {
-    color: #FF161F;
-    font-weight: 700;
+    color: #D10000;
+    font-weight: 600;
     font-size: 16px;
     margin-bottom: 20px;
 }
@@ -121,7 +121,7 @@
     background: #000;
     color: white;
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 600;
     border: none;
     gap: 2px;
 }
@@ -129,7 +129,7 @@
 
 .bank-name {
     font-size: 15px;
-    font-weight: 700;
+    font-weight: 600;
     color: #111;
 }
 

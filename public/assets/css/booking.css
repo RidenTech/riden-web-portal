@@ -1,8 +1,7 @@
 /* Booking Management Styles */
 
 .booking-management-wrapper {
-    padding-top: 20px;
-    padding-bottom: 40px;
+    padding: 0;
 }
 
 .booking-management-container {
@@ -13,7 +12,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
 }
 
 .booking-title {
@@ -34,75 +32,24 @@
     font-size: 14px;
     font-weight: 700;
     color: #333;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .date-range-picker i {
-    color: #ff1c25;
+    color: var(--riden-red);
 }
 
-/* Tabs Section */
-.booking-tabs-container {
-    display: flex;
-    align-items: center;
-    gap: 40px;
-    margin-bottom: 25px;
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 0;
-    position: relative;
-}
 
-.booking-tab-item {
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 18px;
-    color: #111;
-    position: relative;
-    padding: 10px 20px;
-    transition: all 0.2s;
-}
-
-.booking-tab-item.active {
-    color: #ff1c25;
-}
-
-.booking-tab-item.active::after {
-    content: "";
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: #ff1c25;
-    border-radius: 4px 4px 0 0;
-    z-index: 10;
-}
-
-.btn-previous-bookings {
-    background: #ff1c25;
-    color: #fff !important;
-    border-radius: 999px; /* Pill shape */
-    padding: 12px 45px;
-    font-weight: 800;
-    font-size: 18px;
-    text-decoration: none;
-    margin-left: auto;
-    box-shadow: 0 4px 12px rgba(255, 28, 37, 0.2);
-    transition: all 0.2s;
-}
-
-.btn-previous-bookings:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 15px rgba(255, 28, 37, 0.3);
-}
 
 /* Table Section */
 .booking-card {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: 25px;
-    border: 1px solid #eee;
+    border: 1px solid #E5E7EB;
     overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.02);
+    box-shadow: var(--riden-shadow);
 }
 
 .booking-table thead th {
@@ -120,7 +67,6 @@
     vertical-align: middle;
     border-bottom: 1px solid #f8f8f8;
     font-size: 14px;
-    color: #333;
 }
 
 .booking-id {
@@ -171,13 +117,13 @@
 
 .pg-link.active {
     background: #fff !important;
-    border: 1.5px solid #ff1c25 !important;
-    color: #ff1c25 !important;
+    border: 1.5px solid var(--riden-red) !important;
+    color: var(--riden-red) !important;
 }
 
 .pg-link.nav-btn {
-    background: #ff1c25 !important;
-    border-color: #ff1c25 !important;
+    background: var(--riden-red) !important;
+    border-color: var(--riden-red) !important;
     color: #fff !important;
 }
 

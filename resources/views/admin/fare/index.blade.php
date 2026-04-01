@@ -14,36 +14,13 @@
 
 @section('content')
 <div class="col-12 fare-wrapper">
-    <div class="fare-main-card">
+
         
-        <!-- Header with Back Button and User Info -->
-        <div class="fare-header">
-            <a href="{{ route('dashboard') }}" class="fare-back-btn">
-                <i class="bi bi-chevron-left"></i>
-            </a>
-            <h1 class="fare-title">Fare Management</h1>
 
-            <div class="fare-top-right">
-                <div class="fare-icon-btn">
-                    <i class="bi bi-bell-fill"></i>
-                </div>
-                <img src="https://i.pravatar.cc/100?img=5" class="fare-avatar" alt="User Avatar">
-            </div>
-        </div>
-
-        <!-- Main Content Layout -->
+  <!-- Main Content Layout -->
         <div class="fare-content-layout">
             
-            <!-- Left Mini Sidebar -->
-            <div class="car-type-menu">
-                <a href="#" class="car-type-item">All</a>
-                <a href="#" class="car-type-item active">Standard</a>
-                <a href="#" class="car-type-item">SUV</a>
-                <a href="#" class="car-type-item">Van</a>
-                <a href="#" class="car-type-item">Premium</a>
-                <a href="#" class="car-type-item">Wheelchair Accessible</a>
-            </div>
-
+           
             <!-- Right Content Area -->
             <div class="fare-table-container">
                 
@@ -52,11 +29,13 @@
                         <option value="standard">Select Car Type</option>
                         <option value="suv">SUV</option>
                         <option value="van">Van</option>
+                        <option value="premium">Premium</option>
+                        <option value="wheelchair">Wheelchair Accessible</option>
                     </select>
                 </div>
 
                 <div class="table-responsive">
-                    <table class="fare-table">
+                    <table class="table fare-table">
                         <thead>
                             <tr>
                                 <th>Days</th>
@@ -94,6 +73,5 @@
             </div>
         </div>
 
-    </div>
 </div>
 @endsection

@@ -3,18 +3,18 @@
 @section('title', 'Promo Code Management')
 
 @push('styles')
+<link href="{{ asset('assets/css/addadmin.css') }}?v={{ time() }}" rel="stylesheet" type="text/css" />
 <style>
 /* Promo Management Specific Styles */
 .promo-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
 }
 
 .promo-title {
     font-size: 24px;
-    font-weight: 800;
+    font-weight: 600;
     color: #111;
     margin: 0;
 }
@@ -24,42 +24,6 @@
     gap: 12px;
 }
 
-.promo-search-container {
-    margin-bottom: 24px;
-}
-
-.promo-search-bar {
-    position: relative;
-    max-width: 400px;
-}
-
-.promo-search-bar input {
-    height: 48px;
-    border-radius: 999px;
-    background: #F2F2F4;
-    border: 0;
-    padding-left: 56px;
-    padding-right: 20px;
-    font-size: 14px;
-    color: #6B7280;
-    width: 100%;
-}
-
-.promo-search-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 36px;
-    height: 36px;
-    background: #fff;
-    border: 2px solid #E5E7EB;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #FF161F;
-}
 
 /* Table Design */
 .promo-card {
@@ -82,7 +46,7 @@
 .promo-table th {
     padding: 16px 20px;
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 600;
     color: #111;
     text-align: left;
 }
@@ -96,7 +60,7 @@
 }
 
 .promo-code-text {
-    font-weight: 700;
+    font-weight: 600;
     color: #374151;
 }
 
@@ -105,7 +69,7 @@
     padding: 6px 14px;
     border-radius: 999px;
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 600;
     text-transform: capitalize;
     display: inline-block;
 }
@@ -137,7 +101,7 @@
 }
 
 .promo-edit { color: #10B981; }
-.promo-delete { color: #FF161F; }
+.promo-delete { color: #D10000; }
 
 /* Pagination */
 .promo-pagination {
@@ -175,10 +139,10 @@
 }
 
 .pg-num.active {
-    outline: 2.5px solid #FF161F;
+    outline: 2.5px solid #D10000;
     outline-offset: -2.5px;
     background: #fff;
-    font-weight: 800;
+    font-weight: 600;
 }
 
 .date-filter-display {
@@ -195,7 +159,7 @@
 }
 
 .date-filter-display i {
-    color: #FF161F;
+    color: #D10000;
 }
 
 /* Form Styles */
@@ -219,12 +183,12 @@
 }
 
 .form-section-header {
-    background: #FF161F;
+    background: #D10000;
     color: #fff;
     padding: 12px 20px;
     border-radius: 12px;
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .promo-label {
@@ -248,7 +212,7 @@
 }
 
 .promo-input:focus {
-    border-color: #FF161F;
+    border-color: #D10000;
 }
 
 .promo-input-with-icon {
@@ -275,8 +239,15 @@
          LIST VIEW
     ====================================================================== --}}
     <div id="promo-list-view">
-        <div class="promo-header">
-            <h1 class="promo-title">Promo Code Management</h1>
+        <div class="promo-header riden-list-header">
+          
+            <div class="riden-search-bar">
+                <div class="riden-search-icon">
+                    <i class="bi bi-search"></i>
+                </div>
+                <input type="text" placeholder="Search by code or date">
+            </div>
+
             <div class="promo-top-actions">
                 <button class="btn btn-riden-danger" onclick="togglePromoView('add')">
                     <i class="bi bi-plus-circle-fill"></i> Add new Code
@@ -288,15 +259,7 @@
             </div>
         </div>
 
-        <div class="promo-search-container">
-            <div class="promo-search-bar">
-                <div class="promo-search-icon">
-                    <i class="bi bi-search"></i>
-                </div>
-                <input type="text" placeholder="Search by code or date">
-            </div>
-        </div>
-
+      
         <div class="promo-card">
             <table class="promo-table">
                 <thead>
@@ -366,61 +329,67 @@
     {{-- =====================================================================
          ADD/EDIT VIEW
     ====================================================================== --}}
-    <div id="promo-form-view" style="display: none;">
-        <div class="promo-header mb-4">
-            <h1 class="promo-title">Promo Code Management</h1>
-        </div>
+    <div id="promo-form-view" style="display: none;" class="riden-addadmin-wrap">
 
-        <div class="d-flex align-items-center gap-3 mb-4">
-            <button class="promo-back-btn" onclick="togglePromoView('list')">
+        <div class="riden-addadmin-head mb-2">
+            <button class="riden-addadmin-back border-0 bg-transparent text-decoration-none" onclick="togglePromoView('list')">
                 <i class="bi bi-chevron-left"></i>
             </button>
-            <h2 id="promo-form-title" class="m-0" style="font-size: 20px; font-weight: 800; color: #111;">Add New promo Code</h2>
+            <h2 id="promo-form-title" class="riden-addadmin-title mb-0">Add New promo Code</h2>
         </div>
 
-        <div class="promo-card p-4">
-            <div class="form-section-header mb-4">Code Details</div>
+        <div class="card riden-addadmin-card border-0 shadow-sm p-2">
             
-            <div class="row g-4 mb-4">
+            <div class="riden-addadmin-section my-2">Code Details</div>
+            
+            <div class="row g-2">
                 <div class="col-md-6">
-                    <label class="promo-label">Code</label>
-                    <input type="text" id="pc-code" class="promo-input" placeholder="Enter Code">
-                </div>
-                <div class="col-md-6">
-                    <label class="promo-label">Discount Percentage</label>
-                    <input type="text" id="pc-discount" class="promo-input" placeholder="Enter Discount Percentage">
-                </div>
-            </div>
-            <div class="row g-4 mb-5">
-                <div class="col-md-6">
-                    <label class="promo-label">Upto Discount</label>
-                    <input type="text" id="pc-upto" class="promo-input" placeholder="30%">
-                </div>
-            </div>
-
-            <div class="form-section-header mb-4">Date Management</div>
-
-            <div class="row g-4 mb-4">
-                <div class="col-md-6">
-                    <label class="promo-label">Starting Date</label>
-                    <div class="promo-input-with-icon">
-                        <input type="text" id="pc-start" class="promo-input" placeholder="22/04/2024">
-                        <i class="bi bi-calendar-event"></i>
+                    <div class="mb-2">
+                        <label class="riden-field-label">Code</label>
+                        <input type="text" id="pc-code" class="form-control riden-input" placeholder="Enter Code">
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <label class="promo-label">End Date</label>
-                    <div class="promo-input-with-icon">
-                        <input type="text" id="pc-end" class="promo-input" placeholder="22/05/2025">
-                        <i class="bi bi-calendar-event"></i>
+                    <div class="mb-2">
+                        <label class="riden-field-label">Discount Percentage</label>
+                        <input type="text" id="pc-discount" class="form-control riden-input" placeholder="Enter Discount Percentage">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <label class="riden-field-label">Upto Discount</label>
+                        <input type="text" id="pc-upto" class="form-control riden-input" placeholder="30%">
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="d-flex justify-content-end gap-3 mt-4">
-            <button class="btn btn-riden-danger px-5" style="height: 48px; min-width: 160px; font-size: 15px;">Save</button>
-            <button class="btn btn-riden-outline px-5" onclick="togglePromoView('list')" style="height: 48px; min-width: 160px; font-size: 15px; border: 1.5px solid #111;">Cancel</button>
+            <div class="riden-addadmin-section my-2">Date Management</div>
+
+            <div class="row g-2">
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <label class="riden-field-label">Starting Date</label>
+                        <div class="position-relative">
+                            <input type="text" id="pc-start" class="form-control riden-input pe-5" placeholder="22/04/2024">
+                            <i class="bi bi-calendar-event position-absolute top-50 end-0 translate-middle-y me-3 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <label class="riden-field-label">End Date</label>
+                        <div class="position-relative">
+                            <input type="text" id="pc-end" class="form-control riden-input pe-5" placeholder="22/05/2025">
+                            <i class="bi bi-calendar-event position-absolute top-50 end-0 translate-middle-y me-3 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-3 mt-4">
+                <button class="btn btn-riden-danger px-4" style="min-width: 140px; font-size: 15px;">Save</button>
+                <button class="btn btn-riden-outline px-4" onclick="togglePromoView('list')" style="min-width: 140px; font-size: 15px;">Cancel</button>
+            </div>
         </div>
     </div>
 

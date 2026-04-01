@@ -1,16 +1,19 @@
 /* Fare Management Styles */
 
 .fare-wrapper {
-    background: #f1f1f1;
+    background: transparent;
     min-height: 100vh;
-    padding: 30px;
+    padding: 0;
 }
 
 .fare-main-card {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid #E5E7EB;
     border-radius: 30px;
     padding: 40px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: var(--riden-shadow);
     min-height: 80vh;
 }
 
@@ -33,7 +36,7 @@
     color: #111;
     text-decoration: none;
     font-size: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
 }
 
 .fare-title {
@@ -53,9 +56,11 @@
 .car-type-menu {
     width: 200px;
     flex-shrink: 0;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
-    border: 1px solid #eee;
     overflow: hidden;
     height: fit-content;
 }
@@ -73,11 +78,11 @@
 
 .car-type-item:hover {
     background: #fafafa;
-    color: #ff161f;
+    color: var(--riden-red);
 }
 
 .car-type-item.active {
-    background: #ff161f;
+    background: var(--riden-red);
     color: #fff;
 }
 
@@ -112,13 +117,13 @@
 }
 
 .fare-table thead th {
-    background: #ff161f;
+    background: var(--riden-red);
     color: #fff;
     padding: 18px 15px;
     font-weight: 700;
     font-size: 14px;
     text-align: left;
-    border-right: 1px solid rgba(255,255,255,0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .fare-table thead th:last-child {
@@ -132,7 +137,6 @@
     vertical-align: middle;
     font-size: 14px;
     font-weight: 600;
-    color: #444;
 }
 
 .fare-table tbody td:last-child {
@@ -145,7 +149,7 @@
 }
 
 .btn-save-changes {
-    background: #ff161f;
+    background: var(--riden-red);
     color: #fff;
     border: none;
     padding: 8px 20px;
@@ -176,7 +180,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ff161f;
+    color: var(--riden-red);
     font-size: 20px;
     position: relative;
     cursor: pointer;

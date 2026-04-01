@@ -7,11 +7,10 @@
 @endpush
 
 @section('content')
-<div class="col-12 mt-3 px-3">
+<div class="col-12">
 
     <!-- Header & Filters (Using Bootstrap Flex Utilities) -->
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-        <h3 class="mb-0" style="font-weight: 800; color: #111;">Analytics</h3>
+    <div class="d-flex flex-wrap justify-start align-items-center py-2 gap-3">
         <div class="d-flex align-items-center gap-3">
             <select class="form-select border-1" style="border-radius: 8px; font-weight: 500; font-size: 13px; width: auto; color: #111;">
                 <option>This Week</option>
@@ -20,13 +19,13 @@
             </select>
 
             <div class="d-flex align-items-center gap-2">
-                <span style="font-size: 13px; font-weight: 700; color: #000;">Custom</span>
+                <span style="font-size: 13px; font-weight: 600; color: #000;">Custom</span>
                 <div class="position-relative">
-                    <i class="bi bi-calendar-event position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #FF161F; font-size: 14px;"></i>
+                    <i class="bi bi-calendar-event position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #D10000; font-size: 14px;"></i>
                     <input type="text" class="form-control" placeholder="From" style="padding-left: 36px; border-radius: 8px; font-size: 12px; width: 130px;">
                 </div>
                 <div class="position-relative">
-                    <i class="bi bi-calendar-event position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #FF161F; font-size: 14px;"></i>
+                    <i class="bi bi-calendar-event position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #D10000; font-size: 14px;"></i>
                     <input type="text" class="form-control" placeholder="To" style="padding-left: 36px; border-radius: 8px; font-size: 12px; width: 130px;">
                 </div>
             </div>
@@ -38,45 +37,45 @@
         
         <div class="col-12 col-md-3 d-flex align-items-center position-relative">
             <div class="metric-icon-circle shadow-sm me-3 bg-white d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; border-radius: 50%;">
-                <svg xmlns="http://www.w3.org/.svg" width="24" height="24" fill="#FF161F" viewBox="0 0 16 16"><path d="M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0m10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0M1.5 14h13a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.16-.36l-3-2.73A1.5 1.5 0 0 0 10.82 5H5.18a1.5 1.5 0 0 0-1.02.46l-3 2.73a.5.5 0 0 0-.16.36V13.5a.5.5 0 0 0 .5.5m3.18-8h6.64l2.2 2H2.48z"/></svg>
+                <svg xmlns="http://www.w3.org/.svg" width="24" height="24" fill="#D10000" viewBox="0 0 16 16"><path d="M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0m10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0M1.5 14h13a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.16-.36l-3-2.73A1.5 1.5 0 0 0 10.82 5H5.18a1.5 1.5 0 0 0-1.02.46l-3 2.73a.5.5 0 0 0-.16.36V13.5a.5.5 0 0 0 .5.5m3.18-8h6.64l2.2 2H2.48z"/></svg>
             </div>
             <div>
                 <div class="text-dark mb-1" style="font-size: 13px; font-weight: 500;">Total Rides</div>
-                <div class="text-dark" style="font-size: 26px; font-weight: 800; line-height: 1;">243</div>
+                <div class="text-dark" style="font-size: 26px; font-weight: 600; line-height: 1;">243</div>
             </div>
             <!-- Bootstrap visual divider -->
-            <div class="d-none d-md-block position-absolute" style="right: 0; top: 10%; height: 80%; width: 2px; background-color: #FF161F;"></div>
+            <div class="d-none d-md-block position-absolute" style="right: 0; top: 10%; height: 80%; width: 2px; background-color: #D10000;"></div>
         </div>
 
         <div class="col-12 col-md-3 d-flex align-items-center position-relative mt-3 mt-md-0">
             <div class="metric-icon-circle shadow-sm me-3 bg-white d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; border-radius: 50%;">
-                <svg xmlns="http://www.w3.org/.svg" width="24" height="24" fill="#FF161F" viewBox="0 0 16 16"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm4.5 0a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zM8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6m5 2.755C12.146 12.825 10.623 12 8 12s-4.146.826-5 1.755V14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1z"/></svg>
+                <svg xmlns="http://www.w3.org/.svg" width="24" height="24" fill="#D10000" viewBox="0 0 16 16"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm4.5 0a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zM8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6m5 2.755C12.146 12.825 10.623 12 8 12s-4.146.826-5 1.755V14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1z"/></svg>
             </div>
             <div>
                 <div class="text-dark mb-1" style="font-size: 13px; font-weight: 500;">Total Drivers</div>
-                <div class="text-dark" style="font-size: 26px; font-weight: 800; line-height: 1;">243</div>
+                <div class="text-dark" style="font-size: 26px; font-weight: 600; line-height: 1;">243</div>
             </div>
-            <div class="d-none d-md-block position-absolute" style="right: 0; top: 10%; height: 80%; width: 2px; background-color: #FF161F;"></div>
+            <div class="d-none d-md-block position-absolute" style="right: 0; top: 10%; height: 80%; width: 2px; background-color: #D10000;"></div>
         </div>
 
         <div class="col-12 col-md-3 d-flex align-items-center position-relative mt-3 mt-md-0">
             <div class="metric-icon-circle shadow-sm me-3 bg-white d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; border-radius: 50%;">
-                <svg xmlns="http://www.w3.org/.svg" width="24" height="24" fill="#FF161F" viewBox="0 0 16 16"><path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1H1zm7 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/><path d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2z"/></svg>
+                <svg xmlns="http://www.w3.org/.svg" width="24" height="24" fill="#D10000" viewBox="0 0 16 16"><path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1H1zm7 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/><path d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2z"/></svg>
             </div>
             <div>
                 <div class="text-dark mb-1" style="font-size: 13px; font-weight: 500;">Total Revenue</div>
-                <div class="text-dark" style="font-size: 26px; font-weight: 800; line-height: 1;">$1023.00</div>
+                <div class="text-dark" style="font-size: 26px; font-weight: 600; line-height: 1;">$1023.00</div>
             </div>
-            <div class="d-none d-md-block position-absolute" style="right: 0; top: 10%; height: 80%; width: 2px; background-color: #FF161F;"></div>
+            <div class="d-none d-md-block position-absolute" style="right: 0; top: 10%; height: 80%; width: 2px; background-color: #D10000;"></div>
         </div>
 
         <div class="col-12 col-md-3 d-flex align-items-center mt-3 mt-md-0">
             <div class="metric-icon-circle shadow-sm me-3 bg-white d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; border-radius: 50%;">
-                <svg xmlns="http://www.w3.org/.svg" width="24" height="24" fill="#FF161F" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+                <svg xmlns="http://www.w3.org/.svg" width="24" height="24" fill="#D10000" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
             </div>
             <div>
                 <div class="text-dark mb-1" style="font-size: 13px; font-weight: 500;">Satisfaction Rate</div>
-                <div class="text-dark" style="font-size: 26px; font-weight: 800; line-height: 1;">93%</div>
+                <div class="text-dark" style="font-size: 26px; font-weight: 600; line-height: 1;">93%</div>
             </div>
         </div>
 
@@ -95,16 +94,16 @@
         <!-- Driver Status Cards (Bootstrap Row/Col) -->
         <div class="row mb-4">
             <div class="col-12 col-md-6 mb-3 mb-md-0">
-                <div class="card h-100 border-1 border-danger" style="border-radius: 20px; border-color: #FF161F !important; padding: 30px; position: relative; overflow: hidden; min-height: 150px;">
+                <div class="card h-100 border-1 border-danger" style="border-radius: 20px; border-color: #D10000 !important; padding: 30px; position: relative; overflow: hidden; min-height: 150px;">
                     <h4 class="text-dark mb-2" style="font-size: 20px; font-weight: 500; position: relative; z-index: 2;">Active Drivers</h4>
-                    <p class="text-dark m-0" style="font-size: 44px; font-weight: 800; line-height: 1; position: relative; z-index: 2;">210</p>
+                    <p class="text-dark m-0" style="font-size: 44px; font-weight: 600; line-height: 1; position: relative; z-index: 2;">210</p>
                     <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=300&auto=format&fit=crop" alt="Active Driver" class="position-absolute shadow" style="right: -10px; bottom: -10px; height: 110px; width: 140px; object-fit: cover; border-radius: 12px; z-index: 1;">
                 </div>
             </div>
             <div class="col-12 col-md-6">
-                <div class="card h-100 border-1 border-danger" style="border-radius: 20px; border-color: #FF161F !important; padding: 30px; position: relative; overflow: hidden; min-height: 150px;">
+                <div class="card h-100 border-1 border-danger" style="border-radius: 20px; border-color: #D10000 !important; padding: 30px; position: relative; overflow: hidden; min-height: 150px;">
                     <h4 class="text-dark mb-2" style="font-size: 20px; font-weight: 500; position: relative; z-index: 2;">Offline Drivers</h4>
-                    <p class="text-dark m-0" style="font-size: 44px; font-weight: 800; line-height: 1; position: relative; z-index: 2;">33</p>
+                    <p class="text-dark m-0" style="font-size: 44px; font-weight: 600; line-height: 1; position: relative; z-index: 2;">33</p>
                     <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=300&auto=format&fit=crop" alt="Offline Driver" class="position-absolute shadow" style="right: -10px; bottom: -10px; height: 110px; width: 140px; object-fit: cover; border-radius: 12px; z-index: 1;">
                 </div>
             </div>
@@ -117,7 +116,7 @@
             <div class="col-12 col-md-8 mb-4 mb-md-0">
                 <div class="card h-100 border p-4 shadow-sm" style="border-radius: 20px;">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="text-dark m-0" style="font-size: 16px; font-weight: 800;">Avg. Driver Hours</h4>
+                        <h4 class="text-dark m-0" style="font-size: 16px; font-weight: 600;">Avg. Driver Hours</h4>
                         <select class="form-select border-1" style="border-radius: 8px; width: 120px; font-size: 13px;">
                             <option>This Week</option>
                         </select>
@@ -177,16 +176,16 @@
             <!-- Ratings & Complaints Bubble Chart -->
             <div class="col-12 col-md-4">
                 <div class="card h-100 border p-4 shadow-sm" style="border-radius: 20px;">
-                    <h4 class="text-dark mb-4" style="font-size: 16px; font-weight: 800;">Ratings & Complaints</h4>
+                    <h4 class="text-dark mb-4" style="font-size: 16px; font-weight: 600;">Ratings & Complaints</h4>
                     
                     <div class="ratings-legend mb-4">
                         <div class="d-flex align-items-center gap-3 mb-2">
                             <div class="rounded" style="width: 32px; height: 6px; background: #60A5FA;"></div>
-                            <span style="font-size: 12px; font-weight: 600; color: #111;">Complaints <span style="font-weight: 800; color: #FF161F;">25</span></span>
+                            <span style="font-size: 12px; font-weight: 600; color: #111;">Complaints <span style="font-weight: 600; color: #D10000;">25</span></span>
                         </div>
                         <div class="d-flex align-items-center gap-3">
                             <div class="rounded" style="width: 32px; height: 6px; background: #EC4899;"></div>
-                            <span style="font-size: 12px; font-weight: 600; color: #111;">Ratings <span style="font-weight: 800; color: #10B981;">75%</span> (45)</span>
+                            <span style="font-size: 12px; font-weight: 600; color: #111;">Ratings <span style="font-weight: 600; color: #10B981;">75%</span> (45)</span>
                         </div>
                     </div>
 

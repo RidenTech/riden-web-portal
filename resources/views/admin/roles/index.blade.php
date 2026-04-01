@@ -1,26 +1,31 @@
 @extends('admin.layout.master')
 
 @section('title', 'Admin Roles')
-admi
+
 @push('styles')
     <link href="{{ asset('assets/css/roles.css') }}?v={{ time() }}" rel="stylesheet" type="text/css" />
 @endpush
 
 @section('content')
-<div class="col-12 roles-wrapper mt-3">
-    <!-- Header Row (Title and Add Button) -->
-    <div class="roles-header mb-4">
-        <h1 class="roles-title">Admin Roles</h1>
+<div class="col-12 roles-wrapper">
+    <!-- Header Row (Add Button) -->
+    <div class="roles-header riden-list-header mb-2">
+        <div class="riden-search-bar">
+            <div class="riden-search-icon">
+                <i class="bi bi-search"></i>
+            </div>
+            <input type="text" placeholder="Search by name, email or phone">
+        </div>
+
         <a href="{{ route('admin.roles.create') }}" class="btn-add-admin">
             <i class="bi bi-plus-lg"></i> Add new Admin
         </a>
     </div>
-
-    <!-- Table Container Card -->
+     <!-- Table Container Card -->
     <div class="roles-content-card">
         <!-- Table Container -->
         <div class="roles-table-container">
-            <table class="roles-table">
+            <table class="table roles-table">
                 <thead>
                     <tr>
                         <th>Name</th>

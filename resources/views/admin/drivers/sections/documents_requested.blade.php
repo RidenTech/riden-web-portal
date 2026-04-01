@@ -50,12 +50,12 @@
 }
 .doc-name {
     font-size: 15px;
-    font-weight: 700;
+    font-weight: 600;
     color: #111;
 }
 .doc-status {
     font-size: 14px;
-    color: #FF161F;
+    color: #D10000;
     margin-left: 5px;
     font-weight: 500;
 }

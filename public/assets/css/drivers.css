@@ -1,7 +1,7 @@
 /* Driver Management Module Styles - Senior UI Refinement */
 .drivers-wrapper {
-    padding: 30px;
-    background: #fff;
+    background: transparent;
+    padding: 0;
     min-height: calc(100vh - 72px);
 }
 
@@ -9,7 +9,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 35px;
 }
 
 .drivers-title {
@@ -26,7 +25,7 @@
 }
 
 .btn-download-excel {
-    background: #FF161F;
+    background: var(--riden-red);
     color: #fff;
     border: none;
     padding: 10px 24px;
@@ -59,7 +58,7 @@
 }
 
 .date-picker-drivers i {
-    color: #ff161f;
+    color: var(--riden-red);
     font-size: 16px;
 }
 
@@ -86,15 +85,16 @@
 }
 
 .btn-tab-driver.active {
-    background: #FF161F;
+    background: var(--riden-red);
     color: #fff;
-    border-radius: 20px; /* High radius for pill shape */
+    border-radius: 20px;
+    /* High radius for pill shape */
     box-shadow: 0 4px 12px rgba(255, 22, 31, 0.2);
     transform: translateY(-2px);
 }
 
 .btn-tab-driver .count {
-    color: #FF161F;
+    color: var(--riden-red);
     margin-left: 5px;
 }
 
@@ -105,10 +105,12 @@
 /* Table Styling - High Fidelity */
 .drivers-table-container {
     background: #fff;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid #E5E7EB;
-    border-radius: 35px;
+    border-radius: 30px;
     overflow: hidden;
-    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.03);
+    box-shadow: var(--riden-shadow);
 }
 
 .drivers-table {
@@ -117,7 +119,8 @@
 }
 
 .drivers-table thead tr {
-    background: #FFEEEE; /* Soft pink exactly as in Figma */
+    background: #FFEEEE;
+    /* Soft pink exactly as in Figma */
 }
 
 .drivers-table th {
@@ -132,7 +135,6 @@
 .drivers-table td {
     padding: 18px 30px;
     font-size: 14px;
-    color: #4B5563;
     border-bottom: 1px solid #F3F4F6;
     vertical-align: middle;
 }
@@ -153,13 +155,14 @@
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Status Badges - Pill Shape */
 .status-badge {
     padding: 6px 20px;
-    border-radius: 30px; /* Pill shape */
+    border-radius: 30px;
+    /* Pill shape */
     font-size: 13px;
     font-weight: 700;
     display: inline-flex;
@@ -212,7 +215,8 @@
     align-items: center;
     justify-content: center;
     border: 1px solid #E5E7EB;
-    border-radius: 50%; /* Perfect circles */
+    border-radius: 50%;
+    /* Perfect circles */
     color: #374151;
     text-decoration: none;
     font-size: 13px;
@@ -227,8 +231,8 @@
 
 .page-btn-drivers.active {
     background: #fff;
-    border-color: #FF161F;
-    color: #FF161F;
+    border-color: var(--riden-red);
+    color: var(--riden-red);
 }
 
 .page-btn-drivers.arrow {
@@ -238,7 +242,7 @@
 }
 
 .page-btn-drivers.arrow-next {
-    background: #FF161F;
+    background: var(--riden-red);
     color: #fff;
     border: none;
     font-size: 16px;
@@ -248,15 +252,15 @@
 /* --- DETAIL VIEW (Driver View) STYLES --- */
 
 .driver-detail-wrapper {
-    padding: 30px;
+    padding: 0;
 }
 
 .profile-row-driver {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 25px;
-    padding: 0 10px;
+    margin-bottom: 20px;
+    padding: 0;
 }
 
 .profile-card-left {
@@ -276,7 +280,7 @@
     justify-content: center;
     color: #111;
     text-decoration: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .driver-avatar-view-wrapper {
@@ -291,7 +295,7 @@
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #fff;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .driver-identity h4 {
@@ -317,12 +321,13 @@
 
 /* Stats Banner */
 .driver-stats-banner {
-    background: #FFEEEE !important;
-    border-radius: 25px;
+    background: #FDF2F2 !important;
+    border-radius: 20px;
     display: flex;
     align-items: center;
-    padding: 22px 35px;
-    margin-bottom: 30px;
+    padding: 24px 30px;
+    margin-bottom: 25px;
+    border: none;
 }
 
 .driver-stat-unit {
@@ -341,13 +346,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     position: relative;
 }
 
 .driver-stat-circle i {
     font-size: 24px;
-    color: #FF161F;
+    color: var(--riden-red);
 }
 
 .driver-stat-data label {
@@ -366,18 +371,22 @@
 }
 
 .driver-divider {
-    width: 1.5px;
+    width: 2px;
     height: 45px;
-    background: #FFB7B7;
-    margin: 0 15px;
+    background: #D10000;
+    margin: 0 20px;
+    opacity: 0.2;
 }
 
 /* Sidebar Nav */
 .driver-nav-list {
     background: #fff;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid #E5E7EB;
     border-radius: 30px;
-    padding: 25px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    padding: 0px 25px;
+    box-shadow: var(--riden-shadow);
 }
 
 .driver-nav-item {
@@ -391,6 +400,11 @@
     position: relative;
     border-radius: 15px;
     transition: all 0.2s;
+}
+
+.driver-nav-item:hover {
+    background: #F3F4F6;
+    color: #111;
 }
 
 .driver-nav-item .icon-wrapper {
@@ -407,12 +421,14 @@
 }
 
 .driver-nav-item.active {
-    background: #F9FAFB;
+    background: var(--riden-red);
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(209, 0, 0, 0.2);
 }
 
 .driver-nav-item.active .icon-wrapper {
-    background: #fff;
-    color: #FF161F;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
 }
 
 .driver-nav-item.active::before {
@@ -423,7 +439,7 @@
     transform: translateY(-50%);
     width: 5px;
     height: 38px;
-    background: #FF161F;
+    background: var(--riden-red);
     border-radius: 0 5px 5px 0;
 }
 
@@ -447,7 +463,7 @@
 }
 
 .btn-driver-solid-red {
-    background: #FF161F !important;
+    background: var(--riden-red) !important;
     color: #fff !important;
     border: none;
 }
@@ -455,20 +471,23 @@
 .btn-driver-outline-red {
     background: #fff !important;
     color: #111 !important;
-    border: 2px solid #FF161F !important;
+    border: 2px solid var(--riden-red) !important;
 }
 
 /* Info Card */
 .driver-info-card {
     background: #fff;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid #E5E7EB;
     border-radius: 30px;
     overflow: hidden;
-    box-shadow: 0 4px 25px rgba(0,0,0,0.03);
+    box-shadow: var(--riden-shadow);
     height: 100%;
 }
 
 .driver-info-card-header {
-    background: #FF161F !important;
+    background: var(--riden-red) !important;
     padding: 20px 30px;
     color: #fff;
     display: flex;
@@ -478,6 +497,7 @@
 
 .driver-info-card-header h5 {
     margin: 0;
+    color: #fff;
     font-weight: 700;
     font-size: 20px;
 }
@@ -503,5 +523,5 @@
 }
 
 .value-view.red-text {
-    color: #FF161F;
+    color: var(--riden-red);
 }

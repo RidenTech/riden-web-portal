@@ -1,5 +1,5 @@
 <div class="support-table-container">
-    <table class="support-table">
+    <table class="table support-table">
         <thead>
             <tr>
                 <th style="border-top-left-radius: 30px;">Date & Time</th>

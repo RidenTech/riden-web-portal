@@ -1,13 +1,13 @@
 @extends('admin.layout.master')
 
-@section('title', 'Driver Management - Floyd Miles')
+@section('title', 'Driver Management ')
 
 @push('styles')
     <link href="{{ asset('assets/css/drivers.css') }}?v={{ time() }}" rel="stylesheet" type="text/css" />
 @endpush
 
 @section('content')
-<div class="col-12 driver-detail-wrapper mt-3">
+<div class="col-12 driver-detail-wrapper px-0">
     <!-- 1. Profile Header -->
     <div class="profile-row-driver">
         <div class="profile-card-left">
@@ -27,7 +27,7 @@
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill" style="opacity: 0.3;"></i>
                     </div>
-                    <span class="ms-2 fw-bold">(0)</span>
+                    <span class="ms-2 fw-semibold">(0)</span>
                 </div>
             </div>
         </div>
@@ -51,7 +51,7 @@
         <div class="driver-stat-unit">
             <div class="driver-stat-circle">
                 <i class="bi bi-truck"></i>
-                <div class="stat-badge-overlay" style="position: absolute; top: -5px; right: -5px; background: #FF161F; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid #fff;">
+                <div class="stat-badge-overlay" style="position: absolute; top: -5px; right: -5px; background: #D10000; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid #fff;">
                     <i class="bi bi-check-lg" style="color: white; font-size: 10px;"></i>
                 </div>
             </div>
@@ -64,7 +64,7 @@
         <div class="driver-stat-unit">
             <div class="driver-stat-circle">
                 <i class="bi bi-truck"></i>
-                <div class="stat-badge-overlay" style="position: absolute; top: -5px; right: -5px; background: #FF161F; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid #fff;">
+                <div class="stat-badge-overlay" style="position: absolute; top: -5px; right: -5px; background: #D10000; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid #fff;">
                     <i class="bi bi-slash" style="color: white; font-size: 10px;"></i>
                 </div>
             </div>
@@ -86,7 +86,7 @@
     </div>
 
     <!-- 3. Navigation & Detail Grid -->
-    <div class="row g-4 mt-3">
+    <div class="row g-2 mt-0 ">
         <!-- Sidebar Navigation -->
         <div class="col-lg-4">
             <div class="driver-nav-list" id="driverTabList">
@@ -165,10 +165,10 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content doc-modal-content" style="border-radius: 25px !important; border: none; overflow: hidden;">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold" id="docModalLabel">Document Title</h5>
+                <h5 class="modal-title fw-semibold" id="docModalLabel">Document Title</h5>
                 <div class="ms-auto d-flex gap-2 align-items-center">
-                    <button class="btn btn-success btn-approve-doc px-4" style="background: #28a745 !important; border: none; border-radius: 10px; font-weight: 700;">Approve</button>
-                    <button class="btn btn-danger btn-reject-doc px-4" style="background: #ff1c25 !important; border: none; border-radius: 10px; font-weight: 700;">Reject</button>
+                    <button class="btn btn-success btn-approve-doc px-4" style="background: #28a745 !important; border: none; border-radius: 10px; font-weight: 600;">Approve</button>
+                    <button class="btn btn-danger btn-reject-doc px-4" style="background: #D10000 !important; border: none; border-radius: 10px; font-weight: 600;">Reject</button>
                     <button type="button" class="btn-close ms-2" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>

@@ -31,7 +31,7 @@
 
 <style>
 .documents-header-style {
-    background: #FF161F !important;
+    background: #D10000 !important;
     color: white !important;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -70,7 +70,7 @@
 
 .doc-name {
     font-size: 15px;
-    font-weight: 700;
+    font-weight: 600;
     color: #111;
 }
 

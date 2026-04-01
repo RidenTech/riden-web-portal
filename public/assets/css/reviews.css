@@ -1,8 +1,7 @@
 /* Reviews & Ratings Styles */
 
 .reviews-wrapper {
-    padding-top: 20px;
-    padding-bottom: 40px;
+    padding: 0;
 }
 
 .reviews-container {
@@ -13,7 +12,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .reviews-title {
@@ -44,22 +43,24 @@
 }
 
 .review-tab-item.active {
-    background: #ff1c25;
+    background: var(--riden-red);
     color: #fff !important;
     border-radius: 12px 12px 0 0;
 }
 
 /* Stats Card */
 .reviews-stats-card {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: 20px;
-    border: 1px solid #fee2e2;
+    border: 1px solid rgba(254, 226, 226, 0.5);
     padding: 25px;
     display: grid;
     grid-template-columns: 1fr 1.2fr 1.5fr;
     gap: 30px;
     margin-bottom: 35px;
-    box-shadow: 0 4px 15px rgba(255, 28, 37, 0.03);
+    box-shadow: 0 8px 32px 0 rgba(255, 28, 37, 0.05);
 }
 
 .stat-group {
@@ -139,21 +140,42 @@
 }
 
 /* Progress Colors */
-.fill-5 { background: #2dd4bf; width: 85%; }
-.fill-4 { background: #c084fc; width: 70%; }
-.fill-3 { background: #fbbf24; width: 45%; }
-.fill-2 { background: #38bdf8; width: 25%; }
-.fill-1 { background: #fb923c; width: 10%; }
+.fill-5 {
+    background: #2dd4bf;
+    width: 85%;
+}
+
+.fill-4 {
+    background: #c084fc;
+    width: 70%;
+}
+
+.fill-3 {
+    background: #fbbf24;
+    width: 45%;
+}
+
+.fill-2 {
+    background: #38bdf8;
+    width: 25%;
+}
+
+.fill-1 {
+    background: #fb923c;
+    width: 10%;
+}
 
 /* Review List */
 .review-item-card {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
     padding: 25px;
     margin-bottom: 20px;
-    border: 1px solid #f3f4f6;
     position: relative;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.01);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.02);
 }
 
 .review-item-header {
@@ -207,7 +229,7 @@
 }
 
 .booking-badge {
-    background: #ff1c25;
+    background: var(--riden-red);
     color: #fff;
     font-size: 11px;
     font-weight: 700;
@@ -236,14 +258,14 @@
 }
 
 .by-passenger span {
-    color: #ff1c25;
+    color: var(--riden-red);
 }
 
 .delete-review-btn {
     width: 32px;
     height: 32px;
     background: #fff0f1;
-    color: #ff1c25;
+    color: var(--riden-red);
     border: none;
     border-radius: 8px;
     display: flex;
@@ -254,6 +276,6 @@
 }
 
 .delete-review-btn:hover {
-    background: #ff1c25;
+    background: var(--riden-red);
     color: #fff;
 }

@@ -5,14 +5,13 @@
         ['label' => 'Admin Roles', 'icon' => 'bi bi-person', 'url' => route('admin.roles.index')],
         ['label' => 'Driver Management', 'icon' => 'bi bi-person-badge', 'url' => route('drivers.directory')],
         ['label' => 'Passenger Management', 'icon' => 'bi bi-people', 'url' => route('passenger.management')],
-        ['label' => 'Vehicles Type Management', 'icon' => 'bi bi-truck', 'url' => '#'],
+        ['label' => 'Vehicle Management', 'icon' => 'bi bi-truck', 'url' => '#'],
         ['label' => 'Booking Management', 'icon' => 'bi bi-calendar-check', 'url' => route('booking.management')],
         ['label' => 'Reviews & Ratings', 'icon' => 'bi bi-star', 'url' => route('reviews.ratings')],
         ['label' => 'Promo code Management', 'icon' => 'bi bi-tag', 'url' => route('promo.index')],
         ['label' => 'Fare Management', 'icon' => 'bi bi-cash-coin', 'url' => route('fare.management')],
         ['label' => 'Commission Management', 'icon' => 'bi bi-percent', 'url' => route('commission.index')],
-        ['label' => 'Payment', 'icon' => 'bi bi-credit-card', 'url' => route('payouts.drivers')],
-        ['label' => 'Advertising Management', 'icon' => 'bi bi-megaphone', 'url' => '#'],
+        ['label' => 'Payments', 'icon' => 'bi bi-credit-card', 'url' => route('payouts.drivers')],
         ['label' => 'Report Management', 'icon' => 'bi bi-file-earmark-text', 'url' => '#'],
         ['label' => 'Reports', 'icon' => 'bi bi-file-earmark-text', 'url' => '#'],
         ['label' => 'Support Ticket', 'icon' => 'bi bi-life-preserver', 'url' => route('support.complaints.index')],
@@ -24,19 +23,24 @@
 <!-- Desktop / Tablet sidebar -->
 <aside class="riden-sidebar d-none d-md-flex" aria-label="Sidebar navigation">
     <div class="riden-sidebar__inner">
-        <div class="riden-sidebar__top">
-            <a href="{{ url('/') }}" class="riden-sidebar__brand" aria-label="Riden">
-                <span class="riden-sidebar__brand-text" style="font-family:Audiowide">RIDEN</span>
-            </a>
-            <button type="button" class="riden-sidebar__collapsebtn" aria-label="Collapse sidebar" data-riden-sidebar-toggle>
+        <button type="button" class="riden-sidebar__collapsebtn" aria-label="Collapse sidebar" data-riden-sidebar-toggle>
                 <i class="bi bi-list"></i>
             </button>
+        <div class="riden-sidebar__top">
+            <a href="{{ url('/') }}" class="riden-sidebar__brand" aria-label="Riden">
+                <span class="riden-sidebar__brand-text font-500">RIDEN</span>
+            </a>
+            
         </div>
 
         <nav class="riden-sidebar__nav">
             @foreach ($menu as $item)
                 @php
-                    $isActive = $item['url'] !== '#' && request()->fullUrlIs($item['url']);
+                    $isActive = $item['url'] !== '#' && (
+                        $item['label'] === 'Dashboard' 
+                        ? request()->url() == $item['url'] 
+                        : (request()->url() == $item['url'] || str_starts_with(request()->url(), $item['url'] . '/'))
+                    );
                 @endphp
                 <a href="{{ $item['url'] }}"
                    class="riden-sidebar__link {{ $isActive ? 'is-active' : '' }}"

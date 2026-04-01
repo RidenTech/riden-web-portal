@@ -4,16 +4,16 @@
     <div class="row mb-4">
         <!-- Total Passengers Card -->
         <div class="col-12 col-md-6 mb-3 mb-md-0">
-            <div class="card h-100" style="border-radius: 20px; border: 1.5px solid #FF161F; padding: 28px 28px 0 28px; position: relative; overflow: hidden; min-height: 155px; background: #fff;">
+            <div class="card h-100" style="border-radius: 20px; border: 1.5px solid #D10000; padding: 28px 28px 0 28px; position: relative; overflow: hidden; min-height: 155px; background: #fff;">
                 <h4 style="font-size: 18px; font-weight: 600; color: #111; margin-bottom: 6px; position: relative; z-index: 2;">Total Passengers</h4>
-                <p style="font-size: 44px; font-weight: 800; color: #111; line-height: 1; margin: 0; position: relative; z-index: 2;">1024</p>
+                <p style="font-size: 44px; font-weight: 600; color: #111; line-height: 1; margin: 0; position: relative; z-index: 2;">1024</p>
                 <!-- Inline SVG: Car with passengers (matches Figma vector style) -->
                 <div class="position-absolute" style="right: 0; bottom: 0; width: 160px; height: 130px; z-index: 1;">
                     <svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
                         <!-- Road -->
                         <rect x="0" y="120" width="200" height="40" fill="#FFF5F5" rx="0"/>
                         <!-- Car body -->
-                        <rect x="20" y="78" width="140" height="48" rx="10" fill="#FF161F"/>
+                        <rect x="20" y="78" width="140" height="48" rx="10" fill="#D10000"/>
                         <!-- Car roof -->
                         <path d="M 60 78 Q 65 50 85 46 L 125 46 Q 145 50 148 78 Z" fill="#E0000A"/>
                         <!-- Windows -->
@@ -42,9 +42,9 @@
         </div>
         <!-- Active Passengers Card -->
         <div class="col-12 col-md-6">
-            <div class="card h-100" style="border-radius: 20px; border: 1.5px solid #FF161F; padding: 28px 28px 0 28px; position: relative; overflow: hidden; min-height: 155px; background: #fff;">
+            <div class="card h-100" style="border-radius: 20px; border: 1.5px solid #D10000; padding: 28px 28px 0 28px; position: relative; overflow: hidden; min-height: 155px; background: #fff;">
                 <h4 style="font-size: 18px; font-weight: 600; color: #111; margin-bottom: 6px; position: relative; z-index: 2;">Active Passengers</h4>
-                <p style="font-size: 44px; font-weight: 800; color: #111; line-height: 1; margin: 0; position: relative; z-index: 2;">848</p>
+                <p style="font-size: 44px; font-weight: 600; color: #111; line-height: 1; margin: 0; position: relative; z-index: 2;">848</p>
                 <!-- Inline SVG: Two people hailing a ride (Figma style) -->
                 <div class="position-absolute" style="right: 0; bottom: 0; width: 160px; height: 130px; z-index: 1;">
                     <svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
@@ -75,9 +75,9 @@
                         <rect x="143" y="104" width="9" height="26" rx="5" fill="#37474F"/>
 
                         <!-- Phone / App icon -->
-                        <rect x="90" y="78" width="22" height="32" rx="4" fill="#fff" stroke="#FF161F" stroke-width="2"/>
-                        <circle cx="101" cy="94" r="8" fill="#FF161F" opacity="0.2"/>
-                        <circle cx="101" cy="94" r="4" fill="#FF161F"/>
+                        <rect x="90" y="78" width="22" height="32" rx="4" fill="#fff" stroke="#D10000" stroke-width="2"/>
+                        <circle cx="101" cy="94" r="8" fill="#D10000" opacity="0.2"/>
+                        <circle cx="101" cy="94" r="4" fill="#D10000"/>
                     </svg>
                 </div>
             </div>
@@ -92,7 +92,7 @@
             <div class="card h-100 border shadow-sm p-4" style="border-radius: 20px;">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div class="d-flex align-items-center gap-4">
-                        <h4 class="text-dark m-0" style="font-size: 15px; font-weight: 800;">Repeat Ride Ratio</h4>
+                        <h4 class="text-dark m-0" style="font-size: 15px; font-weight: 600;">Repeat Ride Ratio</h4>
                         <div class="d-flex align-items-center gap-3">
                             <div class="d-flex align-items-center gap-2">
                                 <div style="width: 28px; height: 3px; background: #3B82F6; border-radius: 2px;"></div>
@@ -151,7 +151,7 @@
                     <div style="position: absolute; left: 50%; top: 20px; transform: translateX(-50%); background: #fff; border: 1px solid #FCA5A5; border-radius: 10px; padding: 8px 12px; font-size: 11px; box-shadow: 0 4px 14px rgba(255,22,31,0.12); white-space: nowrap; z-index: 10;">
                         <div style="color: #3B82F6; font-weight: 600;">1 Time Ride: <strong>215</strong></div>
                         <div style="color: #10B981; font-weight: 600;">Repeat Ride: <strong>340</strong></div>
-                        <div style="color: #FF161F; font-weight: 600;">Ratio: <strong>41.3%</strong></div>
+                        <div style="color: #D10000; font-weight: 600;">Ratio: <strong>41.3%</strong></div>
                         <!-- Arrow -->
                         <div style="position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 7px solid #FCA5A5;"></div>
                     </div>
@@ -173,15 +173,15 @@
         <!-- Ratings & Complaints Bubble Chart -->
         <div class="col-12 col-md-4">
             <div class="card h-100 border shadow-sm p-4" style="border-radius: 20px;">
-                <h4 class="text-dark mb-3" style="font-size: 15px; font-weight: 800;">Ratings &amp; Complaints</h4>
+                <h4 class="text-dark mb-3" style="font-size: 15px; font-weight: 600;">Ratings &amp; Complaints</h4>
 
                 <div class="d-flex align-items-center gap-3 mb-2">
                     <div style="width: 28px; height: 4px; background: #60A5FA; border-radius: 2px;"></div>
-                    <span style="font-size: 12px; font-weight: 600; color: #111;">Complaints <span style="color: #FF161F; font-weight: 800;">25</span></span>
+                    <span style="font-size: 12px; font-weight: 600; color: #111;">Complaints <span style="color: #D10000; font-weight: 600;">25</span></span>
                 </div>
                 <div class="d-flex align-items-center gap-3 mb-4">
                     <div style="width: 28px; height: 4px; background: #EC4899; border-radius: 2px;"></div>
-                    <span style="font-size: 12px; font-weight: 600; color: #111;">Ratings <span style="color: #10B981; font-weight: 800;">75%</span> (45)</span>
+                    <span style="font-size: 12px; font-weight: 600; color: #111;">Ratings <span style="color: #10B981; font-weight: 600;">75%</span> (45)</span>
                 </div>
 
                 <div class="bubble-chart-area w-100" style="position: relative; height: 180px;">

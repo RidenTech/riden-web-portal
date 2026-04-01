@@ -13,14 +13,14 @@
 
         <!-- No Data Text -->
         <div class="no-data-text text-center">
-            <h5 class="text-muted fw-bold">No Data</h5>
+            <h5 class="text-muted fw-semibold">No Data</h5>
         </div>
     </div>
 </div>
 
 <style>
 .rides-header-style {
-    background: #FF161F !important;
+    background: #D10000 !important;
     color: white !important;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;

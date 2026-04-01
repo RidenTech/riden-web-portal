@@ -4,7 +4,7 @@
     $section = request()->get('section', 'index');
 @endphp
 
-@section('title', $section === 'setup' ? 'Set Commission' : 'Commission Management')
+@section('title',  'Commission Management')
 
 @push('styles')
     <link href="{{ asset('assets/css/commission.css') }}" rel="stylesheet" type="text/css" />
@@ -16,12 +16,16 @@
 <div class="col-12 commission-wrapper">
     <div class="commission-main-card">
         
-        
         <!-- Header Section -->
-        <div class="commission-header">
-            <div></div> <!-- Spacer for flex alignment if title is removed -->
-            
+        <div class="commission-header riden-list-header">
             @if ($section === 'index')
+            <div class="riden-search-bar">
+                <div class="riden-search-icon">
+                    <i class="bi bi-search"></i>
+                </div>
+                <input type="text" placeholder="Search by ID or car type">
+            </div>
+            
             <div class="header-actions">
                 <a href="{{ route('commission.index', ['section' => 'setup']) }}" class="btn btn-set-commission text-decoration-none">
                     <i class="bi bi-plus-lg"></i>
@@ -32,6 +36,8 @@
                     <span>23/04/2025 - 23/04/2025</span>
                 </div>
             </div>
+            @else
+            <div></div> <!-- Spacer for non-list view -->
             @endif
         </div>
 
@@ -60,7 +66,7 @@
 
             <!-- Table Card -->
             <div class="commission-table-container">
-                <table class="commission-table">
+                <table class="table commission-table">
                     <thead>
                         <tr>
                             <th style="border-top-left-radius: 20px;">Date & Time</th>

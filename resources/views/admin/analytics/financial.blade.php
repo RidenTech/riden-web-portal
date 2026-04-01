@@ -13,12 +13,12 @@
                     <div class="d-flex align-items-center gap-2 mb-2">
                         {{-- Refund icon (inline SVG) --}}
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M9 14l-4-4 4-4" stroke="#FF161F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M5 10h11a4 4 0 0 1 0 8h-1" stroke="#FF161F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M9 14l-4-4 4-4" stroke="#D10000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 10h11a4 4 0 0 1 0 8h-1" stroke="#D10000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                         <span class="fin-card-title">Refunds / Chargebacks</span>
                     </div>
-                    <div style="color: #FF161F; font-size: 15px; font-weight: 700; margin-bottom: 4px;">32 Rides Refunded</div>
+                    <div style="color: #D10000; font-size: 15px; font-weight: 600; margin-bottom: 4px;">32 Rides Refunded</div>
                     <div style="color: #6B7280; font-size: 13px; font-weight: 500;">2.3% of Total Rides</div>
                 </div>
                 {{-- Inline SVG illustration: refund/money --}}
@@ -27,21 +27,21 @@
                         {{-- Background circle --}}
                         <circle cx="95" cy="65" r="45" fill="#FFF5F5"/>
                         {{-- Money bag --}}
-                        <ellipse cx="88" cy="80" rx="26" ry="22" fill="#FF161F"/>
+                        <ellipse cx="88" cy="80" rx="26" ry="22" fill="#D10000"/>
                         <rect x="78" y="58" width="20" height="16" rx="6" fill="#CC0008"/>
                         {{-- $ sign --}}
-                        <text x="82" y="85" font-size="22" fill="#fff" font-weight="800" font-family="Arial">$</text>
+                        <text x="82" y="85" font-size="22" fill="#fff" font-weight="600" font-family="Arial">$</text>
                         {{-- Arrow back --}}
-                        <path d="M 50 55 C 50 35 75 30 90 42" stroke="#FF161F" stroke-width="3" fill="none" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+                        <path d="M 50 55 C 50 35 75 30 90 42" stroke="#D10000" stroke-width="3" fill="none" stroke-dasharray="5,3" marker-end="url(#arr)"/>
                         <defs>
                             <marker id="arr" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
-                                <path d="M0,0 L8,4 L0,8 Z" fill="#FF161F"/>
+                                <path d="M0,0 L8,4 L0,8 Z" fill="#D10000"/>
                             </marker>
                         </defs>
                         {{-- Small x badge --}}
-                        <circle cx="55" cy="42" r="12" fill="#FEE2E2" stroke="#FF161F" stroke-width="1.5"/>
-                        <line x1="50" y1="37" x2="60" y2="47" stroke="#FF161F" stroke-width="2.5" stroke-linecap="round"/>
-                        <line x1="60" y1="37" x2="50" y2="47" stroke="#FF161F" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="55" cy="42" r="12" fill="#FEE2E2" stroke="#D10000" stroke-width="1.5"/>
+                        <line x1="50" y1="37" x2="60" y2="47" stroke="#D10000" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="60" y1="37" x2="50" y2="47" stroke="#D10000" stroke-width="2.5" stroke-linecap="round"/>
                     </svg>
                 </div>
             </div>
@@ -54,10 +54,10 @@
                     <div class="d-flex align-items-center gap-2 mb-3">
                         {{-- Commission icon --}}
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="2" y="7" width="20" height="14" rx="3" stroke="#FF161F" stroke-width="2"/>
-                            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" stroke="#FF161F" stroke-width="2"/>
-                            <line x1="12" y1="12" x2="12" y2="16" stroke="#FF161F" stroke-width="2" stroke-linecap="round"/>
-                            <line x1="10" y1="14" x2="14" y2="14" stroke="#FF161F" stroke-width="2" stroke-linecap="round"/>
+                            <rect x="2" y="7" width="20" height="14" rx="3" stroke="#D10000" stroke-width="2"/>
+                            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" stroke="#D10000" stroke-width="2"/>
+                            <line x1="12" y1="12" x2="12" y2="16" stroke="#D10000" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="10" y1="14" x2="14" y2="14" stroke="#D10000" stroke-width="2" stroke-linecap="round"/>
                         </svg>
                         <span class="fin-card-title">Commission</span>
                     </div>
@@ -81,14 +81,14 @@
                         {{-- Person --}}
                         <circle cx="80" cy="45" r="16" fill="#FFCCBC"/>
                         <path d="M64 45 Q65 32 80 30 Q95 32 96 45" fill="#5D4037"/>
-                        <rect x="66" y="61" width="28" height="35" rx="10" fill="#FF161F"/>
+                        <rect x="66" y="61" width="28" height="35" rx="10" fill="#D10000"/>
                         {{-- Coins floating --}}
                         <circle cx="106" cy="50" r="10" fill="#FCD34D" stroke="#F59E0B" stroke-width="1.5"/>
-                        <text x="101" y="54" font-size="10" fill="#92400E" font-weight="800">$</text>
+                        <text x="101" y="54" font-size="10" fill="#92400E" font-weight="600">$</text>
                         <circle cx="118" cy="68" r="8" fill="#FCD34D" stroke="#F59E0B" stroke-width="1.5"/>
-                        <text x="114" y="72" font-size="9" fill="#92400E" font-weight="800">$</text>
+                        <text x="114" y="72" font-size="9" fill="#92400E" font-weight="600">$</text>
                         <circle cx="108" cy="85" r="7" fill="#FCD34D" stroke="#F59E0B" stroke-width="1.5"/>
-                        <text x="104" y="89" font-size="8" fill="#92400E" font-weight="800">$</text>
+                        <text x="104" y="89" font-size="8" fill="#92400E" font-weight="600">$</text>
                     </svg>
                 </div>
             </div>
@@ -105,7 +105,7 @@
         <div class="col-12 col-md-8">
             <div class="card h-100 border shadow-sm p-4" style="border-radius: 20px;">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="m-0" style="font-size: 15px; font-weight: 800; color: #111;">Commission Trend</h4>
+                    <h4 class="m-0" style="font-size: 15px; font-weight: 600; color: #111;">Commission Trend</h4>
                     <select class="form-select" style="width: 120px; font-size: 12px; border-radius: 8px; border-color: #e5e7eb;">
                         <option>This Week</option>
                         <option>This Month</option>
@@ -140,15 +140,15 @@
 
                         <defs>
                             <linearGradient id="finGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#FF161F" stop-opacity="0.7"/>
-                                <stop offset="100%" stop-color="#FF161F" stop-opacity="0"/>
+                                <stop offset="0%" stop-color="#D10000" stop-opacity="0.7"/>
+                                <stop offset="100%" stop-color="#D10000" stop-opacity="0"/>
                             </linearGradient>
                         </defs>
 
                         {{-- Main Red Line --}}
                         <path d="M 10,160 C 60,140 100,60 170,80 C 240,100 280,50 360,70
                                    C 430,88 480,130 550,100 C 600,80 640,120 690,110"
-                              fill="none" stroke="#FF161F" stroke-width="3"
+                              fill="none" stroke="#D10000" stroke-width="3"
                               stroke-linecap="round" stroke-linejoin="round"
                               class="fin-chart-line"/>
 
@@ -156,7 +156,7 @@
                         <line x1="170" y1="0" x2="170" y2="180" stroke="#D1D5DB" stroke-width="1" stroke-dasharray="5,4"/>
 
                         {{-- Dot at Tuesday --}}
-                        <circle cx="170" cy="80" r="5" fill="#FF161F" stroke="#fff" stroke-width="2.5"/>
+                        <circle cx="170" cy="80" r="5" fill="#D10000" stroke="#fff" stroke-width="2.5"/>
                     </svg>
 
                     {{-- Floating Tooltip --}}
@@ -164,7 +164,7 @@
                                 background:#fff;border:1px solid #FCA5A5;border-radius:10px;
                                 padding:6px 12px;font-size:11px;box-shadow: 0 4px 14px rgba(255,22,31,0.12);
                                 white-space:nowrap;z-index:10;">
-                        <div style="color:#FF161F;font-weight:700;">$23,000</div>
+                        <div style="color:#D10000;font-weight: 600;">$23,000</div>
                         <div style="position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);
                                     width:0;height:0;border-left:7px solid transparent;
                                     border-right:7px solid transparent;border-top:7px solid #FCA5A5;"></div>
@@ -188,12 +188,12 @@
         {{-- Payment Method (Donut Chart) --}}
         <div class="col-12 col-md-4">
             <div class="card h-100 border shadow-sm p-4 d-flex flex-column" style="border-radius: 20px;">
-                <h4 class="m-0 mb-4" style="font-size: 15px; font-weight: 800; color: #111;">Payment Method</h4>
+                <h4 class="m-0 mb-4" style="font-size: 15px; font-weight: 600; color: #111;">Payment Method</h4>
 
                 {{-- Legend --}}
                 <div class="d-flex flex-column gap-2 mb-4">
                     <div class="d-flex align-items-center gap-3">
-                        <span class="fin-legend-dot" style="background: #FF161F;"></span>
+                        <span class="fin-legend-dot" style="background: #D10000;"></span>
                         <span style="font-size: 13px; font-weight: 600; color: #374151;">Card <span style="color: #6B7280; font-weight: 500;">65%</span></span>
                     </div>
                     <div class="d-flex align-items-center gap-3">
@@ -220,7 +220,7 @@
 
                         {{-- Segment: Card 65% (Red) --}}
                         <circle cx="80" cy="80" r="54"
-                                fill="none" stroke="#FF161F" stroke-width="22"
+                                fill="none" stroke="#D10000" stroke-width="22"
                                 stroke-dasharray="220.5 339.3"
                                 stroke-dashoffset="0"
                                 stroke-linecap="butt"
@@ -246,7 +246,7 @@
                                 class="fin-donut-seg"/>
 
                         {{-- Centre label --}}
-                        <text x="80" y="76" text-anchor="middle" font-size="13" font-weight="800" fill="#111" font-family="Inter,Arial,sans-serif">Total</text>
+                        <text x="80" y="76" text-anchor="middle" font-size="13" font-weight="600" fill="#111" font-family="Inter,Arial,sans-serif">Total</text>
                         <text x="80" y="92" text-anchor="middle" font-size="11" fill="#6B7280" font-family="Inter,Arial,sans-serif">Payments</text>
                     </svg>
                 </div>
@@ -268,7 +268,7 @@
     align-items: flex-start;
     gap: 16px;
     background: #fff;
-    border: 1.5px solid #FF161F;
+    border: 1.5px solid #D10000;
     border-radius: 20px;
     padding: 24px 24px 14px 24px;
     position: relative;
@@ -277,7 +277,7 @@
 }
 .fin-card-title {
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 600;
     color: #111;
 }
 
@@ -296,7 +296,7 @@
 }
 .fin-commission-amount {
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 600;
     color: #111;
 }
 

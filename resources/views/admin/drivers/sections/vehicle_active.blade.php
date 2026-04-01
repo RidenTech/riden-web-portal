@@ -52,7 +52,7 @@
 
 <style>
 .vehicle-header-style {
-    background: #FF161F !important;
+    background: #D10000 !important;
     color: white !important;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -90,7 +90,7 @@
 
 .vehicle-overlay-text h3 {
     font-size: 24px;
-    font-weight: 700;
+    font-weight: 600;
     margin: 0;
 }
 
@@ -121,7 +121,7 @@
 }
 
 .vehicle-detail-icon i {
-    color: #FF161F;
+    color: #D10000;
     font-size: 18px;
 }
 
@@ -136,7 +136,7 @@
 
 .vehicle-detail-data .value {
     font-size: 15px;
-    font-weight: 700;
+    font-weight: 600;
     color: #111;
 }
 </style>

@@ -1,6 +1,6 @@
 @extends('admin.layout.master')
 
-@section('title', 'Requested Drivers')
+@section('title', 'Driver Management')
 
 @push('styles')
     <link href="{{ asset('assets/css/drivers.css') }}?v={{ time() }}" rel="stylesheet" type="text/css" />
@@ -9,9 +9,14 @@
 @section('content')
 <div class="col-12 drivers-wrapper">
     <!-- Header -->
-    <div class="drivers-header">
-        <h1 class="drivers-title">Driver Directory</h1>
-        
+    <div class="drivers-header riden-list-header">
+        <div class="riden-search-bar">
+            <div class="riden-search-icon">
+                <i class="bi bi-search"></i>
+            </div>
+            <input type="text" placeholder="Search by name, ID or phone">
+        </div>
+
         <div class="header-actions">
             <a href="#" class="btn-download-excel">
                 <i class="bi bi-file-earmark-excel-fill"></i> Download
@@ -24,14 +29,14 @@
     </div>
 
     <!-- Tabs -->
-    <div class="drivers-tabs">
-        <a href="{{ route('drivers.directory') }}" class="btn-tab-driver">Active Drivers</a>
-        <a href="{{ route('drivers.requests') }}" class="btn-tab-driver active">Requested <span class="count">(14)</span></a>
+    <div class="riden-tabs-container">
+        <a href="{{ route('drivers.directory') }}" class="riden-tab-item">Active Drivers</a>
+        <a href="{{ route('drivers.requests') }}" class="riden-tab-item active">Requested <span class="count">(14)</span></a>
     </div>
 
     <!-- Table Container -->
     <div class="drivers-table-container">
-        <table class="drivers-table">
+        <table class="table drivers-table">
             <thead>
                 <tr>
                     <th>Name</th>

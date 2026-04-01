@@ -1,7 +1,6 @@
 /* Admin Roles Module Styles */
 
 .roles-wrapper {
-    padding: 20px 30px;
     background: #fff;
     border-radius: 30px;
     min-height: calc(100vh - 150px);
@@ -11,7 +10,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
 }
 
 .roles-title {
@@ -22,7 +20,7 @@
 }
 
 .btn-add-admin {
-    background: #FF161F;
+    background: var(--riden-red);
     color: white;
     padding: 10px 24px;
     border-radius: 12px;
@@ -34,6 +32,7 @@
     transition: all 0.3s ease;
     border: none;
 }
+
 .btn-add-admin:hover {
     background: #e6141b;
     color: white;
@@ -43,7 +42,7 @@
 
 /* Search Area */
 .roles-search-container {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     position: relative;
     max-width: 450px;
 }
@@ -58,9 +57,10 @@
     color: #111;
     transition: all 0.3s ease;
 }
+
 .roles-search-input:focus {
     outline: none;
-    border-color: #FF161F;
+    border-color: var(--riden-red);
     background: #fff;
     box-shadow: 0 0 0 4px rgba(255, 22, 31, 0.05);
 }
@@ -70,7 +70,7 @@
     left: 18px;
     top: 50%;
     transform: translateY(-50%);
-    color: #FF161F;
+    color: var(--riden-red);
     font-size: 18px;
 }
 
@@ -88,7 +88,8 @@
 }
 
 .roles-table thead th {
-    background: #FFF1F2 !important; /* Light Pink/Red */
+    background: #FFF1F2 !important;
+    /* Light Pink/Red */
     color: #111;
     font-weight: 700;
     font-size: 14px;
@@ -104,14 +105,11 @@
     font-weight: 500;
     border-bottom: 1px solid #F3F4F6;
     vertical-align: middle;
+    transition: background-color 0.2s ease;
 }
 
 .roles-table tbody tr:last-child td {
     border-bottom: none;
-}
-
-.roles-table tbody tr:hover {
-    background: #FDFDFD;
 }
 
 .admin-name-cell {
@@ -125,7 +123,8 @@
     gap: 8px;
 }
 
-.btn-role-edit, .btn-role-delete {
+.btn-role-edit,
+.btn-role-delete {
     width: 32px;
     height: 32px;
     display: flex;
@@ -138,18 +137,22 @@
 }
 
 .btn-role-edit {
-    background: #EBFDF5; /* Light Green */
+    background: #EBFDF5;
+    /* Light Green */
     color: #10B981;
 }
+
 .btn-role-edit:hover {
     background: #10B981;
     color: #fff;
 }
 
 .btn-role-delete {
-    background: #FEF2F2; /* Light Red */
+    background: #FEF2F2;
+    /* Light Red */
     color: #EF4444;
 }
+
 .btn-role-delete:hover {
     background: #EF4444;
     color: #fff;
@@ -185,7 +188,7 @@
 
 .page-btn-roles.active {
     background: #FFF1F2;
-    color: #FF161F;
+    color: var(--riden-red);
 }
 
 .page-btn-roles.arrow {
@@ -199,7 +202,7 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .btn-back-roles {
@@ -210,9 +213,10 @@
     align-items: center;
     transition: transform 0.2s;
 }
+
 .btn-back-roles:hover {
     transform: translateX(-4px);
-    color: #FF161F;
+    color: var(--riden-red);
 }
 
 .roles-subheader-title {
@@ -223,13 +227,13 @@
 }
 
 .form-section-header {
-    background: #FF161F;
+    background: var(--riden-red);
     color: white;
     padding: 12px 20px;
     border-radius: 8px;
     font-size: 15px;
     font-weight: 700;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .roles-form-group {
@@ -254,9 +258,10 @@
     color: #111;
     transition: all 0.2s;
 }
+
 .roles-input:focus {
     outline: none;
-    border-color: #FF161F;
+    border-color: var(--riden-red);
     box-shadow: 0 0 0 4px rgba(255, 22, 31, 0.05);
 }
 
@@ -269,19 +274,23 @@
     padding: 0 16px;
     transition: border-color 0.2s;
 }
+
 .phone-input-wrapper:focus-within {
-    border-color: #FF161F;
+    border-color: var(--riden-red);
     box-shadow: 0 0 0 4px rgba(255, 22, 31, 0.05);
 }
+
 .phone-flag {
     margin-right: 12px;
     font-size: 18px;
 }
+
 .phone-code {
     font-weight: 600;
     color: #4B5563;
     margin-right: 10px;
 }
+
 .phone-input-field {
     border: none;
     padding: 12px 0;
@@ -289,6 +298,7 @@
     background: transparent;
     font-size: 14px;
 }
+
 .phone-input-field:focus {
     outline: none;
 }
@@ -318,10 +328,12 @@
     position: relative;
     transition: all 0.2s;
 }
+
 .permission-checkbox:checked {
-    background: #FF161F;
-    border-color: #FF161F;
+    background: #D10000;
+    border-color: #D10000;
 }
+
 .permission-checkbox:checked::after {
     content: '\F633';
     font-family: 'bootstrap-icons';
@@ -344,6 +356,7 @@
 .password-input-wrapper {
     position: relative;
 }
+
 .password-toggle-icon {
     position: absolute;
     right: 16px;
@@ -362,7 +375,7 @@
 }
 
 .btn-roles-invite {
-    background: #FF161F;
+    background: #D10000;
     color: white;
     padding: 12px 45px;
     border-radius: 12px;
@@ -370,6 +383,7 @@
     border: none;
     transition: background 0.2s;
 }
+
 .btn-roles-invite:hover {
     background: #e6141b;
 }
@@ -387,6 +401,7 @@
     justify-content: center;
     transition: background 0.2s;
 }
+
 .btn-roles-cancel:hover {
     background: #F9FAFB;
 }
@@ -411,7 +426,7 @@
 }
 
 .btn-modal-okay {
-    background: #FF161F;
+    background: #D10000;
     color: white;
     padding: 14px;
     border-radius: 12px;

@@ -10,12 +10,17 @@
 
 @section('content')
 <div class="col-12">
-    <div class="booking-management-wrapper px-3 px-md-4">
+    <div class="booking-management-wrapper">
         <div class="booking-management-container">
         
         <!-- 1. Header Row -->
-        <div class="booking-header-row">
-            <h4 class="booking-title">Booking Management</h4>
+        <div class="booking-header-row riden-list-header">
+            <div class="riden-search-bar">
+                <div class="riden-search-icon">
+                    <i class="bi bi-search"></i>
+                </div>
+                <input type="text" placeholder="Search by ID, passenger or driver">
+            </div>
             <div class="date-range-picker">
                 <i class="bi bi-calendar-range"></i>
                 <span>23/04/2025 - 23/04/2025</span>
@@ -23,9 +28,9 @@
         </div>
 
         <!-- 2. Tabs Row -->
-        <div class="booking-tabs-container">
-            <a href="#" class="booking-tab-item active">Ongoing Bookings</a>
-            <a href="#" class="btn-previous-bookings">Previous Bookings</a>
+        <div class="riden-tabs-container">
+            <a href="#" class="riden-tab-item active">Ongoing Bookings</a>
+            <a href="#" class="riden-tab-item">Previous Bookings</a>
         </div>
 
         <!-- 3. Table Card -->

@@ -2,8 +2,14 @@
 <div class="reviews-container">
     
     <!-- 1. Header Row -->
-    <div class="reviews-header-row">
-        <h4 class="reviews-title">Reviews & Ratings</h4>
+    <div class="reviews-header-row riden-list-header">
+        <div class="riden-search-bar">
+            <div class="riden-search-icon">
+                <i class="bi bi-search"></i>
+            </div>
+            <input type="text" placeholder="Search reviews...">
+        </div>
+        
         <div class="date-range-picker">
             <i class="bi bi-calendar-range"></i>
             <span>23/04/2025 - 23/04/2025</span>
@@ -11,9 +17,9 @@
     </div>
 
     <!-- 2. Tabs Row -->
-    <div class="reviews-tabs-container">
-        <a href="{{ route('reviews.ratings', ['tab' => 'drivers']) }}" class="review-tab-item active">Drivers Reviews</a>
-        <a href="{{ route('reviews.ratings', ['tab' => 'passengers']) }}" class="review-tab-item">Passengers Reviews</a>
+    <div class="riden-tabs-container">
+        <a href="{{ route('reviews.ratings', ['tab' => 'drivers']) }}" class="riden-tab-item active">Drivers Reviews</a>
+        <a href="{{ route('reviews.ratings', ['tab' => 'passengers']) }}" class="riden-tab-item">Passengers Reviews</a>
     </div>
 
     <!-- 3. Stats Summary Card -->

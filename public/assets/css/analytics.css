@@ -94,7 +94,7 @@ input.form-control::placeholder {
     left: 50%;
     transform: translateX(-50%);
     background: #fff;
-    border: 1px solid #FF161F;
+    border: 1px solid #D10000;
     padding: 6px 10px;
     border-radius: 6px;
     font-size: 9px;
@@ -112,7 +112,7 @@ input.form-control::placeholder {
     transform: translateX(-50%);
     border-width: 5px 5px 0;
     border-style: solid;
-    border-color: #FF161F transparent transparent transparent;
+    border-color: #D10000 transparent transparent transparent;
 }
 .chart-tooltip::before {
     content: '';
@@ -150,7 +150,7 @@ input.form-control::placeholder {
 }
 .legend-swatch.swatch-complaints { background: #60A5FA; }
 .legend-swatch.swatch-ratings { background: #EC4899; }
-.legend-value-red { color: #FF161F; font-weight: 800; }
+.legend-value-red { color: #D10000; font-weight: 800; }
 .legend-value-green { color: #10B981; font-weight: 800; }
 
 .bubble-chart-area {
@@ -229,7 +229,7 @@ input.form-control::placeholder {
 
 /* Red Navigation Pill (Fixing Bootstrap class conflicts) */
 .analytics-nav-pill {
-    background: #FF161F;
+    background: #D10000;
     border-radius: 50px;
     display: flex;
     align-items: center;
@@ -253,5 +253,5 @@ input.form-control::placeholder {
 
 .analytics-nav-item.active-pill {
     background: #fff;
-    color: #FF161F !important;
+    color: #D10000 !important;
 }

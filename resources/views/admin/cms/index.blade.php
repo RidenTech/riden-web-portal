@@ -9,9 +9,7 @@
 @section('content')
 <div class="col-12 cms-wrapper">
     <div class="cms-container">
-        
-        <h1 class="cms-title">CMS Management</h1>
-
+       
         <!-- Top Actions -->
         <div class="cms-top-actions">
             <div class="dropdown">
@@ -86,7 +84,7 @@
             </div>
             <div class="modal-body modal-body-custom">
                 <div class="mb-3">
-                    <label class="form-label fw-bold small text-dark mb-2">Page Title</label>
+                    <label class="form-label fw-semibold small text-dark mb-2">Page Title</label>
                     <input type="text" class="form-control cms-page-title-input mb-0" placeholder="Enter Page Title" style="background-color: #f3f4f6; border: 1px solid #ddd;">
                 </div>
             </div>

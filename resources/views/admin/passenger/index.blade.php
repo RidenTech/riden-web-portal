@@ -9,10 +9,15 @@
 @endpush
 
 @section('content')
-<div class="col-12 px-3">
+<div class="col-12 px-0">
     <!-- Header Actions Row (Below Topbar) -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="passenger-page-title mb-0">Passenger Directory</h2>
+    <div class="riden-list-header ">
+        <div class="riden-search-bar">
+            <div class="riden-search-icon">
+                <i class="bi bi-search"></i>
+            </div>
+            <input type="text" placeholder="Search by name, ID or phone">
+        </div>
         
         <div class="d-flex gap-3 align-items-center">
             <button class="btn-figma-red-pill">
@@ -59,12 +64,12 @@
                         <td class="ps-4">
                             <div class="d-flex align-items-center gap-3">
                                 <img src="https://i.pravatar.cc/100?u={{ $p['name'] }}" class="avatar-sm-figma" alt="Avatar">
-                                <span class="fw-bold">{{ $p['name'] }}</span>
+                                <span class="fw-semibold">{{ $p['name'] }}</span>
                             </div>
                         </td>
-                        <td class="text-muted fw-bold">{{ $p['id'] }}</td>
-                        <td class="fw-bold">{{ $p['phone'] }}</td>
-                        <td class="fw-bold">{{ $p['bookings'] }}</td>
+                        <td class="text-muted fw-semibold">{{ $p['id'] }}</td>
+                        <td class="fw-semibold">{{ $p['phone'] }}</td>
+                        <td class="fw-semibold">{{ $p['bookings'] }}</td>
                         <td class="text-center">
                             <span class="badge-status-figma {{ strtolower($p['status']) == 'active' ? 'active' : 'inactive' }}">
                                 {{ $p['status'] }}

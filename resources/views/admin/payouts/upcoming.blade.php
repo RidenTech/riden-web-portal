@@ -1,4 +1,4 @@
-<table class="payouts-table">
+<table class="table payouts-table">
     <thead>
         <tr>
             <th style="border-top-left-radius: 20px;">Name</th>

@@ -4,7 +4,7 @@
     $activeTab = request()->get('section', 'upcoming');
 @endphp
 
-@section('title', $activeTab === 'instant' ? 'Instant Payout Requests' : 'Drivers Payouts')
+@section('title', 'Payments')
 
 @push('styles')
     <link href="{{ asset('assets/css/payouts.css') }}" rel="stylesheet" type="text/css" />
@@ -15,17 +15,13 @@
     <div class="payouts-main-card">
         
         <!-- Header Section -->
-        <div class="payouts-header">
-            @if ($activeTab === 'instant')
-                <div class="d-flex align-items-center gap-3">
-                    <a href="{{ route('payouts.drivers', ['section' => 'upcoming']) }}" class="fare-back-btn" style="width: 32px; height: 32px; font-size: 16px;">
-                        <i class="bi bi-chevron-left"></i>
-                    </a>
-                    <h1 class="payouts-title">Instant Payout Requests</h1>
+        <div class="payouts-header riden-list-header">
+            <div class="riden-search-bar">
+                <div class="riden-search-icon">
+                    <i class="bi bi-search"></i>
                 </div>
-            @else
-                <h1 class="payouts-title">Drivers Payouts</h1>
-            @endif
+                <input type="text" placeholder="Search transactions...">
+            </div>
             
             <div class="header-actions">
                 <div class="date-picker-btn">
@@ -39,12 +35,12 @@
 
         <!-- Custom Tabs Navigation -->
         @if ($activeTab !== 'instant')
-        <div class="payouts-tabs-container">
+        <div class="riden-tabs-container">
             <a href="{{ route('payouts.drivers', ['section' => 'upcoming']) }}" 
-               class="tab-btn {{ $activeTab === 'upcoming' ? 'active' : 'inactive' }}" 
+               class="riden-tab-item {{ $activeTab === 'upcoming' ? 'active' : '' }}" 
                style="text-decoration: none;">Upcoming Payments</a>
             <a href="{{ route('payouts.drivers', ['section' => 'previous']) }}" 
-               class="tab-btn {{ $activeTab === 'previous' ? 'active' : 'inactive' }}" 
+               class="riden-tab-item {{ $activeTab === 'previous' ? 'active' : '' }}" 
                style="text-decoration: none;">Previous Transactions</a>
         </div>
         @endif

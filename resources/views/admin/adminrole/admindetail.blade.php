@@ -7,9 +7,7 @@
 @section('content')
     <div class="col-12">
         <div class="riden-adminroles-top">
-            <h2 class="riden-adminroles-title">Admin Roles</h2>
-
-            <a href="{{ route('addadmin') }}" class="btn btn-sm btn-riden-danger px-3">
+                      <a href="{{ route('addadmin') }}" class="btn btn-sm btn-riden-danger px-3">
                 <i class="bi bi-plus-lg me-1"></i>
                 Add new Admin
             </a>
@@ -18,7 +16,7 @@
         <div class="riden-adminroles-card">
             <div class="p-3 p-md-4">
                 <div class="table-responsive">
-                    <table class="riden-adminroles-table">
+                    <table class="table riden-adminroles-table">
                         <thead>
                             <tr>
                                 <th>Name</th>

@@ -1,4 +1,4 @@
-<div class="d-flex align-items-center gap-2 mb-4">
+<div class="d-flex align-items-center gap-2 mb-2">
     <a href="{{ route('commission.index', ['section' => 'index']) }}" class="commission-back-arrow">
         <i class="bi bi-chevron-left"></i>
     </a>
@@ -6,7 +6,7 @@
 </div>
 
 <div class="setup-table-container">
-    <table class="setup-table">
+    <table class="table setup-table">
         <thead>
             <tr>
                 <th style="width: 30%;">Car Types</th>

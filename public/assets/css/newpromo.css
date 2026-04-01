@@ -1,33 +1,32 @@
 /* Add New Promo Code page styles */
 
-.riden-newpromo-wrap{
-    max-width: 1100px;
-    margin: 0 auto;
+.riden-newpromo-wrap {
+    width: 100%;
 }
 
-.riden-newpromo-head{
+.riden-newpromo-head {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 14px;
 }
 
-.riden-newpromo-title{
+.riden-newpromo-title {
     font-size: 30px;
     /* font-weight: 800; */
     margin: 0;
 }
 
-.riden-newpromo-card{
+.riden-newpromo-card {
     background: #fff;
     border: 1px solid #eee;
     border-radius: 22px;
-    box-shadow: 0 8px 24px rgba(16,24,40,.06);
+    box-shadow: 0 8px 24px rgba(16, 24, 40, .06);
     padding: 22px;
 }
 
-.riden-newpromo-section{
-    background: #ff161f;
+.riden-newpromo-section {
+    background: var(--riden-red);
     color: #fff;
     border-radius: 10px;
     font-weight: 700;
@@ -36,24 +35,25 @@
     margin: 0 0 14px;
 }
 
-.riden-field-label{
+.riden-field-label {
     font-size: 12px;
     color: #111;
     font-weight: 600;
     margin-bottom: 6px;
 }
 
-.riden-input{
+.riden-input {
     border-radius: 10px;
     border: 1px solid #d9d9d9;
     height: 42px;
     font-size: 13px;
 }
 
-.riden-date{
+.riden-date {
     position: relative;
 }
-.riden-date .riden-cal{
+
+.riden-date .riden-cal {
     position: absolute;
     right: 12px;
     top: 50%;
@@ -62,7 +62,7 @@
     opacity: .8;
 }
 
-.riden-newpromo-actions{
+.riden-newpromo-actions {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -70,12 +70,12 @@
     margin-top: 18px;
 }
 
-@media (max-width: 575.98px){
-    .riden-newpromo-card{
+@media (max-width: 575.98px) {
+    .riden-newpromo-card {
         padding: 14px;
     }
-    .riden-newpromo-actions{
+
+    .riden-newpromo-actions {
         justify-content: center;
     }
 }
-

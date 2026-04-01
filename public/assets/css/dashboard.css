@@ -1,7 +1,7 @@
 /* Dashboard Styles */
 
 .dashboard-wrapper {
-    padding: 0 10px;
+    padding: 0;
 }
 
 /* KPI Cards */
@@ -13,14 +13,15 @@
 
 .kpi-card {
     background: #fff;
-    border: 1px solid #FF161F;
+    border: 1px solid #D10000;
     border-radius: 20px;
     padding: 20px 30px;
     flex: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 480px; /* Constrain width to match Figma proportion */
+    max-width: 480px;
+    /* Constrain width to match Figma proportion */
 }
 
 .kpi-card-info {
@@ -92,6 +93,7 @@
     justify-content: center;
     border-radius: 50%;
 }
+
 .map-marker::after {
     content: '';
     position: absolute;
@@ -103,6 +105,7 @@
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
 }
+
 .map-marker-inner {
     width: 24px;
     height: 24px;
@@ -113,6 +116,7 @@
     align-items: center;
     justify-content: center;
 }
+
 .map-marker-inner i {
     font-size: 10px;
 }
@@ -120,14 +124,26 @@
 .marker-green {
     background: #10B981;
 }
-.marker-green::after { border-top: 8px solid #10B981; }
-.marker-green .map-marker-inner i { color: #10B981; }
+
+.marker-green::after {
+    border-top: 8px solid #10B981;
+}
+
+.marker-green .map-marker-inner i {
+    color: #10B981;
+}
 
 .marker-yellow {
     background: #FBBF24;
 }
-.marker-yellow::after { border-top: 8px solid #FBBF24; }
-.marker-yellow .map-marker-inner i { color: #FBBF24; }
+
+.marker-yellow::after {
+    border-top: 8px solid #FBBF24;
+}
+
+.marker-yellow .map-marker-inner i {
+    color: #FBBF24;
+}
 
 /* Ongoing Ride Overlay Card */
 .ongoing-ride-card {
@@ -138,14 +154,15 @@
     border-radius: 20px;
     padding: 24px;
     width: 330px;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.08); /* Softer, wider shadow */
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+    /* Softer, wider shadow */
     z-index: 10;
 }
 
 .ongoing-ride-header {
     font-size: 13px;
     font-weight: 700;
-    color: #FF161F;
+    color: #D10000;
     margin-bottom: 18px;
     text-transform: capitalize;
 }
@@ -187,20 +204,22 @@
     width: 34px;
     height: 34px;
     border-radius: 50%;
-    border: 1px solid #FF161F;
+    border: 1px solid #D10000;
     background: #fff;
-    color: #FF161F;
+    color: #D10000;
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
     transition: all 0.2s;
 }
+
 .btn-call i {
     font-size: 14px;
 }
+
 .btn-call:hover {
-    background: #FF161F;
+    background: #D10000;
     color: #fff;
 }
 
@@ -211,6 +230,7 @@
     padding-left: 20px;
     margin-bottom: 20px;
 }
+
 .ride-timeline::before {
     content: '';
     position: absolute;
@@ -218,7 +238,7 @@
     top: 6px;
     bottom: 6px;
     width: 2px;
-    background-image: linear-gradient(to bottom, #9CA3AF 50%, rgba(255,255,255,0) 0%);
+    background-image: linear-gradient(to bottom, #9CA3AF 50%, rgba(255, 255, 255, 0) 0%);
     background-position: right;
     background-size: 2px 8px;
     background-repeat: repeat-y;
@@ -228,6 +248,7 @@
     position: relative;
     margin-bottom: 16px;
 }
+
 .timeline-point:last-child {
     margin-bottom: 0;
 }
@@ -241,11 +262,12 @@
     background: #111;
     border-radius: 50%;
 }
+
 .timeline-icon-end {
     position: absolute;
     left: -24px;
     top: 3px;
-    color: #FF161F;
+    color: #D10000;
     font-size: 12px;
     background: #fff;
     display: flex;

@@ -44,7 +44,7 @@
 
 <style>
 .rides-header-style {
-    background: #FF161F !important;
+    background: #D10000 !important;
     color: white !important;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -63,7 +63,7 @@
 .rides-mini-table thead th {
     background: #FFF1F2 !important; /* Very light red/pink */
     color: #111;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 13px;
     padding: 12px 15px;
     border: none;
@@ -93,14 +93,14 @@
 }
 
 .view-all-rides-link {
-    color: #FF161F;
-    font-weight: 700;
+    color: #D10000;
+    font-weight: 600;
     font-size: 14px;
     text-decoration: underline;
     transition: opacity 0.2s;
 }
 .view-all-rides-link:hover {
     opacity: 0.8;
-    color: #FF161F;
+    color: #D10000;
 }
 </style>

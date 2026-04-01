@@ -4,7 +4,7 @@
     $activeTab = request()->get('tab', 'drivers');
 @endphp
 
-@section('title', 'Complaint Tickets')
+@section('title', 'Support Ticket')
 
 @push('styles')
     <link href="{{ asset('assets/css/support.css') }}" rel="stylesheet" type="text/css" />
@@ -15,9 +15,14 @@
     <div class="support-main-card">
         
         <!-- Header Section -->
-        <div class="support-header">
-            <h1 class="support-title">Complaint Tickets</h1>
-            
+        <div class="support-header riden-list-header">
+            <div class="riden-search-bar">
+                <div class="riden-search-icon">
+                    <i class="bi bi-search"></i>
+                </div>
+                <input type="text" placeholder="Search by name, ID or phone">
+            </div>
+
             <div class="header-actions">
                 <div class="date-picker-support">
                     <i class="bi bi-calendar3"></i>
@@ -27,13 +32,13 @@
         </div>
 
         <!-- Custom Tabs -->
-        <div class="support-tabs d-flex align-items-center mb-4" style="border-bottom: none;">
+        <div class="riden-tabs-container">
             <a href="{{ route('support.complaints.index', ['tab' => 'drivers']) }}" 
-               class="support-tab {{ $activeTab === 'drivers' ? 'active' : '' }}">
+               class="riden-tab-item {{ $activeTab === 'drivers' ? 'active' : '' }}">
                 Driver Complaints
             </a>
             <a href="{{ route('support.complaints.index', ['tab' => 'passengers']) }}" 
-               class="support-tab {{ $activeTab === 'passengers' ? 'active' : '' }}">
+               class="riden-tab-item {{ $activeTab === 'passengers' ? 'active' : '' }}">
                 Passenger Complaints
             </a>
         </div>

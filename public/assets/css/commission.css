@@ -1,14 +1,4 @@
-/* Layout Overrides */
-.commission-page .riden-main .container-fluid {
-    padding-top: 0 !important;
-}
-
-.commission-page .riden-topbar {
-    border-bottom: none;
-}
-
 .commission-wrapper {
-    padding: 0 24px 24px; /* Reduced top padding since master padding is removed */
     background: #fff;
     min-height: calc(100vh - 72px);
 }
@@ -16,7 +6,6 @@
 .commission-main-card {
     background: #fff;
     border-radius: 20px;
-    padding: 10px 0;
 }
 
 /* Header Section */
@@ -24,8 +13,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
-    padding-top: 10px;
 }
 
 .commission-title {
@@ -52,7 +39,7 @@
 }
 
 .commission-back-arrow:hover {
-    color: #ff161f;
+    color: var(--riden-red);
 }
 
 .header-actions {
@@ -62,7 +49,7 @@
 }
 
 .btn-set-commission {
-    background: #FF161F;
+    background: #D10000;
     color: #fff;
     border: none;
     padding: 8px 16px;
@@ -99,7 +86,7 @@
 
 .summary-card-custom {
     background: #fff;
-    border: 1.5px solid #FF161F;
+    border: 1.5px solid #D10000;
     border-radius: 24px;
     padding: 24px;
     display: flex;
@@ -136,10 +123,11 @@
 /* Table Section */
 .commission-table-container {
     background: #fff;
-    border: 1px solid #eee;
+    border: 1px solid #E5E7EB;
     border-radius: 20px;
     overflow: hidden;
     margin-bottom: 20px;
+    box-shadow: var(--riden-shadow);
 }
 
 .commission-table {
@@ -162,7 +150,6 @@
 .commission-table td {
     padding: 15px 20px;
     font-size: 13px;
-    color: #333;
     border-bottom: 1px solid #f8f9fa;
 }
 
@@ -201,8 +188,8 @@
 }
 
 .page-link-custom.active {
-    border-color: #FF161F;
-    color: #FF161F;
+    border-color: #D10000;
+    color: #D10000;
 }
 
 .page-link-custom.arrow {
@@ -216,10 +203,11 @@
 
 /* Setup Section Styles */
 .setup-table-container {
-    border: 1.5px solid #FF161F;
+    border: 1px solid #E5E7EB;
     border-radius: 24px;
     overflow: hidden;
     margin-top: 5px;
+    box-shadow: var(--riden-shadow);
 }
 
 .setup-table {
@@ -228,7 +216,7 @@
 }
 
 .setup-table thead tr {
-    background: #FF161F;
+    background: #D10000;
 }
 
 .setup-table th {
@@ -237,7 +225,7 @@
     font-weight: 700;
     font-size: 14px;
     color: #fff;
-    border-right: 1.5px solid rgba(255,255,255,0.2);
+    border-right: 1.5px solid rgba(255, 255, 255, 0.2);
 }
 
 .setup-table th:last-child {
@@ -247,7 +235,6 @@
 .setup-table td {
     padding: 12px 25px;
     font-size: 14px;
-    color: #000;
     border-bottom: 1px solid #eee;
     border-right: 1.5px solid #eee;
 }
@@ -270,7 +257,7 @@
 }
 
 .btn-save {
-    background: #FF161F;
+    background: #D10000;
     color: #fff;
     border: none;
     padding: 6px 18px;

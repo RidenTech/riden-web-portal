@@ -1,22 +1,15 @@
 /* Support Module Styles */
 .support-wrapper {
-    padding: 0 24px 24px;
-    background: #fff;
+    background: transparent;
+    padding: 0;
     min-height: calc(100vh - 72px);
-}
-
-.support-page .riden-main .container-fluid {
-    padding-top: 0 !important;
-}
-
-.support-page .riden-topbar {
-    border-bottom: none;
 }
 
 .support-main-card {
     background: #fff;
+    border: 1px solid #E5E7EB;
     border-radius: 20px;
-    padding: 10px 0;
+    padding: 40px;
 }
 
 /* Header Section */
@@ -24,8 +17,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
-    padding-top: 10px;
 }
 
 .support-title {
@@ -49,7 +40,7 @@
 }
 
 .date-picker-support i {
-    color: #ff161f;
+    color: var(--riden-red);
 }
 
 /* Tabs Styling */
@@ -72,7 +63,7 @@
 }
 
 .support-tab.active {
-    background: #FF161F;
+    background: var(--riden-red);
     color: #fff;
     border-radius: 20px;
     border-bottom: none;
@@ -80,16 +71,16 @@
 }
 
 .support-tab:not(.active):hover {
-    color: #FF161F;
+    color: var(--riden-red);
 }
 
 /* Table Card */
 .support-table-container {
     background: #fff;
-    border: 1px solid #f1f1f1;
+    border: 1px solid #E5E7EB;
     border-radius: 30px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    box-shadow: var(--riden-shadow);
 }
 
 .support-table {
@@ -112,7 +103,6 @@
 .support-table td {
     padding: 18px 25px;
     font-size: 14px;
-    color: #333;
     border-bottom: 1px solid #f8f9fa;
     vertical-align: middle;
 }
@@ -166,12 +156,12 @@
 }
 
 .page-btn-support.active {
-    border-color: #FF161F;
-    color: #FF161F;
+    border-color: var(--riden-red);
+    color: var(--riden-red);
 }
 
 .page-btn-support.arrow-next {
-    background: #FF161F;
+    background: var(--riden-red);
     color: #fff;
     border: none;
 }
@@ -209,7 +199,7 @@
 }
 
 .btn-mark-resolved {
-    background: #FF161F;
+    background: var(--riden-red);
     color: #fff;
     border: none;
     padding: 6px 16px;
@@ -225,8 +215,10 @@
 
 /* Message Cards */
 .message-card {
-    background: #fff;
-    border: 1px solid #eee;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
     padding: 25px;
     margin-top: 20px;
@@ -268,7 +260,7 @@
 }
 
 .btn-reply-custom {
-    background: #FF161F;
+    background: var(--riden-red);
     color: #fff;
     border: none;
     padding: 8px 30px;
@@ -281,7 +273,7 @@
 .section-title-custom {
     font-size: 20px;
     font-weight: 800;
-    background: #FF161F;
+    background: var(--riden-red);
     color: #fff;
     padding: 10px 20px;
     border-radius: 12px;
@@ -289,10 +281,12 @@
 }
 
 .response-input-container {
-    border: 1.5px solid #eee;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
     padding: 15px;
-    background: #fff;
 }
 
 .response-textarea {
@@ -325,11 +319,11 @@
 }
 
 .toolbar-icons i:hover {
-    color: #FF161F;
+    color: var(--riden-red);
 }
 
 .btn-send-custom {
-    background: #FF161F;
+    background: var(--riden-red);
     color: #fff;
     border: none;
     padding: 8px 35px;

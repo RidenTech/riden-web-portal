@@ -7,7 +7,7 @@
 @endpush
 
 @section('content')
-<div class="col-12 dashboard-wrapper mt-3">
+<div class="col-12 dashboard-wrapper">
 
     <!-- Top KPI Cards -->
     <div class="kpi-cards-row">

@@ -1,7 +1,6 @@
 /* Alerts Module Styles */
 .alerts-wrapper {
-    padding: 24px;
-    background: #fff;
+    background: transparent;
     min-height: calc(100vh - 72px);
 }
 
@@ -9,7 +8,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
 }
 
 .alerts-title {
@@ -26,7 +24,7 @@
 }
 
 .btn-send-alert {
-    background: #FF161F;
+    background: #D10000;
     color: #fff;
     border: none;
     padding: 8px 20px;
@@ -57,16 +55,16 @@
 }
 
 .date-picker-alerts i {
-    color: #ff161f;
+    color: var(--riden-red);
 }
 
 /* Table Styling */
 .alerts-table-container {
     background: #fff;
-    border: 1px solid #f1f1f1;
+    border: 1px solid #E5E7EB;
     border-radius: 30px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    box-shadow: var(--riden-shadow);
 }
 
 .alerts-table {
@@ -89,7 +87,6 @@
 .alerts-table td {
     padding: 18px 25px;
     font-size: 14px;
-    color: #333;
     border-bottom: 1px solid #f8f9fa;
     vertical-align: middle;
 }
@@ -133,12 +130,12 @@
 }
 
 .page-btn-alerts.active {
-    border-color: #FF161F;
-    color: #FF161F;
+    border-color: #D10000;
+    color: #D10000;
 }
 
 .page-btn-alerts.arrow-next {
-    background: #FF161F;
+    background: #D10000;
     color: #fff;
     border: none;
 }
@@ -186,7 +183,7 @@
 }
 
 .section-title-bar {
-    background: #FF161F;
+    background: #D10000;
     color: #fff;
     padding: 10px 20px;
     border-radius: 8px;
@@ -212,7 +209,7 @@
 }
 
 .form-control-custom:focus {
-    border-color: #FF161F;
+    border-color: #D10000;
     box-shadow: none;
 }
 
@@ -239,8 +236,8 @@
 }
 
 .form-check-input-custom:checked {
-    background-color: #FF161F;
-    border-color: #FF161F;
+    background-color: #D10000;
+    border-color: #D10000;
 }
 
 .form-check-label-custom {
@@ -262,7 +259,7 @@
 }
 
 .file-upload-zone:hover {
-    border-color: #FF161F;
+    border-color: #D10000;
 }
 
 .upload-icon {
@@ -287,7 +284,7 @@
 }
 
 .btn-send {
-    background: #FF161F;
+    background: #D10000;
     color: #fff;
     padding: 12px 60px;
     border-radius: 12px;
@@ -321,6 +318,6 @@
     right: 15px;
     top: 50%;
     transform: translateY(-50%);
-    color: #FF161F;
+    color: #D10000;
     font-size: 18px;
 }
