@@ -60,7 +60,7 @@
                     @endphp
 
                     @foreach($passengers as $p)
-                    <tr onclick="window.location='{{ route('passenger.detail') }}'" style="cursor: pointer;">
+                    <tr onclick="window.location='{{ route('admin.passenger.detail') }}'" style="cursor: pointer;">
                         <td class="ps-4">
                             <div class="d-flex align-items-center gap-3">
                                 <img src="https://i.pravatar.cc/100?u={{ $p['name'] }}" class="avatar-sm-figma" alt="Avatar">

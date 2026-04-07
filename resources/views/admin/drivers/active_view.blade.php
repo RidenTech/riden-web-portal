@@ -11,7 +11,7 @@
     <!-- 1. Profile Header -->
     <div class="profile-row-driver">
         <div class="profile-card-left">
-            <a href="{{ route('drivers.directory') }}" class="back-btn-driver">
+            <a href="{{ route('admin.drivers.directory') }}" class="back-btn-driver">
                 <i class="bi bi-chevron-left"></i>
             </a>
             <div class="driver-avatar-view-wrapper">

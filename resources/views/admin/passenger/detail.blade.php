@@ -15,7 +15,7 @@
         <!-- 1. Profile Identity Row -->
         <div class="profile-row-figma">
             <div class="profile-card-left">
-                <a href="{{ route('passenger.management') }}" class="back-btn-small">
+                <a href="{{ route('admin.passenger.management') }}" class="back-btn-small">
                     <i class="bi bi-chevron-left"></i>
                 </a>
                 <div class="avatar-figma-wrapper">

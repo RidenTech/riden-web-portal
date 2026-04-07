@@ -1,122 +1,140 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\AdminRoleController;
 
-Route::get('/', function () {
-    return view('admin.dashboard.index');
-})->name('dashboard');
+// Authentication Routes
+Route::prefix('admin')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('admin.login');
+    Route::post('/login', [AuthController::class, 'login'])->name('admin.login.post');
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('admin.register');
+    Route::post('/register', [AuthController::class, 'register'])->name('admin.register.post');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
-Route::get('/profile', function () {
-    return view('admin.profile');
+    // Password Reset Routes
+    Route::get('/forgot', function () {
+        return view('admin.auth.forgot');
+    })->name('admin.forgot');
+
+    Route::get('/reset', [AuthController::class, 'showUpdatePassword'])->name('admin.password.reset');
+    Route::post('/reset', [AuthController::class, 'updatePassword'])->name('admin.password.update');
+
+    // Protected Admin Routes
+    Route::middleware(['auth:admin', 'admin.active'])->group(function () {
+        Route::middleware(['admin.module:Dashboard'])->group(function () {
+            Route::get('/', function () {
+                return view('admin.dashboard.index');
+            })->name('admin.dashboard');
+
+            Route::get('/dashboard', function () {
+                return view('admin.dashboard.index');
+            })->name('admin.dashboard.alias');
+        });
+
+        Route::get('/profile', function () {
+            return view('admin.profile');
+        })->name('admin.profile');
+
+        Route::middleware(['admin.module:Analytics/Stats'])->get('/analytics', function () {
+            return view('admin.analytics.index');
+        })->name('admin.analytics.index');
+
+        Route::middleware(['admin.module:Passenger Management'])->group(function () {
+            Route::get('/passenger-management', function () {
+                return view('admin.passenger.index');
+            })->name('admin.passenger.management');
+
+            Route::get('/passenger-management/detail', function () {
+                return view('admin.passenger.detail');
+            })->name('admin.passenger.detail');
+        });
+
+        Route::middleware(['admin.module:Booking Management'])->get('/booking-management', function () {
+            return view('admin.booking.index');
+        })->name('admin.booking.management');
+
+        Route::middleware(['admin.module:Reviews & Ratings'])->get('/reviews-ratings', function () {
+            return view('admin.reviews.index');
+        })->name('admin.reviews.ratings');
+
+        Route::middleware(['admin.module:Payment Management'])->get('/drivers-payouts', function () {
+            return view('admin.payouts.index');
+        })->name('admin.payouts.drivers');
+
+        Route::middleware(['admin.module:Commission Management'])->get('/commission-management', function () {
+            return view('admin.commission.index');
+        })->name('admin.commission.index');
+
+        Route::middleware(['admin.module:Fare Management'])->get('/fare-management', function () {
+            return view('admin.fare.index');
+        })->name('admin.fare.management');
+
+        // Support Tickets
+        Route::middleware(['admin.module:Support Ticket'])->group(function () {
+            Route::group(['prefix' => 'support-tickets', 'as' => 'admin.support.'], function () {
+                Route::get('/', function () {
+                    return view('admin.support.complaints.index');
+                })->name('complaints.index');
+
+                Route::get('/{id}', function ($id) {
+                    return view('admin.support.complaints.detail', ['id' => $id]);
+                })->name('complaints.detail');
+            });
+        });
+
+        Route::middleware(['admin.module:Notifications'])->group(function () {
+            Route::get('/alerts', function () {
+                return view('admin.alerts.index');
+            })->name('admin.alerts.index');
+
+            Route::get('/alerts/send', function () {
+                return view('admin.alerts.send');
+            })->name('admin.alerts.send');
+        });
+
+        Route::middleware(['admin.module:CMS management'])->get('/cms-management', function () {
+            return view('admin.cms.index');
+        })->name('admin.cms.index');
+
+        Route::middleware(['admin.module:Admin Roles'])->group(function () {
+            Route::get('/roles', [AdminRoleController::class, 'index'])->name('admin.roles.index');
+            Route::get('/roles/create', [AdminRoleController::class, 'create'])->name('admin.roles.create');
+            Route::post('/roles/store', [AdminRoleController::class, 'store'])->name('admin.roles.store');
+            Route::get('/roles/edit/{id}', [AdminRoleController::class, 'edit'])->name('admin.roles.edit');
+            Route::post('/roles/update/{id}', [AdminRoleController::class, 'update'])->name('admin.roles.update');
+            Route::delete('/roles/delete/{id}', [AdminRoleController::class, 'destroy'])->name('admin.roles.destroy');
+            Route::get('/roles/delete/{id}', [AdminRoleController::class, 'destroy'])->name('admin.roles.destroy.get');
+        });
+
+        Route::middleware(['admin.module:Driver Management'])->group(function () {
+            Route::group(['prefix' => 'driver-management', 'as' => 'admin.drivers.'], function () {
+                Route::get('/directory', function () {
+                    return view('admin.drivers.directory');
+                })->name('directory');
+                Route::get('/requests', function () {
+                    return view('admin.drivers.requests');
+                })->name('requests');
+                Route::get('/view/{id}', function ($id) {
+                    return view('admin.drivers.view', ['id' => $id]);
+                })->name('view');
+                Route::get('/active/view/{id}', function ($id) {
+                    return view('admin.drivers.active_view', ['id' => $id]);
+                })->name('active.view');
+            });
+        });
+
+        Route::middleware(['admin.module:Promo code Management'])->group(function () {
+            Route::get('/promo-management', function () {
+                return view('admin.promo.index');
+            })->name('admin.promo.index');
+
+            Route::get('/promo-management/detail', function () {
+                return view('admin.promo.detail');
+            })->name('admin.promo.detail');
+        });
+    });
 });
 
-Route::get('/analytics', function () {
-    return view('admin.analytics.index');
-})->name('analytics.index');
-
-
-Route::get('/index', function () {
-    return view('admin.auth.index');
-});
-
-Route::get('/forgot', function () {
-    return view('admin.auth.forgot');
-})->name('forgot');
-
-Route::get('/forgot-sent', function () {
-    return view('admin.auth.forgot-sent');
-});
-
-Route::get('/reset-success', function () {
-    return view('admin.auth.reset-success');
-});
-
-Route::get('/reset', function () {
-    return view('admin.auth.reset');
-});
-
-Route::get('/passenger-management', function () {
-    return view('admin.passenger.index');
-})->name('passenger.management');
-
-Route::get('/passenger-management/detail', function () {
-    return view('admin.passenger.detail');
-})->name('passenger.detail');
-
-Route::get('/booking-management', function () {
-    return view('admin.booking.index');
-})->name('booking.management');
-
-Route::get('/reviews-ratings', function () {
-    return view('admin.reviews.index');
-})->name('reviews.ratings');
-
-Route::get('/drivers-payouts', function () {
-    return view('admin.payouts.index');
-})->name('payouts.drivers');
-
-Route::get('/commission-management', function () {
-    return view('admin.commission.index');
-})->name('commission.index');
-
-Route::get('/fare-management', function () {
-    return view('admin.fare.index');
-})->name('fare.management');
-
-// Support Tickets
-Route::group(['prefix' => 'support-tickets', 'as' => 'support.'], function () {
-    Route::get('/', function () {
-        return view('admin.support.complaints.index');
-    })->name('complaints.index');
-
-    Route::get('/{id}', function ($id) {
-        return view('admin.support.complaints.detail', ['id' => $id]);
-    })->name('complaints.detail');
-});
-
-Route::get('/alerts', function () {
-    return view('admin.alerts.index');
-})->name('alerts.index');
-
-Route::get('/alerts/send', function () {
-    return view('admin.alerts.send');
-})->name('alerts.send');
-
-Route::get('/cms-management', function () {
-    return view('admin.cms.index');
-})->name('cms.index');
-
-Route::get('/admin-roles', function () {
-    return view('admin.roles.index');
-})->name('admin.roles.index');
-
-Route::get('/admin-roles/create', function () {
-    return view('admin.roles.create');
-})->name('admin.roles.create');
-
-Route::group(['prefix' => 'driver-management'], function () {
-    Route::get('/directory', function () {
-        return view('admin.drivers.directory');
-    })->name('drivers.directory');
-    Route::get('/requests', function () {
-        return view('admin.drivers.requests');
-    })->name('drivers.requests');
-    Route::get('/view/{id}', function ($id) {
-        return view('admin.drivers.view', ['id' => $id]);
-    })->name('drivers.view');
-
-    Route::get('/active/view/{id}', function ($id) {
-        return view('admin.drivers.active_view', ['id' => $id]);
-    })->name('drivers.active.view');
-});
-
-Route::get('/promo-management', function () {
-    return view('admin.promo.index');
-})->name('promo.index');
-
-Route::get('/promo-management/detail', function () {
-    return view('admin.promo.detail');
-})->name('promo.detail');
 
 
 

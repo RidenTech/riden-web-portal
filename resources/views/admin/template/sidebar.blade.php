@@ -1,23 +1,27 @@
 @php
-    $menu = [
-        ['label' => 'Dashboard', 'icon' => 'bi bi-house-door', 'url' => route('dashboard')],
-        ['label' => 'Analytics/Stats', 'icon' => 'bi bi-bar-chart', 'url' => route('analytics.index')],
-        ['label' => 'Admin Roles', 'icon' => 'bi bi-person', 'url' => route('admin.roles.index')],
-        ['label' => 'Driver Management', 'icon' => 'bi bi-person-badge', 'url' => route('drivers.directory')],
-        ['label' => 'Passenger Management', 'icon' => 'bi bi-people', 'url' => route('passenger.management')],
-        ['label' => 'Vehicle Management', 'icon' => 'bi bi-truck', 'url' => '#'],
-        ['label' => 'Booking Management', 'icon' => 'bi bi-calendar-check', 'url' => route('booking.management')],
-        ['label' => 'Reviews & Ratings', 'icon' => 'bi bi-star', 'url' => route('reviews.ratings')],
-        ['label' => 'Promo code Management', 'icon' => 'bi bi-tag', 'url' => route('promo.index')],
-        ['label' => 'Fare Management', 'icon' => 'bi bi-cash-coin', 'url' => route('fare.management')],
-        ['label' => 'Commission Management', 'icon' => 'bi bi-percent', 'url' => route('commission.index')],
-        ['label' => 'Payments', 'icon' => 'bi bi-credit-card', 'url' => route('payouts.drivers')],
-        ['label' => 'Report Management', 'icon' => 'bi bi-file-earmark-text', 'url' => '#'],
-        ['label' => 'Reports', 'icon' => 'bi bi-file-earmark-text', 'url' => '#'],
-        ['label' => 'Support Ticket', 'icon' => 'bi bi-life-preserver', 'url' => route('support.complaints.index')],
-        ['label' => 'Manage Notifications', 'icon' => 'bi bi-bell', 'url' => route('alerts.index')],
-        ['label' => 'CMS Management', 'icon' => 'bi bi-window', 'url' => route('cms.index')],
+    $allMenu = [
+        ['label' => 'Dashboard', 'icon' => 'bi bi-house-door', 'url' => route('admin.dashboard'), 'permission' => 'Dashboard'],
+        ['label' => 'Analytics/Stats', 'icon' => 'bi bi-bar-chart', 'url' => route('admin.analytics.index'), 'permission' => 'Analytics/Stats'],
+        ['label' => 'Admin Roles', 'icon' => 'bi bi-person', 'url' => route('admin.roles.index'), 'permission' => 'Admin Roles'],
+        ['label' => 'Driver Management', 'icon' => 'bi bi-person-badge', 'url' => route('admin.drivers.directory'), 'permission' => 'Driver Management'],
+        ['label' => 'Passenger Management', 'icon' => 'bi bi-people', 'url' => route('admin.passenger.management'), 'permission' => 'Passenger Management'],
+        ['label' => 'Vehicle Management', 'icon' => 'bi bi-truck', 'url' => '#', 'permission' => 'Vehicles Management'],
+        ['label' => 'Booking Management', 'icon' => 'bi bi-calendar-check', 'url' => route('admin.booking.management'), 'permission' => 'Booking Management'],
+        ['label' => 'Reviews & Ratings', 'icon' => 'bi bi-star', 'url' => route('admin.reviews.ratings'), 'permission' => 'Reviews & Ratings'],
+        ['label' => 'Promo code Management', 'icon' => 'bi bi-tag', 'url' => route('admin.promo.index'), 'permission' => 'Promo code Management'],
+        ['label' => 'Fare Management', 'icon' => 'bi bi-cash-coin', 'url' => route('admin.fare.management'), 'permission' => 'Fare Management'],
+        ['label' => 'Commission Management', 'icon' => 'bi bi-percent', 'url' => route('admin.commission.index'), 'permission' => 'Commission Management'],
+        ['label' => 'Payments', 'icon' => 'bi bi-credit-card', 'url' => route('admin.payouts.drivers'), 'permission' => 'Payment Management'],
+        ['label' => 'Report Management', 'icon' => 'bi bi-file-earmark-text', 'url' => '#', 'permission' => 'Report Management'],
+        ['label' => 'Support Ticket', 'icon' => 'bi bi-life-preserver', 'url' => route('admin.support.complaints.index'), 'permission' => 'Support Ticket'],
+        ['label' => 'Manage Notifications', 'icon' => 'bi bi-bell', 'url' => route('admin.alerts.index'), 'permission' => 'Notifications'],
+        ['label' => 'CMS Management', 'icon' => 'bi bi-window', 'url' => route('admin.cms.index'), 'permission' => 'CMS management'],
     ];
+
+    $admin = Auth::guard('admin')->user();
+    $menu = array_filter($allMenu, function($item) use ($admin) {
+        return $admin && $admin->hasModuleAccess($item['permission']);
+    });
 @endphp
 
 <!-- Desktop / Tablet sidebar -->
@@ -27,7 +31,7 @@
                 <i class="bi bi-list"></i>
             </button>
         <div class="riden-sidebar__top">
-            <a href="{{ url('/') }}" class="riden-sidebar__brand" aria-label="Riden">
+            <a href="{{ url('/admin') }}" class="riden-sidebar__brand" aria-label="Riden">
                 <span class="riden-sidebar__brand-text font-500">RIDEN</span>
             </a>
             
@@ -53,8 +57,12 @@
         </nav>
 
         <div class="riden-sidebar__footer mt-auto">
+            <form action="{{ route('admin.logout') }}" method="POST" id="logout-form" style="display: none;">
+                @csrf
+            </form>
             <a href="#"
                class="riden-sidebar__link riden-sidebar__logout"
+               onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                title="Logout">
                 <i class="bi bi-box-arrow-right riden-sidebar__icon" aria-hidden="true"></i>
                 <span class="riden-sidebar__label">Logout</span>

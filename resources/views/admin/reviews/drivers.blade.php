@@ -18,8 +18,8 @@
 
     <!-- 2. Tabs Row -->
     <div class="riden-tabs-container">
-        <a href="{{ route('reviews.ratings', ['tab' => 'drivers']) }}" class="riden-tab-item active">Drivers Reviews</a>
-        <a href="{{ route('reviews.ratings', ['tab' => 'passengers']) }}" class="riden-tab-item">Passengers Reviews</a>
+        <a href="{{ route('admin.reviews.ratings', ['tab' => 'drivers']) }}" class="riden-tab-item active">Drivers Reviews</a>
+        <a href="{{ route('admin.reviews.ratings', ['tab' => 'passengers']) }}" class="riden-tab-item">Passengers Reviews</a>
     </div>
 
     <!-- 3. Stats Summary Card -->
