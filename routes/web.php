@@ -2,6 +2,12 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\AdminRoleController;
+use App\Http\Controllers\Admin\PassengerManagementController;
+
+// Root Redirect to Admin Login or Dashboard
+Route::get('/', function () {
+    return redirect()->route('admin.login');
+});
 
 // Authentication Routes
 Route::prefix('admin')->group(function () {
@@ -40,13 +46,14 @@ Route::prefix('admin')->group(function () {
         })->name('admin.analytics.index');
 
         Route::middleware(['admin.module:Passenger Management'])->group(function () {
-            Route::get('/passenger-management', function () {
-                return view('admin.passenger.index');
-            })->name('admin.passenger.management');
-
-            Route::get('/passenger-management/detail', function () {
-                return view('admin.passenger.detail');
-            })->name('admin.passenger.detail');
+            Route::get('/passenger-management', [PassengerManagementController::class, 'index'])->name('admin.passenger.management');
+            Route::get('/passenger-management/create', [PassengerManagementController::class, 'create'])->name('admin.passenger.create');
+            Route::post('/passenger-management/store', [PassengerManagementController::class, 'store'])->name('admin.passenger.store');
+            Route::get('/passenger-management/detail/{id}', [PassengerManagementController::class, 'show'])->name('admin.passenger.detail');
+            Route::get('/passenger-management/edit/{id}', [PassengerManagementController::class, 'edit'])->name('admin.passenger.edit');
+            Route::put('/passenger-management/update/{id}', [PassengerManagementController::class, 'update'])->name('admin.passenger.update');
+            Route::delete('/passenger-management/delete/{id}', [PassengerManagementController::class, 'destroy'])->name('admin.passenger.delete');
+            Route::patch('/passenger-management/status/{id}', [PassengerManagementController::class, 'toggleStatus'])->name('admin.passenger.toggleStatus');
         });
 
         Route::middleware(['admin.module:Booking Management'])->get('/booking-management', function () {
