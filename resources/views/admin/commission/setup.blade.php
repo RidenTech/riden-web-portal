@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center gap-2 mb-2">
-    <a href="{{ route('commission.index', ['section' => 'index']) }}" class="commission-back-arrow">
+    <a href="{{ route('admin.commission.index', ['section' => 'index']) }}" class="commission-back-arrow">
         <i class="bi bi-chevron-left"></i>
     </a>
     <h2 class="commission-setup-title">Set Commission</h2>

@@ -18,7 +18,7 @@
         </div>
         
         <div class="header-actions">
-            <a href="{{ route('alerts.send') }}" class="btn btn-send-alert text-decoration-none">
+            <a href="{{ route('admin.alerts.send') }}" class="btn btn-send-alert text-decoration-none">
                 <i class="bi bi-plus-square-fill"></i> Send Alert
             </a>
             <div class="date-picker-alerts">

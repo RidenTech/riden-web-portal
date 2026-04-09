@@ -2,35 +2,35 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Authenticatable
+class Admin extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
+
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
-        'username',
         'email',
         'password',
-        'status',
-        'image',
+        'phone',
+        'modules',
+        'is_super',
     ];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -47,6 +47,20 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'modules' => 'array',
+            'is_super' => 'boolean',
         ];
+    }
+
+    /**
+     * Check if admin has access to a specific module.
+     */
+    public function hasModuleAccess(string $module): bool
+    {
+        if ($this->is_super) {
+            return true;
+        }
+
+        return is_array($this->modules) && in_array($module, $this->modules);
     }
 }

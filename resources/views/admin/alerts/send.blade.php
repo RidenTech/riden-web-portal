@@ -11,7 +11,7 @@
 <div class="col-12 riden-addadmin-wrap">
     <!-- Send Alert Header -->
     <div class="riden-addadmin-head mb-2">
-        <a href="{{ route('alerts.index') }}" class="riden-addadmin-back border-0 bg-transparent text-decoration-none">
+        <a href="{{ route('admin.alerts.index') }}" class="riden-addadmin-back border-0 bg-transparent text-decoration-none">
             <i class="bi bi-chevron-left"></i>
         </a>
         <h2 class="riden-addadmin-title mb-0">Send Alerts</h2>
@@ -34,7 +34,7 @@
             <!-- Bottom Actions -->
             <div class="d-flex justify-content-end gap-3 mt-2">
                 <button type="submit" class="btn btn-riden-danger px-4" style="min-width: 140px; font-size: 15px;">Send</button>
-                <a href="{{ route('alerts.index') }}" class="btn btn-riden-outline px-4 text-decoration-none d-inline-flex align-items-center justify-content-center" style="min-width: 140px; font-size: 15px;">Cancel</a>
+                <a href="{{ route('admin.alerts.index') }}" class="btn btn-riden-outline px-4 text-decoration-none d-inline-flex align-items-center justify-content-center" style="min-width: 140px; font-size: 15px;">Cancel</a>
             </div>
         </form>
     </div>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RIDEN | Login</title>
+    <title>RIDEN | Signup</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
@@ -16,9 +16,6 @@
 <body class="d-flex align-items-center justify-content-center min-vh-100 p-3">
 
     <div class="login-container">
-        <!-- Sign in header button -->
-
-
         <!-- Main Card -->
         <div class="card main-card overflow-hidden">
             <div class="row g-0">
@@ -35,16 +32,36 @@
                 <div class="col-lg-6 col-md-7 form-side d-flex align-items-center p-4 p-lg-5">
                     <div class="w-100">
                         <div class="text-center mb-4">
-                            <h2 class="welcome-text">Welcome Back!</h2>
-                            <p class="sub-text">Enter Email Address & Password</p>
+                            <h2 class="welcome-text">Create Account</h2>
+                            <p class="sub-text">Join the RIDEN platform today</p>
                         </div>
 
-                        <form action="{{ route('admin.login.post') }}" method="POST">
+                        <form action="{{ route('admin.register.post') }}" method="POST">
                             @csrf
                             <div class="mb-3">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" name="name" class="form-control premium-input @error('name') is-invalid @enderror" id="name"
+                                    placeholder="Enter your name" value="{{ old('name') }}" required autofocus>
+                                @error('name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone Number (Optional)</label>
+                                <input type="text" name="phone" class="form-control premium-input @error('phone') is-invalid @enderror" id="phone"
+                                    placeholder="+1234567890" value="{{ old('phone') }}">
+                                @error('phone')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
                                 <label for="email" class="form-label">Email Address</label>
-                                <input type="text" name="email" class="form-control premium-input @error('email') is-invalid @enderror" id="email"
-                                    placeholder="example@gmail.com" value="{{ old('email') }}" required autofocus>
+                                <input type="email" name="email" class="form-control premium-input @error('email') is-invalid @enderror" id="email"
+                                    placeholder="example@gmail.com" value="{{ old('email') }}" required>
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -54,23 +71,22 @@
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
                                 <input type="password" name="password" class="form-control premium-input @error('password') is-invalid @enderror" id="password"
-                                    placeholder="Enter Password" required>
+                                    placeholder="Create a password" required>
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                    <label class="form-check-label sub-text" for="remember">
-                                        Remember Me
-                                    </label>
-                                </div>
-                                <a href="{{ route('admin.forgot') }}" class="forgot-password">Forgot Password?</a>
+                            <div class="mb-4">
+                                <label for="password_confirmation" class="form-label">Confirm Password</label>
+                                <input type="password" name="password_confirmation" class="form-control premium-input" id="password_confirmation"
+                                    placeholder="Confirm your password" required>
                             </div>
-                            <button type="submit" class="btn btn-login w-100">Log In</button>
+                            <button type="submit" class="btn btn-login w-100">Sign Up</button>
+                            <div class="text-center mt-3">
+                                <span class="sub-text">Already have an account? <a href="{{ route('admin.login') }}" class="forgot-password">Log In</a></span>
+                            </div>
                         </form>
                     </div>
                 </div>

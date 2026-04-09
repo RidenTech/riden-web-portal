@@ -36,13 +36,22 @@
                             <p class="sub-text">Enter Your Email Address</p>
                         </div>
 
-                        <form action="forgot-sent.html">
+                        <form action="{{ route('admin.forgot') }}" method="POST">
+                            @csrf
                             <div class="mb-4">
                                 <label for="email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control premium-input" id="email"
-                                    placeholder="example@gmail.com" required>
+                                <input type="email" name="email" class="form-control premium-input @error('email') is-invalid @enderror" id="email"
+                                    placeholder="example@gmail.com" value="{{ old('email') }}" required>
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                             <button type="submit" class="btn btn-login w-100">Send Link</button>
+                            <div class="text-center mt-3">
+                                <a href="{{ route('admin.login') }}" class="forgot-password">Back to Login</a>
+                            </div>
                         </form>
                     </div>
                 </div>

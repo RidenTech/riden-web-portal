@@ -31,13 +31,12 @@
             </div>
         </div>
 
-        <!-- Custom Tabs -->
         <div class="riden-tabs-container">
-            <a href="{{ route('support.complaints.index', ['tab' => 'drivers']) }}" 
+            <a href="{{ route('admin.support.complaints.index', ['tab' => 'drivers']) }}" 
                class="riden-tab-item {{ $activeTab === 'drivers' ? 'active' : '' }}">
                 Driver Complaints
             </a>
-            <a href="{{ route('support.complaints.index', ['tab' => 'passengers']) }}" 
+            <a href="{{ route('admin.support.complaints.index', ['tab' => 'passengers']) }}" 
                class="riden-tab-item {{ $activeTab === 'passengers' ? 'active' : '' }}">
                 Passenger Complaints
             </a>
