@@ -13,6 +13,10 @@
         $headerTitle = 'Promo Code Management';
         $showHeaderSearch = true;
         $headerSearchPlaceholder = 'Search by code and date';
+    } elseif (str_contains($path, 'passenger-management')) {
+        $headerTitle = 'Passenger Management';
+        $showHeaderSearch = true;
+        $headerSearchPlaceholder = 'Search by name, email, phone number';
     }
 @endphp
 

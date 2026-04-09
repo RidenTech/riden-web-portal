@@ -19,11 +19,15 @@
                     <i class="bi bi-chevron-left"></i>
                 </a>
                 <div class="avatar-figma-wrapper">
-                    <img src="https://i.pravatar.cc/150?img=12" class="avatar-figma-img" alt="Floyd Miles">
-                    <span class="avatar-status-dot"></span>
+                    @if($passenger->avatar)
+                        <img src="{{ asset('storage/'.$passenger->avatar) }}" class="avatar-figma-img" alt="{{ $passenger->first_name }}">
+                    @else
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode($passenger->first_name . ' ' . $passenger->last_name) }}&background=random" class="avatar-figma-img" alt="{{ $passenger->first_name }}">
+                    @endif
+                    <span class="avatar-status-dot" style="background: {{ strtolower($passenger->status) == 'active' ? '#10b981' : '#ff5c5c' }};"></span>
                 </div>
                 <div class="profile-identity">
-                    <h4>Floyd Miles</h4>
+                    <h4>{{ $passenger->first_name }} {{ $passenger->last_name }}</h4>
                     <div class="rating-line">
                         <i class="bi bi-star-fill text-warning"></i>
                         <i class="bi bi-star-fill text-warning"></i>
@@ -35,7 +39,7 @@
                 </div>
             </div>
             <div class="since-date-label">
-                Since March 23, 2023
+                Since {{ $passenger->created_at->format('F d, Y') }}
             </div>
         </div>
 
@@ -44,12 +48,11 @@
             <!-- Total Rides -->
             <div class="figma-stat-unit">
                 <div class="figma-stat-circle">
-                    <!-- Using bi-truck as it is known to work in the sidebar -->
                     <i class="bi bi-truck"></i>
                 </div>
                 <div class="figma-stat-data">
                     <label>Total Rides</label>
-                    <div class="fig-val">24</div>
+                    <div class="fig-val">0</div>
                 </div>
             </div>
 
@@ -65,7 +68,7 @@
                 </div>
                 <div class="figma-stat-data">
                     <label>Completed Rides</label>
-                    <div class="fig-val">20</div>
+                    <div class="fig-val">0</div>
                 </div>
             </div>
 
@@ -81,7 +84,7 @@
                 </div>
                 <div class="figma-stat-data">
                     <label>Cancelled Rides</label>
-                    <div class="fig-val">04</div>
+                    <div class="fig-val">0</div>
                 </div>
             </div>
         </div>
@@ -90,13 +93,13 @@
         <div class="row g-2 mt-0">
             <!-- Sidebar -->
             <div class="col-lg-4">
-                <div class="sidebar-glass-card h-100 d-flex flex-column">
+                <div class="sidebar-glass-card h-100 d-flex flex-column py-4">
                     <div class="nav-figma-list" id="passengerTab" role="tablist">
-                        <a class="nav-figma-item" id="personal-tab" data-bs-toggle="tab" href="#personal" role="tab">
+                        <a class="nav-figma-item active" id="personal-tab" data-bs-toggle="tab" href="#personal" role="tab">
                             <div class="ico-box"><i class="bi bi-person-fill"></i></div>
                             Personal Information
                         </a>
-                        <a class="nav-figma-item active" id="rides-tab" data-bs-toggle="tab" href="#rides" role="tab">
+                        <a class="nav-figma-item" id="rides-tab" data-bs-toggle="tab" href="#rides" role="tab">
                             <div class="ico-box"><i class="bi bi-truck"></i></div>
                             All Rides
                         </a>
@@ -106,11 +109,16 @@
                         </a>
                     </div>
                     
-                    <div class="sidebar-figma-actions mt-4">
-                        <button class="btn-figma-red-solid mb-3" data-bs-toggle="modal" data-bs-target="#blockModal">
-                            <i class="bi bi-slash-circle-fill"></i>
-                            Block Passenger
-                        </button>
+                    <div class="sidebar-figma-actions mt-auto">
+                        <form action="{{ route('admin.passenger.toggleStatus', $passenger->id) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn-figma-red-solid mb-3">
+                                <i class="bi {{ strtolower($passenger->status) == 'active' ? 'bi-slash-circle-fill' : 'bi-check-circle-fill' }}"></i>
+                                {{ strtolower($passenger->status) == 'active' ? 'Block Passenger' : 'Unblock Passenger' }}
+                            </button>
+                        </form>
+                        
                         <button class="btn-figma-red-outline" data-bs-toggle="modal" data-bs-target="#deleteModal">
                             <i class="bi bi-trash-fill text-danger"></i>
                             Delete Passenger
@@ -157,29 +165,34 @@
                     </div>
 
                     <!-- Personal Information Tab -->
-                    <div class="tab-pane fade" id="personal">
+                    <div class="tab-pane fade show active" id="personal">
                         <div class="main-card-figma">
-                            <div class="card-header-red-figma">
-                                <i class="bi bi-person-fill"></i>
-                                <h5>Personal Information</h5>
+                            <div class="card-header-red-figma d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-person-fill"></i>
+                                    <h5 class="mb-0">Personal Information</h5>
+                                </div>
+                                <a href="{{ route('admin.passenger.edit', $passenger->id) }}" class="text-white text-decoration-none small fw-bold">
+                                    <i class="bi bi-pencil-square me-1"></i> Edit
+                                </a>
                             </div>
                             <div class="px-4 pt-0 pb-2">
                                 <div class="row g-4 mt-1">
                                     <div class="col-md-6">
                                         <label class="text-muted small fw-semibold text-uppercase d-block mb-1">Full Name</label>
-                                        <p class="mb-0 fw-semibold">Floyd Miles</p>
+                                        <p class="mb-0 fw-semibold">{{ $passenger->first_name }} {{ $passenger->last_name }}</p>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="text-muted small fw-semibold text-uppercase d-block mb-1">Gender</label>
-                                        <p class="mb-0 fw-semibold">Male</p>
+                                        <p class="mb-0 fw-semibold">{{ $passenger->gender }}</p>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="text-muted small fw-semibold text-uppercase d-block mb-1">Email Address</label>
-                                        <p class="mb-0 fw-semibold">miles.floyd@gmail.com</p>
+                                        <p class="mb-0 fw-semibold">{{ $passenger->email }}</p>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="text-muted small fw-semibold text-uppercase d-block mb-1">Phone Number</label>
-                                        <p class="mb-0 fw-semibold">+1 123 456 7890</p>
+                                        <p class="mb-0 fw-semibold">{{ $passenger->phone }}</p>
                                     </div>
                                 </div>
                             </div>

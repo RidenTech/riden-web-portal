@@ -126,6 +126,96 @@ body {
 }
 
 
+/* --- PREMIUM ACTION & FORM STYLES --- */
+
+.btn-figma-blue-pill {
+    background: #4B49AC !important; /* Premium blue from branding */
+    color: #fff !important;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-weight: 700;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(75, 73, 172, 0.15);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-figma-blue-pill:hover {
+    background: #3f3e91 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(75, 73, 172, 0.25);
+    color: #fff !important;
+}
+
+.figma-form-card {
+    background: #fff;
+    border: 1px solid #EEF0F3;
+    border-radius: 30px;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+}
+
+.figma-label {
+    display: block;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    color: #111 !important;
+    margin-bottom: 10px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.figma-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.figma-input-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 18px;
+}
+
+.figma-input {
+    width: 100%;
+    background: #fdfdfd;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 14px;
+    padding: 14px 18px 14px 50px !important; /* Extra left padding for icon */
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+    transition: all 0.2s ease;
+}
+
+.figma-input:focus {
+    background: #fff;
+    border-color: var(--riden-red);
+    box-shadow: 0 0 0 5px rgba(225, 52, 55, 0.08);
+    outline: none;
+}
+
+.figma-input.is-invalid {
+    border-color: #ef4444;
+}
+
+.figma-input.is-invalid:focus {
+    box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.08);
+}
+
+.figma-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px 12px;
+}
+
 /* --- DETAIL PAGE STYLES (Existing & Refined) --- */
 
 .passenger-management-container {
