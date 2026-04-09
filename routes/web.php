@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\AdminRoleController;
 use App\Http\Controllers\Admin\PassengerManagementController;
+use App\Http\Controllers\Admin\DriverManagementController;
 
 // Root Redirect to Admin Login or Dashboard
 Route::get('/', function () {
@@ -115,18 +116,18 @@ Route::prefix('admin')->group(function () {
 
         Route::middleware(['admin.module:Driver Management'])->group(function () {
             Route::group(['prefix' => 'driver-management', 'as' => 'admin.drivers.'], function () {
-                Route::get('/directory', function () {
-                    return view('admin.drivers.directory');
-                })->name('directory');
+                Route::get('/directory', [DriverManagementController::class, 'index'])->name('directory');
+                Route::get('/create', [DriverManagementController::class, 'create'])->name('create');
+                Route::post('/store', [DriverManagementController::class, 'store'])->name('store');
+                Route::get('/view/{id}', [DriverManagementController::class, 'show'])->name('view');
+                Route::patch('/status/{id}', [DriverManagementController::class, 'toggleStatus'])->name('toggleStatus');
+                Route::delete('/delete/{id}', [DriverManagementController::class, 'destroy'])->name('delete');
+                
+                // Keep these for now if they are used elsewhere, but point to logic later
                 Route::get('/requests', function () {
                     return view('admin.drivers.requests');
                 })->name('requests');
-                Route::get('/view/{id}', function ($id) {
-                    return view('admin.drivers.view', ['id' => $id]);
-                })->name('view');
-                Route::get('/active/view/{id}', function ($id) {
-                    return view('admin.drivers.active_view', ['id' => $id]);
-                })->name('active.view');
+                Route::get('/active/view/{id}', [DriverManagementController::class, 'show'])->name('active.view');
             });
         });
 

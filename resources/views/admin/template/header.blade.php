@@ -17,6 +17,10 @@
         $headerTitle = 'Passenger Management';
         $showHeaderSearch = true;
         $headerSearchPlaceholder = 'Search by name, email, phone number';
+    } elseif (str_contains($path, 'driver-management')) {
+        $headerTitle = 'Driver Management';
+        $showHeaderSearch = true;
+        $headerSearchPlaceholder = 'Search by name, email, phone number';
     }
 @endphp
 
