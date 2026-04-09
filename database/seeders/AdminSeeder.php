@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
@@ -13,13 +13,24 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin User',
-            'username' => 'admin',
-            'email' => 'admin@riden.com',
-            'password' => Hash::make('admin123'),
-            'status' => 'active',
-            'image' => null,
-        ]);
+        // Default Admin
+        Admin::updateOrCreate(
+            ['email' => 'admin@riden.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make('admin123'),
+                'is_super' => true,
+            ]
+        );
+
+        // Super Admin for Boss
+        Admin::updateOrCreate(
+            ['email' => 'haseeb302@gmail.com'],
+            [
+                'name' => 'Haseeb Super Admin',
+                'password' => Hash::make('haseeb123'),
+                'is_super' => true,
+            ]
+        );
     }
 }
