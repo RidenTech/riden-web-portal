@@ -294,3 +294,35 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabLinks = document.querySelectorAll('.driver-nav-item');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove active class from all links
+            tabLinks.forEach(l => l.classList.remove('active'));
+            // Add active class to clicked link
+            this.classList.add('active');
+
+            // Hide all panes
+            tabPanes.forEach(pane => {
+                pane.classList.remove('show', 'active');
+            });
+
+            // Show target pane
+            const targetId = this.getAttribute('href').substring(1);
+            const targetPane = document.getElementById(targetId);
+            if (targetPane) {
+                targetPane.classList.add('show', 'active');
+            }
+        });
+    });
+});
+</script>
+@endpush
