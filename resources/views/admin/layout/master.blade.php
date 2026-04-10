@@ -51,7 +51,7 @@
         </main>
 
         <!-- Bootstrap 5 JS -->
-        <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('assets/js/admin.js') }}"></script>
         @stack('scripts')
 

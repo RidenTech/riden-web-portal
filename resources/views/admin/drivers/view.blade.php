@@ -265,7 +265,10 @@
                                     </div>
                                     <button type="button" 
                                             class="btn-view-doc border-0" 
-                                            onclick="previewDocument('{{ asset('storage/'.$doc->file_path) }}', '{{ addslashes($doc->document_name) }}')">
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#docPreviewModal"
+                                            data-bs-url="{{ asset('storage/'.$doc->file_path) }}"
+                                            data-bs-title="{{ $doc->document_name }}">
                                         View Document
                                     </button>
                                 </div>
@@ -321,44 +324,40 @@
 
 @push('scripts')
 <script>
-/**
- * Global Fail-Safe Preview Function
- * Senior Developer Standard: Direct triggers bypass many standard framework bugs
- */
-function previewDocument(url, title) {
-    const modalEl = document.getElementById('docPreviewModal');
-    if (!modalEl) return;
-
-    // Use Bootstrap instance
-    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-    
-    const frame = document.getElementById('docPreviewFrame');
-    const img = document.getElementById('docPreviewImg');
-    const downloadBtn = document.getElementById('docDownloadBtn');
-    const titleEl = document.getElementById('docPreviewTitle');
-    
-    if (titleEl) titleEl.innerText = title;
-    if (downloadBtn) downloadBtn.href = url;
-    
-    // Clear State
-    img.classList.add('d-none');
-    frame.classList.add('d-none');
-    img.src = '';
-    frame.src = '';
-    
-    if (url.toLowerCase().endsWith('.pdf')) {
-        frame.classList.remove('d-none');
-        frame.src = url;
-    } else {
-        img.classList.remove('d-none');
-        img.src = url;
-    }
-    
-    modal.show();
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Tab Navigation Logic
+    // 1. Modal Logic (Standard Bootstrap 5 Pattern)
+    const modalEl = document.getElementById('docPreviewModal');
+    if (modalEl) {
+        modalEl.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const url = button.getAttribute('data-bs-url');
+            const title = button.getAttribute('data-bs-title');
+            
+            const frame = document.getElementById('docPreviewFrame');
+            const img = document.getElementById('docPreviewImg');
+            const downloadBtn = document.getElementById('docDownloadBtn');
+            const titleEl = document.getElementById('docPreviewTitle');
+            
+            if (titleEl) titleEl.innerText = title;
+            if (downloadBtn) downloadBtn.href = url;
+            
+            // Clear previous
+            img.classList.add('d-none');
+            frame.classList.add('d-none');
+            img.src = '';
+            frame.src = '';
+            
+            if (url.toLowerCase().endsWith('.pdf')) {
+                frame.classList.remove('d-none');
+                frame.src = url;
+            } else {
+                img.classList.remove('d-none');
+                img.src = url;
+            }
+        });
+    }
+
+    // 2. Tab Navigation Logic
     const tabLinks = document.querySelectorAll('.driver-nav-item');
     const tabPanes = document.querySelectorAll('.tab-pane');
 
