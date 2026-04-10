@@ -263,9 +263,14 @@
                                             <small class="text-muted">{{ $doc->status }} • {{ $doc->created_at->format('d M Y') }}</small>
                                         </div>
                                     </div>
-                                    <a href="{{ asset('storage/'.$doc->file_path) }}" target="_blank" class="btn-view-doc">
+                                    <button type="button" 
+                                            class="btn-view-doc border-0" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#docPreviewModal"
+                                            data-bs-url="{{ asset('storage/'.$doc->file_path) }}"
+                                            data-bs-title="{{ $doc->document_name }}">
                                         View Document
-                                    </a>
+                                    </button>
                                 </div>
                             @empty
                                 <div class="text-center py-5">
@@ -293,11 +298,66 @@
         </div>
     </div>
 </div>
+
+<!-- Premium Document Preview Modal -->
+<div class="modal fade" id="docPreviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 25px; overflow: hidden;">
+            <div class="modal-header bg-dark text-white border-0 py-3 px-4">
+                <h5 class="modal-title fw-bold" id="docPreviewTitle">Document Preview</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0 bg-light">
+                <div id="docPreviewContent" class="text-center" style="min-height: 400px; display: flex; align-items: center; justify-content: center;">
+                    <img id="docPreviewImg" src="" class="img-fluid d-none" style="max-height: 80vh;" alt="">
+                    <iframe id="docPreviewFrame" src="" class="d-none" style="width: 100%; height: 80vh; border: none;"></iframe>
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-3">
+                <button type="button" class="btn btn-secondary rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Close Preview</button>
+                <a id="docDownloadBtn" href="#" download class="btn btn-danger rounded-pill px-4 fw-bold">Download File</a>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // 1. Modal Logic (Standard Bootstrap 5 Pattern)
+    const modalEl = document.getElementById('docPreviewModal');
+    if (modalEl) {
+        modalEl.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const url = button.getAttribute('data-bs-url');
+            const title = button.getAttribute('data-bs-title');
+            
+            const frame = document.getElementById('docPreviewFrame');
+            const img = document.getElementById('docPreviewImg');
+            const downloadBtn = document.getElementById('docDownloadBtn');
+            const titleEl = document.getElementById('docPreviewTitle');
+            
+            if (titleEl) titleEl.innerText = title;
+            if (downloadBtn) downloadBtn.href = url;
+            
+            // Clear previous
+            img.classList.add('d-none');
+            frame.classList.add('d-none');
+            img.src = '';
+            frame.src = '';
+            
+            if (url.toLowerCase().endsWith('.pdf')) {
+                frame.classList.remove('d-none');
+                frame.src = url;
+            } else {
+                img.classList.remove('d-none');
+                img.src = url;
+            }
+        });
+    }
+
+    // 2. Tab Navigation Logic
     const tabLinks = document.querySelectorAll('.driver-nav-item');
     const tabPanes = document.querySelectorAll('.tab-pane');
 
