@@ -13,12 +13,12 @@
         <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
         <!-- Bootstrap 5 -->
-        <link href="{{ asset('/') }}assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
         <!-- Bootstrap Icons -->
-        <link rel="stylesheet" href="{{ asset('/') }}assets/libs/bootstrap-icons/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="{{ asset('assets/libs/bootstrap-icons/font/bootstrap-icons.css') }}">
 
         <!-- App CSS -->
-        <link href="{{ asset('/') }}assets/css/admin.css" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/css/admin.css') }}" rel="stylesheet" type="text/css" />
         @stack('styles')
 
     </head>
@@ -51,8 +51,8 @@
         </main>
 
         <!-- Bootstrap 5 JS -->
-        <script src="{{ asset('/') }}assets/js/bootstrap.bundle.min.js"></script>
-        <script src="{{ asset('/') }}assets/js/admin.js"></script>
+        <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('assets/js/admin.js') }}"></script>
         @stack('scripts')
 
     </body>
