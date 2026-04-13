@@ -19,6 +19,10 @@
 
         <!-- App CSS -->
         <link href="{{ asset('assets/css/admin.css') }}" rel="stylesheet" type="text/css" />
+        
+        <!-- SweetAlert2 -->
+        <link href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+        
         @stack('styles')
 
     </head>
@@ -27,23 +31,6 @@
         @include('admin.template.sidebar')
         <main id="wrapper" class="riden-main">
             <div class="container-fluid riden-content-wrapper">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <strong>Whoops!</strong> There were some problems with your input.
-                        <ul class="mb-0 mt-2">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                @if(session('status'))
-                    <div class="alert alert-success">{{ session('status') }}</div>
-                @endif
-                @if(session('statusDanger'))
-                    <div class="alert alert-danger">{{ session('statusDanger') }}</div>
-                @endif
-
                 <div class="row justify-content-center">
                     @yield('content')
                 </div>
@@ -52,7 +39,75 @@
 
         <!-- Bootstrap 5 JS -->
         <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        
+        <!-- SweetAlert2 JS -->
+        <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.all.min.js') }}"></script>
+        
         <script src="{{ asset('assets/js/admin.js') }}"></script>
+
+        <script>
+            // Global SweetAlert2 Configuration & Flash Handler
+            const RidenSwal = Swal.mixin({
+                confirmButtonColor: '#e11d48',
+                cancelButtonColor: '#111',
+                customClass: {
+                    popup: 'riden-swal-popup',
+                    confirmButton: 'btn btn-danger rounded-pill px-4',
+                    cancelButton: 'btn btn-dark rounded-pill px-4'
+                }
+            });
+
+            @if(session('status'))
+                RidenSwal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('status') }}',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            @endif
+
+            @if(session('statusDanger'))
+                RidenSwal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: '{{ session('statusDanger') }}'
+                });
+            @endif
+
+            @if ($errors->any())
+                RidenSwal.fire({
+                    icon: 'error',
+                    title: 'Input Issues',
+                    html: '<ul class="text-start">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>'
+                });
+            @endif
+            
+            // Reusable Confirm Functions
+            window.confirmDelete = (title = 'Are you sure?', text = "You won't be able to revert this!") => {
+                return RidenSwal.fire({
+                    title: title,
+                    text: text,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, cancel',
+                    reverseButtons: true
+                });
+            };
+
+            window.confirmAction = (title, text, icon = 'warning', confirmText = 'Yes, proceed') => {
+                return RidenSwal.fire({
+                    title: title,
+                    text: text,
+                    icon: icon,
+                    showCancelButton: true,
+                    confirmButtonText: confirmText,
+                    cancelButtonText: 'Cancel',
+                    reverseButtons: true
+                });
+            };
+        </script>
         @stack('scripts')
 
     </body>

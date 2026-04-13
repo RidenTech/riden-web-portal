@@ -121,7 +121,7 @@
                     Personal Information
                 </a>
                 <a href="#vehicle" class="driver-nav-item" data-bs-toggle="tab">
-                    <div class="icon-wrapper"><i class="bi bi-car-front-fill"></i></div>
+                    <div class="icon-wrapper"><i class="bi bi-truck"></i></div>
                     Vehicle Information
                 </a>
                 <a href="#documents" class="driver-nav-item" data-bs-toggle="tab">
@@ -137,7 +137,7 @@
             <!-- Action Buttons -->
             <div class="driver-action-buttons">
                 @if($driver->status == 'Active')
-                    <form action="{{ route('admin.drivers.toggleStatus', $driver->id) }}" method="POST">
+                    <form action="{{ route('admin.drivers.toggleStatus', $driver->id) }}" method="POST" onsubmit="event.preventDefault(); window.confirmAction('Block Driver?', 'They will not be able to log in until unblocked.', 'warning', 'Yes, block them').then((r) => { if(r.isConfirmed) this.submit(); })">
                         @csrf @method('PATCH')
                         <input type="hidden" name="status" value="Blocked">
                         <button type="submit" class="btn-driver-action btn-driver-solid-red">
@@ -145,7 +145,7 @@
                         </button>
                     </form>
                 @else
-                    <form action="{{ route('admin.drivers.toggleStatus', $driver->id) }}" method="POST">
+                    <form action="{{ route('admin.drivers.toggleStatus', $driver->id) }}" method="POST" onsubmit="event.preventDefault(); window.confirmAction('Activate Driver?', 'They will be allowed to log in and use the platform.', 'success', 'Yes, activate').then((r) => { if(r.isConfirmed) this.submit(); })">
                         @csrf @method('PATCH')
                         <input type="hidden" name="status" value="Active">
                         <button type="submit" class="btn-driver-action btn-driver-solid-red" style="background-color: #28a745 !important;">
@@ -154,7 +154,7 @@
                     </form>
                 @endif
 
-                <form action="{{ route('admin.drivers.delete', $driver->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this driver?');">
+                <form action="{{ route('admin.drivers.delete', $driver->id) }}" method="POST" onsubmit="event.preventDefault(); window.confirmDelete('Delete Driver?', 'All records for this driver will be permanently removed.').then((r) => { if(r.isConfirmed) this.submit(); })">
                     @csrf @method('DELETE')
                     <button type="submit" class="btn-driver-action btn-driver-outline-red">
                         <i class="bi bi-trash-fill text-danger"></i> Delete Driver
@@ -204,7 +204,7 @@
                 <div class="tab-pane fade" id="vehicle">
                     <div class="driver-info-card">
                         <div class="driver-info-card-header" style="background: #111 !important;">
-                            <i class="bi bi-car-front-fill"></i>
+                            <i class="bi bi-truck"></i>
                             <h5>Vehicle Specifications</h5>
                         </div>
                         <div class="driver-info-grid">

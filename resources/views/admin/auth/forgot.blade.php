@@ -8,9 +8,11 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('/') }}assets\css\style.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 </head>
 
 <body class="d-flex align-items-center justify-content-center min-vh-100 p-3">
@@ -24,7 +26,7 @@
                     class="col-lg-6 col-md-5 illustration-side d-flex flex-column align-items-center justify-content-center p-4">
                     <h1 class="brand-name">RIDEN</h1>
                     <div class="illustration-wrapper mt-auto">
-                        <img src="{{ asset('/') }}assets\images\riden_car.png" alt="Happy couple in car" class="img-fluid hero-img">
+                        <img src="{{ asset('assets/images/riden_car.png') }}" alt="Happy couple in car" class="img-fluid hero-img">
                     </div>
                 </div>
 
@@ -59,8 +61,48 @@
         </div>
     </div>
 
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Bundle -->
+    <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.all.min.js') }}"></script>
+
+    <script>
+        const RidenSwal = Swal.mixin({
+            confirmButtonColor: '#e11d48',
+            cancelButtonColor: '#111',
+            customClass: {
+                popup: 'riden-swal-popup',
+                confirmButton: 'btn btn-danger rounded-pill px-4',
+                cancelButton: 'btn btn-dark rounded-pill px-4'
+            }
+        });
+
+        @if(session('status'))
+            RidenSwal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '{{ session('status') }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        @endif
+
+        @if(session('error'))
+            RidenSwal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: '{{ session('error') }}'
+            });
+        @endif
+
+        @if ($errors->any())
+            RidenSwal.fire({
+                icon: 'error',
+                title: 'Request Failed',
+                html: '<ul class="text-start">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>'
+            });
+        @endif
+    </script>
 </body>
 
 </html>
