@@ -120,6 +120,8 @@ Route::prefix('admin')->group(function () {
                 Route::get('/create', [DriverManagementController::class, 'create'])->name('create');
                 Route::post('/store', [DriverManagementController::class, 'store'])->name('store');
                 Route::get('/view/{id}', [DriverManagementController::class, 'show'])->name('view');
+                Route::get('/edit/{id}', [DriverManagementController::class, 'edit'])->name('edit');
+                Route::put('/update/{id}', [DriverManagementController::class, 'update'])->name('update');
                 Route::patch('/status/{id}', [DriverManagementController::class, 'toggleStatus'])->name('toggleStatus');
                 Route::delete('/delete/{id}', [DriverManagementController::class, 'destroy'])->name('delete');
                 

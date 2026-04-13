@@ -110,4 +110,62 @@ class DriverManagementController extends Controller
         return redirect()->route('admin.drivers.directory')
             ->with('status', 'Driver moved to trash.');
     }
+
+    public function edit($id)
+    {
+        $driver = Driver::with('vehicle')->findOrFail($id);
+        return view('admin.drivers.edit', compact('driver'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $driver = Driver::findOrFail($id);
+        $vehicle = $driver->vehicle;
+
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:drivers,email,' . $id,
+            'phone' => 'required|string|max:20',
+            'gender' => 'required|in:Male,Female,Other',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            // Vehicle
+            'model' => 'required|string|max:255',
+            'year' => 'required|string|max:4',
+            'color' => 'required|string|max:50',
+            'license_plate' => 'required|string|unique:vehicles,license_plate,' . ($vehicle ? $vehicle->id : 'NULL'),
+        ]);
+
+        // 1. Update Driver
+        $driverData = $request->only(['first_name', 'last_name', 'email', 'phone', 'gender']);
+        
+        if ($request->hasFile('avatar')) {
+            // Delete old avatar if exists
+            if ($driver->avatar) {
+                Storage::disk('public')->delete($driver->avatar);
+            }
+            $driverData['avatar'] = $request->file('avatar')->store('drivers/avatars', 'public');
+        }
+
+        $driver->update($driverData);
+
+        // 2. Update/Create Vehicle
+        $vehicleData = [
+            'model' => $request->model,
+            'year' => $request->year,
+            'color' => $request->color,
+            'license_plate' => $request->license_plate,
+            'vehicle_type' => $request->vehicle_type ?? 'Sedan',
+        ];
+
+        if ($vehicle) {
+            $vehicle->update($vehicleData);
+        } else {
+            $vehicleData['driver_id'] = $driver->id;
+            Vehicle::create($vehicleData);
+        }
+
+        return redirect()->route('admin.drivers.view', $driver->id)
+            ->with('status', 'Driver records updated successfully.');
+    }
 }

@@ -73,8 +73,13 @@
                 </div>
             </div>
         </div>
-        <div class="since-date-view text-muted">
-            Registered: {{ $driver->created_at->format('M d, Y') }}
+        <div class="d-flex align-items-center gap-3">
+            <div class="since-date-view text-muted">
+                Registered: {{ $driver->created_at->format('M d, Y') }}
+            </div>
+            <a href="{{ route('admin.drivers.edit', $driver->id) }}" class="btn-figma-blue-pill py-2 px-4 shadow-sm" style="width: auto; font-size: 13px; border: 1px solid rgba(255,255,255,0.2);">
+                <i class="bi bi-pencil-square me-2"></i> Edit Profile
+            </a>
         </div>
     </div>
 
