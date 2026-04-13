@@ -27,7 +27,7 @@
             </div>
             
             <div class="header-actions">
-                <a href="{{ route('commission.index', ['section' => 'setup']) }}" class="btn btn-set-commission text-decoration-none">
+                <a href="{{ route('admin.commission.index', ['section' => 'setup']) }}" class="btn btn-set-commission text-decoration-none">
                     <i class="bi bi-plus-lg"></i>
                     Set Commission
                 </a>

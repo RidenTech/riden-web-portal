@@ -27,7 +27,7 @@
             @endphp
 
             @foreach($complaints as $row)
-            <tr onclick="window.location='{{ route('support.complaints.detail', ['id' => 123456]) }}'" style="cursor: pointer;">
+            <tr onclick="window.location='{{ route('admin.support.complaints.detail', ['id' => 123456]) }}'" style="cursor: pointer;">
                 <td style="font-weight: 500;">{{ $row['date'] }}</td>
                 <td style="font-weight: 500;">{{ $row['id'] }}</td>
                 <td style="font-weight: 500;">{{ $row['booking'] }}</td>

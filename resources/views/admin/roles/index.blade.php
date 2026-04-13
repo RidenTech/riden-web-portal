@@ -8,14 +8,23 @@
 
 @section('content')
 <div class="col-12 roles-wrapper">
-    <!-- Header Row (Add Button) -->
-    <div class="roles-header riden-list-header mb-2">
-        <div class="riden-search-bar">
-            <div class="riden-search-icon">
-                <i class="bi bi-search"></i>
-            </div>
-            <input type="text" placeholder="Search by name, email or phone">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    <!-- Header Row -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold m-0" style="font-size: 2rem;">Admin Roles</h2>
 
         <a href="{{ route('admin.roles.create') }}" class="btn-add-admin">
             <i class="bi bi-plus-lg"></i> Add new Admin
@@ -35,38 +44,37 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                        $admins = [
-                            ['name' => 'Wade Warren', 'email' => 'example@gmail.com', 'phone' => '+123456372893'],
-                            ['name' => 'Jacob Jones', 'email' => 'example@gmail.com', 'phone' => '+123456372893'],
-                            ['name' => 'Bessie Cooper', 'email' => 'example@gmail.com', 'phone' => '+123456372893'],
-                            ['name' => 'Theresa Webb', 'email' => 'example@gmail.com', 'phone' => '+123456372893'],
-                            ['name' => 'Jerome Bell', 'email' => 'example@gmail.com', 'phone' => '+123456372893'],
-                            ['name' => 'Robert Fox', 'email' => 'example@gmail.com', 'phone' => '+123456372893'],
-                            ['name' => 'Kathryn Murphy', 'email' => 'example@gmail.com', 'phone' => '+123456372893'],
-                            ['name' => 'Savannah Nguyen', 'email' => 'example@gmail.com', 'phone' => '+123456372893'],
-                            ['name' => 'Floyd Miles', 'email' => 'example@gmail.com', 'phone' => '+123456372893'],
-                            ['name' => 'Devon Lane', 'email' => 'example@gmail.com', 'phone' => '+123456372893'],
-                        ];
-                    @endphp
-
-                    @foreach($admins as $admin)
+                    @forelse($admins as $admin)
                     <tr>
-                        <td class="admin-name-cell">{{ $admin['name'] }}</td>
-                        <td>{{ $admin['email'] }}</td>
-                        <td>{{ $admin['phone'] }}</td>
+                        <td class="admin-name-cell">
+                            {{ $admin->name }}
+                            @if($admin->is_super)
+                                <span class="badge bg-danger ms-2" style="font-size: 10px; border-radius: 20px; font-weight: 700;">SUPER ADMIN</span>
+                            @endif
+                        </td>
+                        <td>{{ $admin->email }}</td>
+                        <td>{{ $admin->phone }}</td>
                         <td>
-                            <div class="role-actions">
-                                <a href="#" class="btn-role-edit" title="Edit">
+                             <div class="role-actions">
+                                <a href="{{ route('admin.roles.edit', $admin->id) }}" class="btn-role-edit" title="Edit">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <a href="#" class="btn-role-delete" title="Delete">
-                                    <i class="bi bi-trash-fill"></i>
-                                </a>
+                                <form action="{{ route('admin.roles.destroy', $admin->id) }}" method="POST" class="d-inline delete-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="hidden" name="deleted_at" class="h_deleted_at">
+                                    <button type="button" class="btn-role-delete border-0 bg-transparent text-black" title="Delete" onclick="submitDelete(this)">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="4" class="text-center py-4 text-muted">No admins found.</td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -83,4 +91,25 @@
         </div>
     </div>
 </div>
+
+<script>
+// Senior Developer Tool: Ensure the deletion timestamp is captured from the frontend
+function getLaravelTimestamp() {
+    const now = new Date();
+    return now.getFullYear() + '-' +
+        String(now.getMonth() + 1).padStart(2, '0') + '-' +
+        String(now.getDate()).padStart(2, '0') + ' ' +
+        String(now.getHours()).padStart(2, '0') + ':' +
+        String(now.getMinutes()).padStart(2, '0') + ':' +
+        String(now.getSeconds()).padStart(2, '0');
+}
+
+function submitDelete(btn) {
+    if (confirm('Are you sure you want to delete this admin?')) {
+        const form = btn.closest('form');
+        form.querySelector('.h_deleted_at').value = getLaravelTimestamp();
+        form.submit();
+    }
+}
+</script>
 @endsection

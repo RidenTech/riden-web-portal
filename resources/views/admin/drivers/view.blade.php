@@ -1,9 +1,46 @@
 @extends('admin.layout.master')
 
-@section('title', 'Driver Management ')
+@section('title', 'Driver Profile | Riden Admin')
 
 @push('styles')
     <link href="{{ asset('assets/css/drivers.css') }}?v={{ time() }}" rel="stylesheet" type="text/css" />
+    <style>
+        .doc-card-premium {
+            background: #fff;
+            border: 1px solid #E5E7EB;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            transition: all 0.2s;
+        }
+        .doc-card-premium:hover {
+            border-color: var(--riden-red);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .doc-icon {
+            width: 50px;
+            height: 50px;
+            background: #FFEEEE;
+            color: var(--riden-red);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .btn-view-doc {
+            background: #f3f4f6;
+            color: #111;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 13px;
+            text-decoration: none;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -11,14 +48,18 @@
     <!-- 1. Profile Header -->
     <div class="profile-row-driver">
         <div class="profile-card-left">
-            <a href="{{ route('drivers.requests') }}" class="back-btn-driver">
+            <a href="{{ route('admin.drivers.directory') }}" class="back-btn-driver">
                 <i class="bi bi-chevron-left"></i>
             </a>
             <div class="driver-avatar-view-wrapper">
-                <img src="https://i.pravatar.cc/150?img=19" class="driver-avatar-view-img" alt="Floyd Miles">
+                @if($driver->avatar)
+                    <img src="{{ asset('storage/'.$driver->avatar) }}" class="driver-avatar-view-img" alt="">
+                @else
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode($driver->first_name . ' ' . $driver->last_name) }}&background=random" class="driver-avatar-view-img" alt="">
+                @endif
             </div>
             <div class="driver-identity">
-                <h4>Floyd Miles</h4>
+                <h4>{{ $driver->first_name }} {{ $driver->last_name }}</h4>
                 <div class="driver-rating-line">
                     <div class="stars text-warning d-flex gap-1">
                         <i class="bi bi-star-fill"></i>
@@ -27,12 +68,13 @@
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill" style="opacity: 0.3;"></i>
                     </div>
-                    <span class="ms-2 fw-semibold">(0)</span>
+                    <span class="ms-2 fw-semibold">(4.0)</span>
+                    <span class="ms-3 status-badge {{ strtolower($driver->status) == 'active' ? 'online' : (strtolower($driver->status) == 'blocked' ? 'blocked' : 'suspended') }}">{{ $driver->status }}</span>
                 </div>
             </div>
         </div>
-        <div class="since-date-view">
-            Since March 23, 2023
+        <div class="since-date-view text-muted">
+            Registered: {{ $driver->created_at->format('M d, Y') }}
         </div>
     </div>
 
@@ -50,26 +92,10 @@
         <div class="driver-divider"></div>
         <div class="driver-stat-unit">
             <div class="driver-stat-circle">
-                <i class="bi bi-truck"></i>
-                <div class="stat-badge-overlay" style="position: absolute; top: -5px; right: -5px; background: #D10000; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid #fff;">
-                    <i class="bi bi-check-lg" style="color: white; font-size: 10px;"></i>
-                </div>
+                <i class="bi bi-check-circle-fill"></i>
             </div>
             <div class="driver-stat-data">
-                <label>Completed Rides</label>
-                <div class="stat-value">0</div>
-            </div>
-        </div>
-        <div class="driver-divider"></div>
-        <div class="driver-stat-unit">
-            <div class="driver-stat-circle">
-                <i class="bi bi-truck"></i>
-                <div class="stat-badge-overlay" style="position: absolute; top: -5px; right: -5px; background: #D10000; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid #fff;">
-                    <i class="bi bi-slash" style="color: white; font-size: 10px;"></i>
-                </div>
-            </div>
-            <div class="driver-stat-data">
-                <label>Cancelled Rides</label>
+                <label>Completed</label>
                 <div class="stat-value">0</div>
             </div>
         </div>
@@ -86,7 +112,7 @@
     </div>
 
     <!-- 3. Navigation & Detail Grid -->
-    <div class="row g-2 mt-0 ">
+    <div class="row g-2 mt-0">
         <!-- Sidebar Navigation -->
         <div class="col-lg-4">
             <div class="driver-nav-list" id="driverTabList">
@@ -94,38 +120,46 @@
                     <div class="icon-wrapper"><i class="bi bi-person-fill"></i></div>
                     Personal Information
                 </a>
+                <a href="#vehicle" class="driver-nav-item" data-bs-toggle="tab">
+                    <div class="icon-wrapper"><i class="bi bi-car-front-fill"></i></div>
+                    Vehicle Information
+                </a>
                 <a href="#documents" class="driver-nav-item" data-bs-toggle="tab">
                     <div class="icon-wrapper"><i class="bi bi-file-earmark-text-fill"></i></div>
                     Documents
-                </a>
-                <a href="#vehicle" class="driver-nav-item" data-bs-toggle="tab">
-                    <div class="icon-wrapper"><i class="bi bi-truck"></i></div>
-                    Vehicle Information
                 </a>
                 <a href="#rides" class="driver-nav-item" data-bs-toggle="tab">
                     <div class="icon-wrapper"><i class="bi bi-map-fill"></i></div>
                     All Rides
                 </a>
-                <a href="#payment" class="driver-nav-item" data-bs-toggle="tab">
-                    <div class="icon-wrapper"><i class="bi bi-credit-card-fill"></i></div>
-                    Payment Methods
-                </a>
             </div>
 
             <!-- Action Buttons -->
             <div class="driver-action-buttons">
-                <button class="btn-driver-action btn-driver-solid-red">
-                    <i class="bi bi-slash-circle-fill"></i>
-                    Block Driver
-                </button>
-                <button class="btn-driver-action btn-driver-outline-red">
-                    <i class="bi bi-pause-circle-fill text-danger"></i>
-                    Suspend Driver
-                </button>
-                <button class="btn-driver-action btn-driver-outline-red">
-                    <i class="bi bi-trash-fill text-danger"></i>
-                    Delete Driver
-                </button>
+                @if($driver->status == 'Active')
+                    <form action="{{ route('admin.drivers.toggleStatus', $driver->id) }}" method="POST">
+                        @csrf @method('PATCH')
+                        <input type="hidden" name="status" value="Blocked">
+                        <button type="submit" class="btn-driver-action btn-driver-solid-red">
+                            <i class="bi bi-slash-circle-fill"></i> Block Driver
+                        </button>
+                    </form>
+                @else
+                    <form action="{{ route('admin.drivers.toggleStatus', $driver->id) }}" method="POST">
+                        @csrf @method('PATCH')
+                        <input type="hidden" name="status" value="Active">
+                        <button type="submit" class="btn-driver-action btn-driver-solid-red" style="background-color: #28a745 !important;">
+                            <i class="bi bi-check-circle-fill"></i> Activate Driver
+                        </button>
+                    </form>
+                @endif
+
+                <form action="{{ route('admin.drivers.delete', $driver->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this driver?');">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="btn-driver-action btn-driver-outline-red">
+                        <i class="bi bi-trash-fill text-danger"></i> Delete Driver
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -134,86 +168,129 @@
             <div class="tab-content h-100" id="driverTabContent">
                 <!-- Personal Info Section -->
                 <div class="tab-pane fade show active" id="personal">
-                    @include('admin.drivers.sections.personal_requested')
+                    <div class="driver-info-card">
+                        <div class="driver-info-card-header">
+                            <i class="bi bi-person-fill"></i>
+                            <h5>Personal Details</h5>
+                        </div>
+                        <div class="driver-info-grid">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <label class="label-view">Full Name</label>
+                                    <p class="value-view">{{ $driver->first_name }} {{ $driver->last_name }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-view">Email Address</label>
+                                    <p class="value-view">{{ $driver->email }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-view">Phone Number</label>
+                                    <p class="value-view">{{ $driver->phone }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-view">Gender</label>
+                                    <p class="value-view">{{ $driver->gender }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="label-view">Unique ID</label>
+                                    <p class="value-view red-text">{{ $driver->unique_id }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehicle Info Section -->
+                <div class="tab-pane fade" id="vehicle">
+                    <div class="driver-info-card">
+                        <div class="driver-info-card-header" style="background: #111 !important;">
+                            <i class="bi bi-car-front-fill"></i>
+                            <h5>Vehicle Specifications</h5>
+                        </div>
+                        <div class="driver-info-grid">
+                            @if($driver->vehicle)
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label class="label-view">Model</label>
+                                        <p class="value-view">{{ $driver->vehicle->model }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="label-view">Year</label>
+                                        <p class="value-view">{{ $driver->vehicle->year }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="label-view">Color</label>
+                                        <p class="value-view">{{ $driver->vehicle->color }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="label-view">License Plate</label>
+                                        <p class="value-view fw-bold">{{ $driver->vehicle->license_plate }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="label-view">Type</label>
+                                        <p class="value-view">{{ $driver->vehicle->vehicle_type ?? 'Sedan' }}</p>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="text-center py-5">
+                                    <p class="text-muted">No vehicle information found.</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Documents Section -->
                 <div class="tab-pane fade" id="documents">
-                    @include('admin.drivers.sections.documents_requested')
+                    <div class="driver-info-card">
+                        <div class="driver-info-card-header" style="background: #555 !important;">
+                            <i class="bi bi-file-earmark-text-fill"></i>
+                            <h5>Stored Documents</h5>
+                        </div>
+                        <div class="driver-info-grid">
+                            @forelse($driver->documents as $doc)
+                                <div class="doc-card-premium">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="doc-icon">
+                                            @if(Str::endsWith($doc->file_path, '.pdf'))
+                                                <i class="bi bi-file-earmark-pdf"></i>
+                                            @else
+                                                <i class="bi bi-file-earmark-image"></i>
+                                            @endif
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold">{{ $doc->document_name }}</h6>
+                                            <small class="text-muted">{{ $doc->status }} • {{ $doc->created_at->format('d M Y') }}</small>
+                                        </div>
+                                    </div>
+                                    <a href="{{ asset('storage/'.$doc->file_path) }}" target="_blank" class="btn-view-doc">
+                                        View Document
+                                    </a>
+                                </div>
+                            @empty
+                                <div class="text-center py-5">
+                                    <p class="text-muted">No documents uploaded.</p>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Placeholder Sections -->
-                <!-- Vehicle Information Section -->
-                <div class="tab-pane fade" id="vehicle">
-                    @include('admin.drivers.sections.vehicle_requested')
-                </div>
                 <!-- All Rides Section -->
                 <div class="tab-pane fade" id="rides">
-                    @include('admin.drivers.sections.rides_requested')
-                </div>
-                <!-- Payment Methods Section -->
-                <div class="tab-pane fade" id="payment">
-                    @include('admin.drivers.sections.payments_requested')
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Document Preview Modal -->
-<div class="modal fade" id="docModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content doc-modal-content" style="border-radius: 25px !important; border: none; overflow: hidden;">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-semibold" id="docModalLabel">Document Title</h5>
-                <div class="ms-auto d-flex gap-2 align-items-center">
-                    <button class="btn btn-success btn-approve-doc px-4" style="background: #28a745 !important; border: none; border-radius: 10px; font-weight: 600;">Approve</button>
-                    <button class="btn btn-danger btn-reject-doc px-4" style="background: #D10000 !important; border: none; border-radius: 10px; font-weight: 600;">Reject</button>
-                    <button type="button" class="btn-close ms-2" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-            </div>
-            <div class="modal-body p-4">
-                <div class="doc-images-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
-                    @for($i=1; $i<=4; $i++)
-                    <div class="doc-img-container">
-                        <img src="https://placehold.co/600x800?text=Document+Page+{{ $i }}" class="img-fluid rounded border" style="width: 100%; height: auto; object-fit: cover;" alt="Doc Page">
+                    <div class="driver-info-card">
+                        <div class="driver-info-card-header">
+                            <i class="bi bi-map-fill"></i>
+                            <h5>Recent Ride History</h5>
+                        </div>
+                        <div class="driver-info-grid text-center py-5">
+                            <img src="{{ asset('assets/img/no-data.svg') }}" alt="" style="width: 150px; opacity: 0.5;">
+                            <p class="text-muted mt-3">No ride data available yet.</p>
+                        </div>
                     </div>
-                    @endfor
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-@push('scripts')
-<script>
-// Global function - must be outside DOMContentLoaded so onclick can call it
-function openDocument(title) {
-    var modalEl = document.getElementById('docModal');
-    if (!modalEl) { alert('Modal not found'); return; }
-    modalEl.querySelector('.modal-title').textContent = title;
-    var modal = new bootstrap.Modal(modalEl);
-    modal.show();
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Sidebar Tab Logic
-    var tabLinks = document.querySelectorAll('.driver-nav-item');
-    var tabPanes = document.querySelectorAll('.tab-pane');
-
-    tabLinks.forEach(function(link) {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            tabLinks.forEach(function(l) { l.classList.remove('active'); });
-            this.classList.add('active');
-            tabPanes.forEach(function(pane) { pane.classList.remove('show', 'active'); });
-            var targetId = this.getAttribute('href').substring(1);
-            var targetPane = document.getElementById(targetId);
-            if (targetPane) { targetPane.classList.add('show', 'active'); }
-        });
-    });
-});
-</script>
-@endpush
 @endsection
-

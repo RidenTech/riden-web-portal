@@ -4,19 +4,23 @@
     $showHeaderSearch = false;
     $headerSearchPlaceholder = 'Search by name, email, phone number';
 
-    if ($path === 'detailadmin') {
+    if (str_contains($path, 'roles')) {
         $headerTitle = 'Admin Roles';
         $showHeaderSearch = true;
-    } elseif ($path === 'profile') {
+    } elseif (str_contains($path, 'profile')) {
         $headerTitle = 'Profile';
-    }elseif ($path === 'addadmin') {
-        $headerTitle = 'Admin Roles';
-    }elseif ($path === 'adminprofile') {
-        $headerTitle = 'Admin Roles';
-    } elseif ($path === 'promocode') {
+    } elseif (str_contains($path, 'promocode')) {
         $headerTitle = 'Promo Code Management';
         $showHeaderSearch = true;
         $headerSearchPlaceholder = 'Search by code and date';
+    } elseif (str_contains($path, 'passenger-management')) {
+        $headerTitle = 'Passenger Management';
+        $showHeaderSearch = true;
+        $headerSearchPlaceholder = 'Search by name, email, phone number';
+    } elseif (str_contains($path, 'driver-management')) {
+        $headerTitle = 'Driver Management';
+        $showHeaderSearch = true;
+        $headerSearchPlaceholder = 'Search by name, email, phone number';
     }
 @endphp
 

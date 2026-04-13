@@ -28,7 +28,7 @@
                     <i class="bi bi-calendar3"></i>
                     <span>23/04/2025 - 23/04/2025</span>
                 </div>
-                <a href="{{ route('payouts.drivers', ['section' => 'instant']) }}" 
+                <a href="{{ route('admin.payouts.drivers', ['section' => 'instant']) }}" 
                    class="btn btn-instant-payout text-decoration-none">Instant Payout Requests(12)</a>
             </div>
         </div>
@@ -36,10 +36,10 @@
         <!-- Custom Tabs Navigation -->
         @if ($activeTab !== 'instant')
         <div class="riden-tabs-container">
-            <a href="{{ route('payouts.drivers', ['section' => 'upcoming']) }}" 
+            <a href="{{ route('admin.payouts.drivers', ['section' => 'upcoming']) }}" 
                class="riden-tab-item {{ $activeTab === 'upcoming' ? 'active' : '' }}" 
                style="text-decoration: none;">Upcoming Payments</a>
-            <a href="{{ route('payouts.drivers', ['section' => 'previous']) }}" 
+            <a href="{{ route('admin.payouts.drivers', ['section' => 'previous']) }}" 
                class="riden-tab-item {{ $activeTab === 'previous' ? 'active' : '' }}" 
                style="text-decoration: none;">Previous Transactions</a>
         </div>

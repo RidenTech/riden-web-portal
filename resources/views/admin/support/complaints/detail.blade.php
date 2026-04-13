@@ -13,7 +13,7 @@
         <!-- Detail Header -->
         <div class="support-detail-header mb-4">
             <div class="d-flex align-items-center gap-3">
-                <a href="{{ route('support.complaints.index') }}" class="support-back-arrow text-decoration-none">
+                <a href="{{ route('admin.support.complaints.index') }}" class="support-back-arrow text-decoration-none">
                     <i class="bi bi-chevron-left"></i>
                 </a>
                 <h1 class="support-title mb-0">Complaint Type 1</h1>

@@ -28,10 +28,9 @@
         </div>
     </div>
 
-    <!-- Tabs -->
     <div class="riden-tabs-container">
-        <a href="{{ route('drivers.directory') }}" class="riden-tab-item">Active Drivers</a>
-        <a href="{{ route('drivers.requests') }}" class="riden-tab-item active">Requested <span class="count">(14)</span></a>
+        <a href="{{ route('admin.drivers.directory') }}" class="riden-tab-item">Active Drivers</a>
+        <a href="{{ route('admin.drivers.requests') }}" class="riden-tab-item active">Requested <span class="count">(14)</span></a>
     </div>
 
     <!-- Table Container -->
@@ -61,7 +60,7 @@
                     ];
                 @endphp
                 @foreach($drivers as $driver)
-                <tr onclick="window.location='{{ route('drivers.view', ['id' => 1]) }}'" style="cursor: pointer;">
+                <tr onclick="window.location='{{ route('admin.drivers.view', ['id' => 1]) }}'" style="cursor: pointer;">
                     <td>
                         <div class="driver-info">
                             <img src="https://i.pravatar.cc/80?img={{ $driver['img'] }}" class="driver-avatar" alt="">
