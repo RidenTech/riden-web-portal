@@ -3,11 +3,32 @@
 @section('title', 'Edit Driver | Riden Admin')
 
 @push('styles')
-    <link href="{{ asset('assets/css/drivers.css') }}?v={{ time() }}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('assets/css/passenger.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/drivers.css') }}">
+    <style>
+        .edit-section-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--riden-red);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .edit-section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #eee;
+        }
+    </style>
 @endpush
 
 @section('content')
 <div class="col-12 px-0">
+    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h3 class="passenger-page-title mb-0">Edit Driver Profile</h3>
@@ -18,17 +39,19 @@
         </a>
     </div>
 
+    <!-- Form Card -->
     <div class="figma-form-card">
         <form action="{{ route('admin.drivers.update', $driver->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
             <!-- Section 1: Personal Info -->
-            <div class="section-header">
-                <i class="bi bi-person-fill"></i> Personal Information
+            <div class="edit-section-title">
+                <i class="bi bi-person-fill"></i> Personal Info
             </div>
 
             <div class="row g-4 mb-5">
+                <!-- First Name -->
                 <div class="col-md-6">
                     <label class="figma-label">First Name</label>
                     <div class="figma-input-wrapper">
@@ -37,6 +60,7 @@
                     </div>
                 </div>
 
+                <!-- Last Name -->
                 <div class="col-md-6">
                     <label class="figma-label">Last Name</label>
                     <div class="figma-input-wrapper">
@@ -45,6 +69,7 @@
                     </div>
                 </div>
 
+                <!-- Email -->
                 <div class="col-md-6">
                     <label class="figma-label">Email Address</label>
                     <div class="figma-input-wrapper">
@@ -53,6 +78,7 @@
                     </div>
                 </div>
 
+                <!-- Phone -->
                 <div class="col-md-6">
                     <label class="figma-label">Phone Number</label>
                     <div class="figma-input-wrapper">
@@ -61,6 +87,7 @@
                     </div>
                 </div>
 
+                <!-- Gender -->
                 <div class="col-md-6">
                     <label class="figma-label">Gender</label>
                     <div class="figma-input-wrapper">
@@ -73,6 +100,7 @@
                     </div>
                 </div>
 
+                <!-- Avatar -->
                 <div class="col-md-6">
                     <label class="figma-label">Profile Image (Optional)</label>
                     <div class="figma-input-wrapper" style="border-style: dashed;">
@@ -80,19 +108,21 @@
                         <input type="file" name="avatar" class="figma-input" accept="image/*">
                     </div>
                     @if($driver->avatar)
-                        <div class="mt-2 text-muted small fw-bold">
-                            <i class="bi bi-check-circle-fill text-success"></i> Current image exists
+                        <div class="mt-2 text-muted small fw-bold d-flex align-items-center gap-2">
+                            <i class="bi bi-check-circle-fill text-success"></i> 
+                            Current image exists
                         </div>
                     @endif
                 </div>
             </div>
 
             <!-- Section 2: Vehicle Info -->
-            <div class="section-header" style="background: #111 !important;">
+            <div class="edit-section-title">
                 <i class="bi bi-truck"></i> Vehicle Details
             </div>
 
             <div class="row g-4 mb-5">
+                <!-- Model -->
                 <div class="col-md-6">
                     <label class="figma-label">Vehicle Model</label>
                     <div class="figma-input-wrapper">
@@ -101,6 +131,7 @@
                     </div>
                 </div>
 
+                <!-- Year & Color -->
                 <div class="col-md-3">
                     <label class="figma-label">Year</label>
                     <div class="figma-input-wrapper">
@@ -117,6 +148,7 @@
                     </div>
                 </div>
 
+                <!-- Plate -->
                 <div class="col-md-6">
                     <label class="figma-label">License Plate</label>
                     <div class="figma-input-wrapper">
@@ -125,6 +157,7 @@
                     </div>
                 </div>
 
+                <!-- Type -->
                 <div class="col-md-6">
                     <label class="figma-label">Vehicle Type</label>
                     <div class="figma-input-wrapper">
