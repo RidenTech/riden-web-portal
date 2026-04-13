@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\AdminRoleController;
 use App\Http\Controllers\Admin\PassengerManagementController;
 use App\Http\Controllers\Admin\DriverManagementController;
+use App\Http\Controllers\Admin\BookingManagementController;
 
 // Root Redirect to Admin Login or Dashboard
 Route::get('/', function () {
@@ -57,9 +58,10 @@ Route::prefix('admin')->group(function () {
             Route::patch('/passenger-management/status/{id}', [PassengerManagementController::class, 'toggleStatus'])->name('admin.passenger.toggleStatus');
         });
 
-        Route::middleware(['admin.module:Booking Management'])->get('/booking-management', function () {
-            return view('admin.booking.index');
-        })->name('admin.booking.management');
+        Route::middleware(['admin.module:Booking Management'])->group(function () {
+            Route::get('/booking-management', [BookingManagementController::class, 'index'])->name('admin.booking.management');
+            Route::get('/booking-management/detail/{id}', [BookingManagementController::class, 'show'])->name('admin.booking.detail');
+        });
 
         Route::middleware(['admin.module:Reviews & Ratings'])->get('/reviews-ratings', function () {
             return view('admin.reviews.index');
