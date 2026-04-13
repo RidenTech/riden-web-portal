@@ -113,7 +113,7 @@ class DriverManagementController extends Controller
 
     public function edit($id)
     {
-        $driver = Driver::with('vehicle')->findOrFail($id);
+        $driver = Driver::with(['vehicle', 'documents'])->findOrFail($id);
         return view('admin.drivers.edit', compact('driver'));
     }
 
@@ -134,13 +134,15 @@ class DriverManagementController extends Controller
             'year' => 'required|string|max:4',
             'color' => 'required|string|max:50',
             'license_plate' => 'required|string|unique:vehicles,license_plate,' . ($vehicle ? $vehicle->id : 'NULL'),
+            // New Documents
+            'documents.*' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:5120',
+            'doc_names.*' => 'nullable|string|max:255',
         ]);
 
         // 1. Update Driver
         $driverData = $request->only(['first_name', 'last_name', 'email', 'phone', 'gender']);
         
         if ($request->hasFile('avatar')) {
-            // Delete old avatar if exists
             if ($driver->avatar) {
                 Storage::disk('public')->delete($driver->avatar);
             }
@@ -165,7 +167,22 @@ class DriverManagementController extends Controller
             Vehicle::create($vehicleData);
         }
 
+        // 3. Save New Documents
+        if ($request->hasFile('documents')) {
+            foreach ($request->file('documents') as $index => $file) {
+                if ($file->isValid()) {
+                    $path = $file->store('drivers/documents', 'public');
+                    DriverDocument::create([
+                        'driver_id' => $driver->id,
+                        'document_name' => $request->doc_names[$index] ?? 'Document ' . ($index + 1),
+                        'file_path' => $path,
+                        'status' => 'Pending'
+                    ]);
+                }
+            }
+        }
+
         return redirect()->route('admin.drivers.view', $driver->id)
-            ->with('status', 'Driver records updated successfully.');
+            ->with('status', 'Driver records and documents updated successfully.');
     }
 }

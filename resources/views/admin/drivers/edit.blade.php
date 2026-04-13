@@ -23,6 +23,45 @@
             height: 1px;
             background: #eee;
         }
+        .doc-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px dashed #ced4da;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .remove-doc {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--riden-red);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .doc-preview-container {
+            display: none;
+            height: 60px;
+            width: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+        .doc-preview-box {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .existing-doc-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
     </style>
 @endpush
 
@@ -171,11 +210,50 @@
                 </div>
             </div>
 
+            <!-- Section 3: Existing Documents -->
+            @if($driver->documents->count() > 0)
+                <div class="edit-section-title">
+                    <i class="bi bi-file-earmark-check-fill"></i> Current Documents
+                </div>
+                <div class="row mb-5">
+                    @foreach($driver->documents as $doc)
+                        <div class="col-md-6">
+                            <div class="existing-doc-card shadow-sm">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="icon-box-small" style="background: #fdf2f2; padding: 10px; border-radius: 10px;">
+                                        <i class="bi bi-file-earmark-text text-danger"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold small">{{ $doc->document_name }}</div>
+                                        <div class="text-muted" style="font-size: 11px;">Status: <span class="text-danger fw-bold">{{ $doc->status }}</span></div>
+                                    </div>
+                                </div>
+                                <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="btn btn-sm btn-light rounded-pill px-3 fw-bold small border">
+                                    View
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+
+            <!-- Section 4: Add More Documents -->
+            <div class="edit-section-title d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-plus-circle-fill"></i> Add New Documents</span>
+                <button type="button" id="add-doc-btn" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold">
+                    <i class="bi bi-plus-lg me-1"></i> Add Row
+                </button>
+            </div>
+
+            <div id="docs-container" class="mb-4">
+                <!-- Dynamic rows will appear here -->
+            </div>
+
             <!-- Form Actions -->
             <div class="col-12 mt-5 pt-4 border-top">
                 <div class="d-flex align-items-center gap-3">
                     <button type="submit" class="btn-figma-blue-pill px-5" style="width: auto;">
-                        Update Driver Records
+                        Save All Changes
                     </button>
                     <a href="{{ route('admin.drivers.view', $driver->id) }}" class="text-decoration-none text-muted fw-bold small ms-2">
                         Cancel Changes
@@ -186,3 +264,56 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function handleFilePreview(input, previewImg, containerSelector) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                const container = input.closest('.row').querySelector(containerSelector) || document.querySelector(containerSelector);
+                if(container) container.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    document.getElementById('docs-container').addEventListener('change', function(e) {
+        if (e.target.classList.contains('doc-file-input')) {
+            const row = e.target.closest('.row');
+            const previewImg = row.querySelector('.doc-preview-box');
+            handleFilePreview(e.target, previewImg, '.doc-preview-container');
+        }
+    });
+
+    document.getElementById('add-doc-btn').addEventListener('click', function() {
+        const container = document.getElementById('docs-container');
+        const newItem = document.createElement('div');
+        newItem.className = 'doc-item';
+        newItem.innerHTML = `
+            <i class="bi bi-x-circle-fill remove-doc"></i>
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <label class="small fw-bold text-muted mb-1">Document Name</label>
+                    <input type="text" name="doc_names[]" class="form-control rounded-3 border-0 bg-white" placeholder="e.g. Insurance" required>
+                </div>
+                <div class="col-md-5">
+                    <label class="small fw-bold text-muted mb-1">Upload File</label>
+                    <input type="file" name="documents[]" class="form-control rounded-3 border-0 bg-white doc-file-input" required accept="image/*">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <div class="doc-preview-container w-100">
+                        <img src="#" alt="Doc Preview" class="doc-preview-box img-fluid">
+                    </div>
+                </div>
+            </div>
+        `;
+        container.appendChild(newItem);
+
+        newItem.querySelector('.remove-doc').addEventListener('click', function() {
+            newItem.remove();
+        });
+    });
+</script>
+@endpush
