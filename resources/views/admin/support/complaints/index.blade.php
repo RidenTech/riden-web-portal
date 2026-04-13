@@ -24,9 +24,15 @@
             </div>
 
             <div class="header-actions">
-                <div class="date-picker-support">
+                <a href="{{ route('admin.passenger.create') }}" class="btn-figma-red-pill">
+                    <i class="bi bi-person-plus-fill me-2"></i> Add New Passenger
+                </a>
+                <a href="#" class="btn-download-excel">
+                    <i class="bi bi-file-earmark-excel-fill"></i> Download
+                </a>
+                <div class="date-picker-drivers">
                     <i class="bi bi-calendar3"></i>
-                    <span>23/04/2025 - 23/04/2025</span>
+                    <span>{{ date('d/m/Y') }} - {{ date('d/m/Y') }}</span>
                 </div>
             </div>
         </div>
