@@ -13,6 +13,16 @@
     border-bottom: 1px solid #ddd;
 }
 
+/* Global Table Row Hover */
+table tbody tr:hover td {
+    background-color: rgba(0, 0, 0, 0.03) !important;
+    transition: background-color 0.2s ease;
+}
+
+table tbody tr td {
+    transition: background-color 0.2s ease;
+}
+
 .modal-dialog {
     max-width: 900px;
 }
@@ -948,12 +958,8 @@ textarea {
 .table td {
     vertical-align: middle;
     transition: all 0.2s ease;
-    background: #ffffff !important;
+    background: #ffffff;
     color: #535557;
-}
-
-.table td:hover {
-    background: #f3f0f0 !important;
 }
 
 /* Emphasize data in clickable rows or columns with links/actions */
@@ -973,4 +979,101 @@ textarea {
 .table a,
 .table button {
     cursor: pointer !important;
+}
+
+/* Standardized Figma-style Inputs */
+.figma-label {
+    display: block;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    color: #111 !important;
+    margin-bottom: 10px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.figma-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.figma-input-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 18px;
+}
+
+.figma-input {
+    width: 100%;
+    background: #fdfdfd;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 14px;
+    padding: 14px 18px 14px 50px !important;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+    transition: all 0.2s ease;
+}
+
+.figma-input:focus {
+    background: #fff;
+    border-color: var(--riden-red);
+    box-shadow: 0 0 0 5px rgba(225, 52, 55, 0.08);
+    outline: none;
+}
+
+.figma-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px 12px;
+}
+
+/* Figma-style Pill Buttons (Global) */
+.btn-figma-blue-pill {
+    background: #4B49AC !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-weight: 700;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(75, 73, 172, 0.15);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-figma-blue-pill:hover {
+    background: #3f3e91 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(75, 73, 172, 0.25);
+    color: #fff !important;
+}
+
+.btn-figma-red-pill {
+    background: var(--riden-red) !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-weight: 700;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(209, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-figma-red-pill:hover {
+    background: #e0141b !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(209, 0, 0, 0.25);
+    color: #fff !important;
 }

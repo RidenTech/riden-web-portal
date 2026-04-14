@@ -21,6 +21,11 @@ class Driver extends Model
         'is_online',
     ];
 
+    public function getNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
     public function vehicle()
     {
         return $this->hasOne(Vehicle::class);
