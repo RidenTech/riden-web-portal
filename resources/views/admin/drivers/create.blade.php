@@ -378,9 +378,14 @@
             <div class="row g-4 mb-5">
                 <div class="col-md-12 mb-3">
                     <label class="figma-label">Profile Image</label>
-                    <div class="figma-input-wrapper" style="border-style: dashed;">
-                        <i class="bi bi-image figma-input-icon"></i>
-                        <input type="file" name="avatar" class="figma-input" accept="image/*">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="figma-input-wrapper flex-grow-1" style="border-style: dashed;">
+                            <i class="bi bi-image figma-input-icon"></i>
+                            <input type="file" name="avatar" id="avatar-input" class="figma-input avatar-file-input" accept="image/*">
+                        </div>
+                        <div class="avatar-preview-container" id="avatar-preview-box" style="display: none; width: 80px; height: 80px; border-radius: 15px; overflow: hidden; border: 1.5px dashed #ced4da; flex-shrink: 0;">
+                            <img src="#" alt="Avatar Preview" id="avatar-preview-img" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
                     </div>
                 </div>
 
@@ -589,6 +594,15 @@
             }
             reader.readAsDataURL(input.files[0]);
         }
+    }
+
+    // Handle Avatar Preview
+    const avatarInput = document.getElementById('avatar-input');
+    if (avatarInput) {
+        avatarInput.addEventListener('change', function(e) {
+            const previewImg = document.getElementById('avatar-preview-img');
+            handleFilePreview(this, previewImg, '#avatar-preview-box');
+        });
     }
 
     // Delegate Document Previews
