@@ -110,7 +110,7 @@
                     </div>
                     
                     <div class="sidebar-figma-actions mt-auto">
-                        <form action="{{ route('admin.passenger.toggleStatus', $passenger->id) }}" method="POST">
+                        <form action="{{ route('admin.passenger.toggleStatus', $passenger->id) }}" method="POST" onsubmit="event.preventDefault(); window.confirmAction('{{ strtolower($passenger->status) == 'active' ? 'Block Passenger?' : 'Unblock Passenger?' }}', '{{ strtolower($passenger->status) == 'active' ? 'They will lose access to the app.' : 'They will regain access to the app.' }}', '{{ strtolower($passenger->status) == 'active' ? 'warning' : 'success' }}', 'Yes, Proceed').then((r) => { if(r.isConfirmed) this.submit(); })">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn-figma-red-solid mb-3">
@@ -119,10 +119,14 @@
                             </button>
                         </form>
                         
-                        <button class="btn-figma-red-outline" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                            <i class="bi bi-trash-fill text-danger"></i>
-                            Delete Passenger
-                        </button>
+                        <form action="{{ route('admin.passenger.delete', $passenger->id) }}" method="POST" onsubmit="event.preventDefault(); window.confirmDelete('Delete Passenger?', 'This action is irreversible and will remove all associated data.').then((r) => { if(r.isConfirmed) this.submit(); })">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn-figma-red-outline">
+                                <i class="bi bi-trash-fill text-danger"></i>
+                                Delete Passenger
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -165,7 +169,7 @@
                     </div>
 
                     <!-- Personal Information Tab -->
-                    <div class="tab-pane fade show active" id="personal">
+                    <div class="tab-pane fade" id="personal">
                         <div class="main-card-figma">
                             <div class="card-header-red-figma d-flex justify-content-between align-items-center">
                                 <div class="d-flex align-items-center gap-2">
@@ -240,8 +244,6 @@
         </div>
     </div>
 </div>
-
-@include('admin.passenger.modals')
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

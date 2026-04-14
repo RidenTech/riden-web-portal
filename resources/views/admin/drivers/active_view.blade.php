@@ -189,7 +189,14 @@
 // Global function - must be outside DOMContentLoaded so onclick can call it
 function openDocument(title) {
     var modalEl = document.getElementById('docModal');
-    if (!modalEl) { alert('Modal not found'); return; }
+    if (!modalEl) { 
+        RidenSwal.fire({
+            icon: 'error',
+            title: 'Technical Issue',
+            text: 'Preview modal could not be initialized. Please refresh the page.'
+        });
+        return; 
+    }
     modalEl.querySelector('.modal-title').textContent = title;
     var modal = new bootstrap.Modal(modalEl);
     modal.show();

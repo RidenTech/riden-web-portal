@@ -493,25 +493,37 @@
             <div id="docs-container" class="mb-4">
                 <div class="doc-item">
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <label class="small fw-bold text-muted mb-1">Document Name</label>
                             <input type="text" name="doc_names[]" class="form-control rounded-3 border-0 bg-white" placeholder="e.g. Driving License" value="Driving License" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <label class="small fw-bold text-muted mb-1">Upload File</label>
-                            <input type="file" name="documents[]" class="form-control rounded-3 border-0 bg-white" required>
+                            <input type="file" name="documents[]" class="form-control rounded-3 border-0 bg-white doc-file-input" required accept="image/*">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <!-- Preview Box -->
+                            <div class="doc-preview-container w-100">
+                                <img src="#" alt="Doc Preview" class="doc-preview-box img-fluid">
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="doc-item">
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <label class="small fw-bold text-muted mb-1">Document Name</label>
                             <input type="text" name="doc_names[]" class="form-control rounded-3 border-0 bg-white" placeholder="e.g. ID Card" value="ID Card" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <label class="small fw-bold text-muted mb-1">Upload File</label>
-                            <input type="file" name="documents[]" class="form-control rounded-3 border-0 bg-white" required>
+                            <input type="file" name="documents[]" class="form-control rounded-3 border-0 bg-white doc-file-input" required accept="image/*">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <!-- Preview Box -->
+                            <div class="doc-preview-container w-100">
+                                <img src="#" alt="Doc Preview" class="doc-preview-box img-fluid">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -566,6 +578,29 @@
         const container = document.getElementById('docs-container');
         const newItem = document.createElement('div');
         newItem.className = 'doc-item-premium';
+    // Universal Preview Handler
+    function handleFilePreview(input, previewImg, containerSelector) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                const container = input.closest('.row').querySelector(containerSelector) || document.querySelector(containerSelector);
+                if(container) container.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Delegate Document Previews
+    document.getElementById('docs-container').addEventListener('change', function(e) {
+        if (e.target.classList.contains('doc-file-input')) {
+            const row = e.target.closest('.row');
+            const previewImg = row.querySelector('.doc-preview-box');
+            handleFilePreview(e.target, previewImg, '.doc-preview-container');
+        }
+    });
+
+    // Add More Documents
     document.getElementById('add-doc-btn').addEventListener('click', function() {
         const container = document.getElementById('docs-container');
         const newItem = document.createElement('div');
@@ -586,12 +621,18 @@
                         <i class="bi bi-cloud-upload figma-input-icon"></i>
                         <input type="file" name="documents[]" class="figma-input" required>
                     </div>
+                <div class="col-md-5">
                     <label class="small fw-bold text-muted mb-1">Document Name</label>
                     <input type="text" name="doc_names[]" class="form-control rounded-3 border-0 bg-white" placeholder="e.g. Insurance" required>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <label class="small fw-bold text-muted mb-1">Upload File</label>
-                    <input type="file" name="documents[]" class="form-control rounded-3 border-0 bg-white" required>
+                    <input type="file" name="documents[]" class="form-control rounded-3 border-0 bg-white doc-file-input" required accept="image/*">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <div class="doc-preview-container w-100">
+                        <img src="#" alt="Doc Preview" class="doc-preview-box img-fluid">
+                    </div>
                 </div>
             </div>
         `;
