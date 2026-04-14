@@ -59,6 +59,13 @@ Route::prefix('admin')->group(function () {
         });
 
         Route::middleware(['admin.module:Booking Management'])->group(function () {
+            Route::get('/booking-management', function () {
+                return view('admin.booking.index');
+            })->name('admin.booking.management');
+
+            Route::get('/booking-management/detail/{id}', function ($id) {
+                return view('admin.booking.detail', ['id' => $id]);
+            })->name('admin.booking.detail');
             Route::get('/booking-management', [BookingManagementController::class, 'index'])->name('admin.booking.management');
             Route::get('/booking-management/detail/{id}', [BookingManagementController::class, 'show'])->name('admin.booking.detail');
         });
