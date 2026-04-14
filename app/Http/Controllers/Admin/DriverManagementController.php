@@ -151,7 +151,20 @@ class DriverManagementController extends Controller
 
         $driver->update($driverData);
 
-        // 2. Update/Create Vehicle
+        // 2. Handle Deleted Documents
+        if ($request->filled('deleted_documents')) {
+            $deletedIds = explode(',', $request->deleted_documents);
+            $docsToDelete = DriverDocument::whereIn('id', $deletedIds)->where('driver_id', $driver->id)->get();
+            
+            foreach ($docsToDelete as $doc) {
+                if ($doc->file_path) {
+                    Storage::disk('public')->delete($doc->file_path);
+                }
+                $doc->delete();
+            }
+        }
+
+        // 3. Update/Create Vehicle
         $vehicleData = [
             'model' => $request->model,
             'year' => $request->year,
