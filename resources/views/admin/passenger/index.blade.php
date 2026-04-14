@@ -23,6 +23,19 @@
             <div class="date-picker-passengers">
                 <i class="bi bi-calendar3"></i>
                 <span>{{ date('d/m/Y') }} - {{ date('d/m/Y') }}</span>
+    <div class="riden-list-header ">
+        <h3 class="passenger-page-title mb-0">Passenger Management</h3>
+        
+        <div class="d-flex gap-3 align-items-center">
+            <a href="{{ route('admin.passenger.create') }}" class="btn-figma-blue-pill">
+                <i class="bi bi-person-plus-fill me-2"></i> Add New Passenger
+            </a>
+            <button class="btn-figma-red-pill border-0">
+                <img src="https://img.icons8.com/ios-glyphs/30/ffffff/export.png" width="16" class="me-2"> Download
+            </button>
+            <div class="date-picker-figma">
+                <i class="bi bi-calendar3 me-2"></i>
+                <span>23/04/2025 - 23/04/2025</span>
             </div>
         </div>
     </div>
@@ -62,6 +75,9 @@
                                 elseif($p->status == 'Blocked') $badgeClass = 'blocked';
                             @endphp
                             <span class="status-badge {{ $badgeClass }}">{{ $p->status }}</span>
+                            <span class="badge-status-figma {{ strtolower($p->status) == 'active' ? 'active' : 'inactive' }}">
+                                {{ $p->status }}
+                            </span>
                         </td>
                     </tr>
                     @empty

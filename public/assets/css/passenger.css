@@ -189,6 +189,7 @@ body {
 .btn-figma-blue-pill {
     background: #4B49AC !important;
     /* Premium blue from branding */
+    background: #4B49AC !important; /* Premium blue from branding */
     color: #fff !important;
     border: none;
     border-radius: 12px;
@@ -247,6 +248,7 @@ body {
     border-radius: 14px;
     padding: 14px 18px 14px 50px !important;
     /* Extra left padding for icon */
+    padding: 14px 18px 14px 50px !important; /* Extra left padding for icon */
     font-size: 14px;
     font-weight: 600;
     color: #111;
