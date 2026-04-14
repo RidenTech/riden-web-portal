@@ -9,8 +9,20 @@
 @endpush
 
 @section('content')
-<div class="col-12 px-0">
+<div class="col-12 passengers-wrapper px-0">
     <!-- Header Actions Row (Below Topbar) -->
+    <div class="passengers-header riden-list-header">
+        <h3 class="passenger-page-title mb-0">Passenger Management</h3>
+     <div class="header-actions">
+            <a href="{{ route('admin.passenger.create') }}" class="btn-figma-red-pill">
+                <i class="bi bi-person-plus-fill me-2"></i> Add New Passenger
+            </a>
+            <a href="#" class="btn-download-passengers">
+                <i class="bi bi-file-earmark-excel-fill"></i> Download
+            </a>
+            <div class="date-picker-passengers">
+                <i class="bi bi-calendar3"></i>
+                <span>{{ date('d/m/Y') }} - {{ date('d/m/Y') }}</span>
     <div class="riden-list-header ">
         <h3 class="passenger-page-title mb-0">Passenger Management</h3>
         
@@ -28,19 +40,18 @@
         </div>
     </div>
 
-    <!-- Main Table Card -->
-    <div class="card figma-index-card">
-        <div class="table-responsive">
-            <table class="table figma-table-index mb-0">
-                <thead>
-                    <tr>
-                        <th class="ps-4">Name</th>
-                        <th>Unique ID</th>
-                        <th>Phone Number</th>
-                        <th>Bookings</th>
-                        <th class="text-center">Status</th>
-                    </tr>
-                </thead>
+    <!-- Table Container -->
+    <div class="drivers-table-container mt-4">
+        <table class="table drivers-table mb-0">
+            <thead>
+                <tr>
+                    <th class="ps-4">Name</th>
+                    <th>Unique ID</th>
+                    <th>Phone Number</th>
+                    <th>Bookings</th>
+                    <th class="text-center">Status</th>
+                </tr>
+            </thead>
                 <tbody>
                     @forelse($passengers as $p)
                     <tr onclick="window.location='{{ route('admin.passenger.detail', $p->id) }}'" style="cursor: pointer;">
@@ -58,6 +69,12 @@
                         <td class="fw-semibold">{{ $p->phone }}</td>
                         <td class="fw-semibold">0</td> {{-- Bookings count can be added later --}}
                         <td class="text-center">
+                            @php
+                                $badgeClass = 'offline';
+                                if($p->status == 'Active') $badgeClass = 'online';
+                                elseif($p->status == 'Blocked') $badgeClass = 'blocked';
+                            @endphp
+                            <span class="status-badge {{ $badgeClass }}">{{ $p->status }}</span>
                             <span class="badge-status-figma {{ strtolower($p->status) == 'active' ? 'active' : 'inactive' }}">
                                 {{ $p->status }}
                             </span>

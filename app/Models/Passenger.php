@@ -23,6 +23,11 @@ class Passenger extends Authenticatable
         'status'
     ];
 
+    public function getNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
     protected $hidden = [
         'password',
     ];
