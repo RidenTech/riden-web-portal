@@ -1,6 +1,6 @@
 @extends('admin.layout.master')
 
-@section('title', 'Add New Passenger | Riden Admin')
+@section('title', 'Passenger Management')
 
 @push('styles')
     <link href="{{ asset('assets/css/passenger.css') }}" rel="stylesheet" type="text/css" />

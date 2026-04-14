@@ -15,11 +15,11 @@
         $headerSearchPlaceholder = 'Search by code and date';
     } elseif (str_contains($path, 'passenger-management')) {
         $headerTitle = 'Passenger Management';
-        $showHeaderSearch = true;
+        $showHeaderSearch = false;
         $headerSearchPlaceholder = 'Search by name, email, phone number';
     } elseif (str_contains($path, 'driver-management')) {
         $headerTitle = 'Driver Management';
-        $showHeaderSearch = true;
+        $showHeaderSearch = false;
         $headerSearchPlaceholder = 'Search by name, email, phone number';
     }
 @endphp

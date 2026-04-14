@@ -1,6 +1,6 @@
 @extends('admin.layout.master')
 
-@section('title', 'Driver Profile | Riden Admin')
+@section('title', 'Driver Profile ')
 
 @push('styles')
     <link href="{{ asset('assets/css/drivers.css') }}?v={{ time() }}" rel="stylesheet" type="text/css" />
@@ -115,20 +115,20 @@
     <div class="row g-2 mt-0">
         <!-- Sidebar Navigation -->
         <div class="col-lg-4">
-            <div class="driver-nav-list" id="driverTabList">
-                <a href="#personal" class="driver-nav-item active" data-bs-toggle="tab">
+            <div class="driver-nav-list pt-1" id="driverTabList" role="tablist">
+                <a href="#personal" class="driver-nav-item active border-0 w-100 text-start text-decoration-none" data-bs-toggle="pill" data-bs-target="#personal" role="tab">
                     <div class="icon-wrapper"><i class="bi bi-person-fill"></i></div>
                     Personal Information
                 </a>
-                <a href="#vehicle" class="driver-nav-item" data-bs-toggle="tab">
-                    <div class="icon-wrapper"><i class="bi bi-car-front-fill"></i></div>
+                <a href="#vehicle" class="driver-nav-item border-0 w-100 text-start text-decoration-none" data-bs-toggle="pill" data-bs-target="#vehicle" role="tab">
+                    <div class="icon-wrapper"><i class="bi bi-truck"></i></div>
                     Vehicle Information
                 </a>
-                <a href="#documents" class="driver-nav-item" data-bs-toggle="tab">
+                <a href="#documents" class="driver-nav-item border-0 w-100 text-start text-decoration-none" data-bs-toggle="pill" data-bs-target="#documents" role="tab">
                     <div class="icon-wrapper"><i class="bi bi-file-earmark-text-fill"></i></div>
                     Documents
                 </a>
-                <a href="#rides" class="driver-nav-item" data-bs-toggle="tab">
+                <a href="#rides" class="driver-nav-item border-0 w-100 text-start text-decoration-none" data-bs-toggle="pill" data-bs-target="#rides" role="tab">
                     <div class="icon-wrapper"><i class="bi bi-map-fill"></i></div>
                     All Rides
                 </a>
@@ -169,7 +169,7 @@
                 <!-- Personal Info Section -->
                 <div class="tab-pane fade show active" id="personal">
                     <div class="driver-info-card">
-                        <div class="driver-info-card-header">
+                        <div class="driver-info-card-header" style="background: var(--riden-red) !important;">
                             <i class="bi bi-person-fill"></i>
                             <h5>Personal Details</h5>
                         </div>
@@ -203,7 +203,7 @@
                 <!-- Vehicle Info Section -->
                 <div class="tab-pane fade" id="vehicle">
                     <div class="driver-info-card">
-                        <div class="driver-info-card-header" style="background: #111 !important;">
+                        <div class="driver-info-card-header" style="background: var(--riden-red) !important;">
                             <i class="bi bi-car-front-fill"></i>
                             <h5>Vehicle Specifications</h5>
                         </div>
@@ -243,7 +243,7 @@
                 <!-- Documents Section -->
                 <div class="tab-pane fade" id="documents">
                     <div class="driver-info-card">
-                        <div class="driver-info-card-header" style="background: #555 !important;">
+                        <div class="driver-info-card-header" style="background: var(--riden-red) !important;">
                             <i class="bi bi-file-earmark-text-fill"></i>
                             <h5>Stored Documents</h5>
                         </div>
@@ -279,7 +279,7 @@
                 <!-- All Rides Section -->
                 <div class="tab-pane fade" id="rides">
                     <div class="driver-info-card">
-                        <div class="driver-info-card-header">
+                        <div class="driver-info-card-header" style="background: var(--riden-red) !important;">
                             <i class="bi bi-map-fill"></i>
                             <h5>Recent Ride History</h5>
                         </div>
@@ -294,3 +294,31 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    // Manual fallback for tab switching if Bootstrap JS fails
+    document.querySelectorAll('.driver-nav-item').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            
+            // Remove active from all siblings
+            document.querySelectorAll('.driver-nav-item').forEach(l => l.classList.remove('active'));
+            // Add active to clicked
+            this.classList.add('active');
+            
+            // Hide all panes
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('show', 'active');
+            });
+            
+            // Show target pane
+            const targetId = this.getAttribute('data-bs-target');
+            const targetPane = document.querySelector(targetId);
+            if (targetPane) {
+                targetPane.classList.add('show', 'active');
+            }
+        });
+    });
+</script>
+@endpush

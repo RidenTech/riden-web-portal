@@ -1,6 +1,6 @@
 @extends('admin.layout.master')
 
-@section('title', 'Add New Driver | Riden Admin')
+@section('title', 'Driver Management ')
 
 @push('styles')
     <link href="{{ asset('assets/css/passenger.css') }}" rel="stylesheet" type="text/css" />
@@ -77,13 +77,10 @@
                 <a href="{{ route('admin.drivers.directory') }}" class="back-btn-driver">
                     <i class="bi bi-chevron-left"></i>
                 </a>
-                <div class="placeholder-avatar-ring">
-                    <i class="bi bi-person-plus-fill"></i>
-                </div>
-                <div class="driver-identity">
+                            <div class="driver-identity">
                     <h4>Add New Driver</h4>
                     <div class="driver-rating-line">
-                        <span class="text-muted fw-semibold">Fill in the details to register a new driver</span>
+                        <span class="text-muted ">Fill in the details to register a new driver</span>
                     </div>
                 </div>
             </div>
