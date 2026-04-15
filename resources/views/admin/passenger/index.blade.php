@@ -11,27 +11,8 @@
 @section('content')
 <div class="col-12 drivers-wrapper">
     <!-- Header Actions Row (Below Topbar) -->
-    <div class="drivers-header riden-list-header">
-        <form class="riden-header-search flex-grow-1" style="max-width: 400px; ">
-            <span class="riden-header-search-icon-circle">
-                <i class="bi bi-search"></i>
-            </span>
-            <input type="text"
-                   class="form-control form-control-sm"
-                   placeholder="Search by name, email, phone number">
-        </form>
-
-        <div class="header-actions">
-            <a href="{{ route('admin.passenger.create') }}" class="btn-figma-red-pill">
-                <i class="bi bi-person-plus-fill me-2"></i> Add New Passenger
-            </a>
-            <a href="#" class="btn-download-excel">
-                <i class="bi bi-file-earmark-excel-fill"></i> Download
-            </a>
-            <div class="date-picker-drivers">
-                <i class="bi bi-calendar3"></i>
-                <span>{{ date('d/m/Y') }} - {{ date('d/m/Y') }}</span>
-    <div class="riden-list-header ">
+    <!-- 1. Header Actions Row -->
+    <div class="riden-list-header px-4 mt-4">
         <h3 class="passenger-page-title mb-0">Passenger Management</h3>
         
         <div class="d-flex gap-3 align-items-center">
@@ -43,18 +24,13 @@
             </button>
             <div class="date-picker-figma">
                 <i class="bi bi-calendar3 me-2"></i>
-                <span>23/04/2025 - 23/04/2025</span>
+                <span>{{ date('d/m/Y') }} - {{ date('d/m/Y') }}</span>
             </div>
         </div>
     </div>
 
-    <div class="riden-tabs-container">
-        <a href="#" class="riden-tab-item active">Active Passengers</a>
-        <a href="#" class="riden-tab-item">Inactive <span class="count">(0)</span></a>
-    </div>
-
-    <!-- Table Container -->
-    <div class="drivers-table-container mt-4">
+    <!-- 2. Table Container -->
+    <div class="drivers-table-container mt-4 mx-4 shadow-sm">
         <table class="table drivers-table mb-0">
             <thead>
                 <tr>
@@ -80,15 +56,9 @@
                         </td>
                         <td class="text-muted fw-semibold">{{ $p->unique_id }}</td>
                         <td class="fw-semibold">{{ $p->phone }}</td>
-                        <td class="fw-semibold">0</td> {{-- Bookings count can be added later --}}
+                        <td class="fw-semibold">0</td>
                         <td class="text-center">
-                            @php
-                                $badgeClass = 'offline';
-                                if($p->status == 'Active') $badgeClass = 'online';
-                                elseif($p->status == 'Blocked') $badgeClass = 'blocked';
-                            @endphp
-                            <span class="status-badge {{ $badgeClass }}">{{ $p->status }}</span>
-                            <span class="badge-status-figma {{ strtolower($p->status) == 'active' ? 'active' : 'inactive' }}">
+                            <span class="badge-status-figma {{ strtolower($p->status) == 'active' ? 'active' : (strtolower($p->status) == 'blocked' ? 'blocked' : 'inactive') }}">
                                 {{ $p->status }}
                             </span>
                         </td>
