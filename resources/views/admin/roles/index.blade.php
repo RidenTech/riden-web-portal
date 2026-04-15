@@ -8,20 +8,6 @@
 
 @section('content')
 <div class="col-12 roles-wrapper">
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
     <!-- Header Row -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold m-0" style="font-size: 2rem;">Admin Roles</h2>
@@ -105,11 +91,13 @@ function getLaravelTimestamp() {
 }
 
 function submitDelete(btn) {
-    if (confirm('Are you sure you want to delete this admin?')) {
-        const form = btn.closest('form');
-        form.querySelector('.h_deleted_at').value = getLaravelTimestamp();
-        form.submit();
-    }
+    window.confirmDelete('Delete Admin?', 'This administrator will no longer have access to the portal.').then((result) => {
+        if (result.isConfirmed) {
+            const form = btn.closest('form');
+            form.querySelector('.h_deleted_at').value = getLaravelTimestamp();
+            form.submit();
+        }
+    });
 }
 </script>
 @endsection

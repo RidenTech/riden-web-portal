@@ -41,32 +41,30 @@
                     <thead>
                         <tr>
                             <th class="ps-4">Booking ID</th>
-                            <th>Passenger</th>
                             <th>Driver</th>
+                            <th>Passenger</th>
                             <th>Fare</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($bookings as $booking)
-                        <tr>
+                        <tr onclick="window.location='{{ route('admin.booking.detail', $booking->id) }}'" style="cursor: pointer;">
                             <td class="ps-4 booking-id">
-                                <a href="{{ route('admin.booking.detail', $booking->id) }}" class="text-dark text-decoration-none">
-                                    {{ $booking->booking_id }}
-                                </a>
+                                {{ $booking->booking_id }}
                             </td>
-                            <td>{{ $booking->passenger->name ?? 'N/A' }}</td>
-                            <td>{{ $booking->driver->name ?? 'Unassigned' }}</td>
+                            <td>{{ $booking->driver->first_name ?? 'Unassigned' }} {{ $booking->driver->last_name ?? '' }}</td>
+                            <td>{{ $booking->passenger->first_name ?? 'N/A' }} {{ $booking->passenger->last_name ?? '' }}</td>
                             <td>${{ number_format($booking->fare, 2) }}</td>
                             <td>
-                                <span class="status-badge {{ in_array($booking->status, ['completed', 'ongoing']) ? 'status-completed' : ($booking->status === 'cancelled' ? 'status-cancelled' : '') }}">
+                                <span class="status-badge {{ in_array(strtolower($booking->status), ['completed', 'ongoing']) ? 'status-completed' : 'status-cancelled' }}">
                                     {{ ucfirst($booking->status) }}
                                 </span>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="text-center">No bookings found.</td>
+                            <td colspan="5" class="text-center py-4 text-muted">No bookings found matching your criteria.</td>
                         </tr>
                         @endforelse
                     </tbody>

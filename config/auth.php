@@ -47,6 +47,11 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+
+        'passenger' => [
+            'driver' => 'sanctum',
+            'provider' => 'passengers',
+        ],
     ],
 
     /*
@@ -75,6 +80,11 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
+        ],
+
+        'passengers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Passenger::class,
         ],
 
         // 'users' => [
