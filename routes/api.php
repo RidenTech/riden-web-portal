@@ -18,6 +18,8 @@ Route::prefix('passenger')->group(function () {
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/profile', [PassengerAuthController::class, 'profile']);
+        Route::post('/profile/update', [PassengerAuthController::class, 'updateProfile']);
+        Route::post('/password/update', [PassengerAuthController::class, 'updatePassword']);
         Route::post('/logout', [PassengerAuthController::class, 'logout']);
     });
 });

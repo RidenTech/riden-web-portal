@@ -119,6 +119,74 @@ class PassengerAuthController extends Controller
     }
 
     /**
+     * Update passenger profile
+     */
+    public function updateProfile(Request $request)
+    {
+        $passenger = $request->user();
+
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20|unique:passengers,phone,' . $passenger->id,
+            'gender' => 'nullable|string|in:Male,Female,Other',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $passenger->update($request->only(['first_name', 'last_name', 'phone', 'gender']));
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Profile updated successfully',
+            'data' => $passenger
+        ]);
+    }
+
+    /**
+     * Update passenger password
+     */
+    public function updatePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $passenger = $request->user();
+
+        if (!Hash::check($request->current_password, $passenger->password)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Current password does not match'
+            ], 401);
+        }
+
+        $passenger->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Password updated successfully'
+        ]);
+    }
+
+    /**
      * Logout passenger
      */
     public function logout(Request $request)
