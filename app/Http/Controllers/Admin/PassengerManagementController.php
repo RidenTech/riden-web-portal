@@ -42,7 +42,7 @@ class PassengerManagementController extends Controller
         ]);
 
         Passenger::create([
-            'unique_id' => '#' . rand(10000, 99999),
+            'unique_id' => 'RIDEN-P' . strtoupper(Str::random(6)),
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
