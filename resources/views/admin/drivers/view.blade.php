@@ -73,8 +73,13 @@
                 </div>
             </div>
         </div>
-        <div class="since-date-view text-muted">
-            Registered: {{ $driver->created_at->format('M d, Y') }}
+        <div class="d-flex align-items-center gap-3">
+            <div class="since-date-view text-muted">
+                Registered: {{ $driver->created_at->format('M d, Y') }}
+            </div>
+            <a href="{{ route('admin.drivers.edit', $driver->id) }}" class="btn-figma-blue-pill py-2 px-4 shadow-sm" style="width: auto; font-size: 13px; border: 1px solid rgba(255,255,255,0.2);">
+                <i class="bi bi-pencil-square me-2"></i> Edit Profile
+            </a>
         </div>
     </div>
 
@@ -121,6 +126,7 @@
                     Personal Information
                 </a>
                 <a href="#vehicle" class="driver-nav-item border-0 w-100 text-start text-decoration-none" data-bs-toggle="pill" data-bs-target="#vehicle" role="tab">
+                <a href="#vehicle" class="driver-nav-item" data-bs-toggle="tab">
                     <div class="icon-wrapper"><i class="bi bi-truck"></i></div>
                     Vehicle Information
                 </a>
@@ -137,7 +143,7 @@
             <!-- Action Buttons -->
             <div class="driver-action-buttons">
                 @if($driver->status == 'Active')
-                    <form action="{{ route('admin.drivers.toggleStatus', $driver->id) }}" method="POST">
+                    <form action="{{ route('admin.drivers.toggleStatus', $driver->id) }}" method="POST" onsubmit="event.preventDefault(); window.confirmAction('Block Driver?', 'They will not be able to log in until unblocked.', 'warning', 'Yes, block them').then((r) => { if(r.isConfirmed) this.submit(); })">
                         @csrf @method('PATCH')
                         <input type="hidden" name="status" value="Blocked">
                         <button type="submit" class="btn-driver-action btn-driver-solid-red">
@@ -145,7 +151,7 @@
                         </button>
                     </form>
                 @else
-                    <form action="{{ route('admin.drivers.toggleStatus', $driver->id) }}" method="POST">
+                    <form action="{{ route('admin.drivers.toggleStatus', $driver->id) }}" method="POST" onsubmit="event.preventDefault(); window.confirmAction('Activate Driver?', 'They will be allowed to log in and use the platform.', 'success', 'Yes, activate').then((r) => { if(r.isConfirmed) this.submit(); })">
                         @csrf @method('PATCH')
                         <input type="hidden" name="status" value="Active">
                         <button type="submit" class="btn-driver-action btn-driver-solid-red" style="background-color: #28a745 !important;">
@@ -154,7 +160,7 @@
                     </form>
                 @endif
 
-                <form action="{{ route('admin.drivers.delete', $driver->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this driver?');">
+                <form action="{{ route('admin.drivers.delete', $driver->id) }}" method="POST" onsubmit="event.preventDefault(); window.confirmDelete('Delete Driver?', 'All records for this driver will be permanently removed.').then((r) => { if(r.isConfirmed) this.submit(); })">
                     @csrf @method('DELETE')
                     <button type="submit" class="btn-driver-action btn-driver-outline-red">
                         <i class="bi bi-trash-fill text-danger"></i> Delete Driver
@@ -205,6 +211,8 @@
                     <div class="driver-info-card">
                         <div class="driver-info-card-header" style="background: var(--riden-red) !important;">
                             <i class="bi bi-car-front-fill"></i>
+                        <div class="driver-info-card-header" style="background: #111 !important;">
+                            <i class="bi bi-truck"></i>
                             <h5>Vehicle Specifications</h5>
                         </div>
                         <div class="driver-info-grid">
@@ -263,9 +271,14 @@
                                             <small class="text-muted">{{ $doc->status }} • {{ $doc->created_at->format('d M Y') }}</small>
                                         </div>
                                     </div>
-                                    <a href="{{ asset('storage/'.$doc->file_path) }}" target="_blank" class="btn-view-doc">
+                                    <button type="button" 
+                                            class="btn-view-doc border-0" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#docPreviewModal"
+                                            data-bs-url="{{ asset('storage/'.$doc->file_path) }}"
+                                            data-bs-title="{{ $doc->document_name }}">
                                         View Document
-                                    </a>
+                                    </button>
                                 </div>
                             @empty
                                 <div class="text-center py-5">
@@ -289,6 +302,28 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Premium Document Preview Modal -->
+<div class="modal fade" id="docPreviewModal" tabindex="-1" aria-hidden="true" style="z-index: 9999;">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 25px; overflow: hidden;">
+            <div class="modal-header bg-dark text-white border-0 py-3 px-4">
+                <h5 class="modal-title fw-bold" id="docPreviewTitle">Document Preview</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0 bg-light">
+                <div id="docPreviewContent" class="text-center" style="min-height: 400px; display: flex; align-items: center; justify-content: center;">
+                    <img id="docPreviewImg" src="" class="img-fluid d-none" style="max-height: 80vh;" alt="">
+                    <iframe id="docPreviewFrame" src="" class="d-none" style="width: 100%; height: 80vh; border: none;"></iframe>
+                </div>
+            </div>
+            <div class="modal-footer border-0 p-3">
+                <button type="button" class="btn btn-secondary rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Close Preview</button>
+                <a id="docDownloadBtn" href="#" download class="btn btn-danger rounded-pill px-4 fw-bold">Download File</a>
             </div>
         </div>
     </div>
@@ -320,5 +355,54 @@
             }
         });
     });
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Modal Logic (Standard Bootstrap 5 Pattern)
+    const modalEl = document.getElementById('docPreviewModal');
+    if (modalEl) {
+        modalEl.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const url = button.getAttribute('data-bs-url');
+            const title = button.getAttribute('data-bs-title');
+            
+            const frame = document.getElementById('docPreviewFrame');
+            const img = document.getElementById('docPreviewImg');
+            const downloadBtn = document.getElementById('docDownloadBtn');
+            const titleEl = document.getElementById('docPreviewTitle');
+            
+            if (titleEl) titleEl.innerText = title;
+            if (downloadBtn) downloadBtn.href = url;
+            
+            // Clear previous
+            img.classList.add('d-none');
+            frame.classList.add('d-none');
+            img.src = '';
+            frame.src = '';
+            
+            if (url.toLowerCase().endsWith('.pdf')) {
+                frame.classList.remove('d-none');
+                frame.src = url;
+            } else {
+                img.classList.remove('d-none');
+                img.src = url;
+            }
+        });
+    }
+
+    // 2. Tab Navigation Logic
+    const tabLinks = document.querySelectorAll('.driver-nav-item');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            tabLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            tabPanes.forEach(pane => pane.classList.remove('show', 'active'));
+            const targetId = this.getAttribute('href').substring(1);
+            const targetPane = document.getElementById(targetId);
+            if (targetPane) targetPane.classList.add('show', 'active');
+        });
+    });
+});
 </script>
 @endpush

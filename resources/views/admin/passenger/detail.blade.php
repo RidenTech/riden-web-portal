@@ -114,6 +114,46 @@
                 <button class="btn-driver-action btn-driver-outline-red" data-bs-toggle="modal" data-bs-target="#deleteModal">
                     <i class="bi bi-trash-fill text-danger"></i> Delete Passenger
                 </button>
+        <!-- 3. Sidebar & Content Grid -->
+        <div class="row g-2 mt-0">
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="sidebar-glass-card h-100 d-flex flex-column py-4">
+                    <div class="nav-figma-list" id="passengerTab" role="tablist">
+                        <a class="nav-figma-item active" id="personal-tab" data-bs-toggle="tab" href="#personal" role="tab">
+                            <div class="ico-box"><i class="bi bi-person-fill"></i></div>
+                            Personal Information
+                        </a>
+                        <a class="nav-figma-item" id="rides-tab" data-bs-toggle="tab" href="#rides" role="tab">
+                            <div class="ico-box"><i class="bi bi-truck"></i></div>
+                            All Rides
+                        </a>
+                        <a class="nav-figma-item" id="payment-tab" data-bs-toggle="tab" href="#payment" role="tab">
+                            <div class="ico-box"><i class="bi bi-credit-card-fill"></i></div>
+                            Payment Methods
+                        </a>
+                    </div>
+                    
+                    <div class="sidebar-figma-actions mt-auto">
+                        <form action="{{ route('admin.passenger.toggleStatus', $passenger->id) }}" method="POST" onsubmit="event.preventDefault(); window.confirmAction('{{ strtolower($passenger->status) == 'active' ? 'Block Passenger?' : 'Unblock Passenger?' }}', '{{ strtolower($passenger->status) == 'active' ? 'They will lose access to the app.' : 'They will regain access to the app.' }}', '{{ strtolower($passenger->status) == 'active' ? 'warning' : 'success' }}', 'Yes, Proceed').then((r) => { if(r.isConfirmed) this.submit(); })">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn-figma-red-solid mb-3">
+                                <i class="bi {{ strtolower($passenger->status) == 'active' ? 'bi-slash-circle-fill' : 'bi-check-circle-fill' }}"></i>
+                                {{ strtolower($passenger->status) == 'active' ? 'Block Passenger' : 'Unblock Passenger' }}
+                            </button>
+                        </form>
+                        
+                        <form action="{{ route('admin.passenger.delete', $passenger->id) }}" method="POST" onsubmit="event.preventDefault(); window.confirmDelete('Delete Passenger?', 'This action is irreversible and will remove all associated data.').then((r) => { if(r.isConfirmed) this.submit(); })">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn-figma-red-outline">
+                                <i class="bi bi-trash-fill text-danger"></i>
+                                Delete Passenger
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -137,6 +177,15 @@
                                 <div class="col-md-6">
                                     <label class="label-view">Full Name</label>
                                     <p class="value-view">{{ $passenger->first_name }} {{ $passenger->last_name }}</p>
+                    </div>
+
+                    <!-- Personal Information Tab -->
+                    <div class="tab-pane fade" id="personal">
+                        <div class="main-card-figma">
+                            <div class="card-header-red-figma d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-person-fill"></i>
+                                    <h5 class="mb-0">Personal Information</h5>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="label-view">Email Address</label>
@@ -217,6 +266,10 @@
 @include('admin.passenger.modals')
 
 @endsection
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabLinks = document.querySelectorAll('.nav-figma-item');
+    const tabPanes = document.querySelectorAll('.tab-pane');
 
 @push('scripts')
 <script>

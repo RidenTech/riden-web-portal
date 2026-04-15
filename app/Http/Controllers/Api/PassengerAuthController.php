@@ -1,0 +1,133 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\Passenger;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+
+class PassengerAuthController extends Controller
+{
+    /**
+     * Register a new passenger via Mobile App
+     */
+    public function register(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:passengers',
+            'phone' => 'required|string|max:20|unique:passengers',
+            'password' => 'required|string|min:8|confirmed',
+            'gender' => 'nullable|string|in:Male,Female,Other',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $passenger = Passenger::create([
+            'unique_id' => 'RIDEN-P' . strtoupper(Str::random(6)),
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+            'gender' => $request->gender,
+            'status' => 'Active'
+        ]);
+
+        $token = $passenger->createToken('passenger_auth_token')->plainTextToken;
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Passenger registered successfully',
+            'data' => [
+                'user' => $passenger,
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ]
+        ], 201);
+    }
+
+    /**
+     * Login passenger via Mobile App
+     */
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $passenger = Passenger::where('email', $request->email)->first();
+
+        if (!$passenger || !Hash::check($request->password, $passenger->password)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid credentials'
+            ], 401);
+        }
+
+        if ($passenger->status !== 'Active') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Your account is ' . $passenger->status
+            ], 403);
+        }
+
+        // Revoke previous tokens to keep it clean (Optional)
+        $passenger->tokens()->delete();
+
+        $token = $passenger->createToken('passenger_auth_token')->plainTextToken;
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Login successful',
+            'data' => [
+                'user' => $passenger,
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ]
+        ]);
+    }
+
+    /**
+     * Get authenticated passenger profile
+     */
+    public function profile(Request $request)
+    {
+        return response()->json([
+            'status' => 'success',
+            'data' => $request->user()
+        ]);
+    }
+
+    /**
+     * Logout passenger
+     */
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Logged out successfully'
+        ]);
+    }
+}

@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\AdminRoleController;
 use App\Http\Controllers\Admin\PassengerManagementController;
 use App\Http\Controllers\Admin\DriverManagementController;
+use App\Http\Controllers\Admin\BookingManagementController;
 
 // Root Redirect to Admin Login or Dashboard
 Route::get('/', function () {
@@ -65,6 +66,8 @@ Route::prefix('admin')->group(function () {
             Route::get('/booking-management/detail/{id}', function ($id) {
                 return view('admin.booking.detail', ['id' => $id]);
             })->name('admin.booking.detail');
+            Route::get('/booking-management', [BookingManagementController::class, 'index'])->name('admin.booking.management');
+            Route::get('/booking-management/detail/{id}', [BookingManagementController::class, 'show'])->name('admin.booking.detail');
         });
 
         Route::middleware(['admin.module:Reviews & Ratings'])->get('/reviews-ratings', function () {
@@ -126,6 +129,8 @@ Route::prefix('admin')->group(function () {
                 Route::get('/create', [DriverManagementController::class, 'create'])->name('create');
                 Route::post('/store', [DriverManagementController::class, 'store'])->name('store');
                 Route::get('/view/{id}', [DriverManagementController::class, 'show'])->name('view');
+                Route::get('/edit/{id}', [DriverManagementController::class, 'edit'])->name('edit');
+                Route::put('/update/{id}', [DriverManagementController::class, 'update'])->name('update');
                 Route::patch('/status/{id}', [DriverManagementController::class, 'toggleStatus'])->name('toggleStatus');
                 Route::delete('/delete/{id}', [DriverManagementController::class, 'destroy'])->name('delete');
                 

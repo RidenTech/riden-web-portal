@@ -135,6 +135,27 @@
             transition: all 0.3s ease;
             margin-top: 1rem;
         }
+    <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+</head>
+
+<body class="d-flex align-items-center justify-content-center min-vh-100 p-3">
+    <!-- ... (body content stays the same) ... -->
+    <div class="login-container">
+        <!-- Main Card -->
+        <div class="card main-card overflow-hidden">
+            <div class="row g-0">
+                <!-- Left Illustration Section -->
+                <div
+                    class="col-lg-6 col-md-5 illustration-side d-flex flex-column align-items-center justify-content-center p-4">
+                    <h1 class="brand-name">RIDEN</h1>
+                    <div class="illustration-wrapper mt-auto">
+                        <img src="{{ asset('assets/images/riden_car.png') }}" alt="Happy couple in car" class="img-fluid hero-img">
+                    </div>
+                </div>
 
         .btn-login:hover {
             transform: translateY(-2px);
@@ -244,6 +265,47 @@
                 this.classList.toggle('bi-eye-slash');
             });
         });
+    <!-- Bootstrap Bundle -->
+    <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.all.min.js') }}"></script>
+
+    <script>
+        const RidenSwal = Swal.mixin({
+            confirmButtonColor: '#e11d48',
+            cancelButtonColor: '#111',
+            customClass: {
+                popup: 'riden-swal-popup',
+                confirmButton: 'btn btn-danger rounded-pill px-4',
+                cancelButton: 'btn btn-dark rounded-pill px-4'
+            }
+        });
+
+        @if(session('status'))
+            RidenSwal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '{{ session('status') }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        @endif
+
+        @if(session('error'))
+            RidenSwal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: '{{ session('error') }}'
+            });
+        @endif
+
+        @if ($errors->any())
+            RidenSwal.fire({
+                icon: 'error',
+                title: 'Access Denied',
+                html: '<ul class="text-start">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>'
+            });
+        @endif
     </script>
 </body>
 
