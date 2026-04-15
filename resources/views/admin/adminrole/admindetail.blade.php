@@ -6,11 +6,26 @@
 
 @section('content')
     <div class="col-12">
-        <div class="riden-adminroles-top">
-                      <a href="{{ route('addadmin') }}" class="btn btn-sm btn-riden-danger px-3">
-                <i class="bi bi-plus-lg me-1"></i>
-                Add new Admin
-            </a>
+        <div class="riden-adminroles-top d-flex align-items-center justify-content-between mb-4">
+            <div class="d-flex align-items-center gap-4 flex-grow-1">
+                <h2 class="riden-adminroles-title mb-0">Admin Roli</h2>
+                
+                <form class="riden-header-search flex-grow-1" style="max-width: 400px;">
+                    <span class="riden-header-search-icon-circle">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Search by name, email, phone number">
+                </form>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <a href="{{ route('addadmin') }}" class="btn btn-riden-danger px-4">
+                    <i class="bi bi-plus-lg me-2"></i>
+                    Add new Admin
+                </a>
+            </div>
         </div>
 
         <div class="riden-adminroles-card">

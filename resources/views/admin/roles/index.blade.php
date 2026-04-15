@@ -24,8 +24,15 @@
 
     <!-- Header Row -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold m-0" style="font-size: 2rem;">Admin Roles</h2>
-
+          
+                <form class="riden-header-search flex-grow-1" style="max-width: 400px;">
+                    <span class="riden-header-search-icon-circle">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Search by name, email, phone number">
+                </form>
         <a href="{{ route('admin.roles.create') }}" class="btn-add-admin">
             <i class="bi bi-plus-lg"></i> Add new Admin
         </a>

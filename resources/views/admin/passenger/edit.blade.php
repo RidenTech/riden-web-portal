@@ -1,121 +1,144 @@
 @extends('admin.layout.master')
 
 @section('title')
-    Edit Passenger | Riden Admin
+    RIDEN | Webportal
 @endsection
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('assets/css/passenger.css') }}">
+    <link href="{{ asset('assets/css/addadmin.css') }}?v={{ time() }}" rel="stylesheet" type="text/css" />
 @endpush
 
 @section('content')
-<div class="col-12 px-0">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h3 class="passenger-page-title mb-0">Edit Passenger</h3>
-            <p class="text-muted small fw-semibold">Update passenger information for <strong>{{ $passenger->first_name }}</strong></p>
-        </div>
-        <a href="{{ route('admin.passenger.detail', $passenger->id) }}" class="back-btn-small">
+<div class="col-12 riden-addadmin-wrap">
+
+    <!-- Subheader with Back Button -->
+    <div class="riden-addadmin-head mb-2">
+        <a href="{{ route('admin.passenger.detail', $passenger->id) }}" class="riden-addadmin-back text-decoration-none">
             <i class="bi bi-chevron-left"></i>
         </a>
+        <h2 class="riden-addadmin-title mb-0">Edit Passenger</h2>
     </div>
 
-    <div class="figma-form-card">
+    <!-- Main Card -->
+    <div class="card riden-addadmin-card border-0 shadow-sm p-2">
         <form action="{{ route('admin.passenger.update', $passenger->id) }}" method="POST">
             @csrf
             @method('PUT')
             
-            <div class="row g-4">
-                <!-- First Name -->
+            <div class="riden-addadmin-section mb-2 d-flex justify-content-between align-items-center">
+                <span>Passenger Details</span>
+                <span class="text-muted small fw-normal" style="font-size: 14px;">Update passenger information for <strong style="color:var(--text-main);">{{ $passenger->first_name }}</strong></span>
+            </div>
+
+            <div class="row g-2">
                 <div class="col-md-6">
-                    <label class="figma-label">First Name</label>
-                    <div class="figma-input-wrapper">
-                        <i class="bi bi-person figma-input-icon"></i>
-                        <input type="text" name="first_name" class="figma-input @error('first_name') is-invalid @enderror" value="{{ old('first_name', $passenger->first_name) }}" placeholder="e.g. John" required>
+                    <div class="mb-2">
+                        <label class="riden-field-label">First Name</label>
+                        <input type="text" name="first_name" class="form-control riden-input @error('first_name') is-invalid @enderror" value="{{ old('first_name', $passenger->first_name) }}" placeholder="e.g. John" required>
+                        @error('first_name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-                    @error('first_name')
-                        <div class="text-danger small mt-1 fw-bold">{{ $message }}</div>
-                    @enderror
                 </div>
 
-                <!-- Last Name -->
                 <div class="col-md-6">
-                    <label class="figma-label">Last Name</label>
-                    <div class="figma-input-wrapper">
-                        <i class="bi bi-person figma-input-icon"></i>
-                        <input type="text" name="last_name" class="figma-input @error('last_name') is-invalid @enderror" value="{{ old('last_name', $passenger->last_name) }}" placeholder="e.g. Doe" required>
+                    <div class="mb-2">
+                        <label class="riden-field-label">Last Name</label>
+                        <input type="text" name="last_name" class="form-control riden-input @error('last_name') is-invalid @enderror" value="{{ old('last_name', $passenger->last_name) }}" placeholder="e.g. Doe" required>
+                        @error('last_name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-                    @error('last_name')
-                        <div class="text-danger small mt-1 fw-bold">{{ $message }}</div>
-                    @enderror
                 </div>
 
-                <!-- Email -->
                 <div class="col-md-6">
-                    <label class="figma-label">Email Address</label>
-                    <div class="figma-input-wrapper">
-                        <i class="bi bi-envelope figma-input-icon"></i>
-                        <input type="email" name="email" class="figma-input @error('email') is-invalid @enderror" value="{{ old('email', $passenger->email) }}" placeholder="john.doe@example.com" required>
+                    <div class="mb-2">
+                        <label class="riden-field-label">Email Address</label>
+                        <input type="email" name="email" class="form-control riden-input @error('email') is-invalid @enderror" value="{{ old('email', $passenger->email) }}" placeholder="john.doe@example.com" required>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-                    @error('email')
-                        <div class="text-danger small mt-1 fw-bold">{{ $message }}</div>
-                    @enderror
                 </div>
 
-                <!-- Phone Number -->
                 <div class="col-md-6">
-                    <label class="figma-label">Phone Number</label>
-                    <div class="figma-input-wrapper">
-                        <i class="bi bi-telephone figma-input-icon"></i>
-                        <input type="text" name="phone" class="figma-input @error('phone') is-invalid @enderror" value="{{ old('phone', $passenger->phone) }}" placeholder="+1 234 567 890" required>
+                    <div class="mb-2">
+                        <label class="riden-field-label">Phone Number</label>
+                        <div class="riden-phone">
+                            <div class="riden-flag">
+                                <img src="https://flagcdn.com/w40/ca.png" alt="CA">
+                                <span>+1</span>
+                            </div>
+                            <input type="text" name="phone" class="form-control riden-input flex-grow-1 @error('phone') is-invalid @enderror" value="{{ old('phone', $passenger->phone) }}" placeholder="000 000 0000" required>
+                        </div>
+                        @error('phone')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
-                    @error('phone')
-                        <div class="text-danger small mt-1 fw-bold">{{ $message }}</div>
-                    @enderror
                 </div>
 
-                <!-- Gender -->
                 <div class="col-md-6">
-                    <label class="figma-label">Gender</label>
-                    <div class="figma-input-wrapper">
-                        <i class="bi bi-gender-ambiguous figma-input-icon"></i>
-                        <select name="gender" class="figma-input figma-select @error('gender') is-invalid @enderror" required>
+                    <div class="mb-2">
+                        <label class="riden-field-label">Gender</label>
+                        <select name="gender" class="form-select riden-input @error('gender') is-invalid @enderror" required>
                             <option value="" disabled>Select gender</option>
                             <option value="Male" {{ old('gender', $passenger->gender) == 'Male' ? 'selected' : '' }}>Male</option>
                             <option value="Female" {{ old('gender', $passenger->gender) == 'Female' ? 'selected' : '' }}>Female</option>
                             <option value="Other" {{ old('gender', $passenger->gender) == 'Other' ? 'selected' : '' }}>Other</option>
                         </select>
+                        @error('gender')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-                    @error('gender')
-                        <div class="text-danger small mt-1 fw-bold">{{ $message }}</div>
-                    @enderror
                 </div>
+            </div>
 
-                <!-- Password (Optional) -->
+            <div class="riden-addadmin-section my-2">Update Password (Leave blank to keep current)</div>
+            
+            <div class="row g-4 mb-3">
                 <div class="col-md-6">
-                    <label class="figma-label">New Password (Leave blank to keep current)</label>
-                    <div class="figma-input-wrapper">
-                        <i class="bi bi-lock figma-input-icon"></i>
-                        <input type="password" name="password" class="figma-input @error('password') is-invalid @enderror" placeholder="••••••••">
+                    <div class="mb-2">
+                        <label class="riden-field-label">New Password</label>
+                        <div class="position-relative">
+                            <input type="password" name="password" class="form-control riden-input pe-5 @error('password') is-invalid @enderror" placeholder="••••••••" id="pass_main">
+                            <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 opacity-50 cursor-pointer" onclick="togglePass('pass_main')"></i>
+                        </div>
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-                    @error('password')
-                        <div class="text-danger small mt-1 fw-bold">{{ $message }}</div>
-                    @enderror
                 </div>
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <label class="riden-field-label">Confirm New Password</label>
+                        <div class="position-relative">
+                            <input type="password" name="password_confirmation" class="form-control riden-input pe-5" placeholder="••••••••" id="pass_confirm">
+                            <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 opacity-50 cursor-pointer" onclick="togglePass('pass_confirm')"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                <!-- Actions -->
-                <div class="col-12 mt-5 pt-3 border-top">
-                    <div class="d-flex align-items-center gap-3">
-                        <button type="submit" class="btn-figma-blue-pill px-5" style="width: auto;">
-                            Update Passenger Records
-                        </button>
-                        <a href="{{ route('admin.passenger.detail', $passenger->id) }}" class="text-decoration-none text-muted fw-bold small ms-2">
-                            Cancel Changes
-                        </a>
-                    </div>
-                </div>
+            <!-- Footer Actions -->
+            <div class="riden-actions d-flex justify-content-end gap-3 pt-3">
+                <button type="submit" class="btn btn-riden-danger px-5">Update Passenger</button>
+                <a href="{{ route('admin.passenger.detail', $passenger->id) }}" class="btn btn-riden-outline px-5 d-flex align-items-center justify-content-center" style="text-decoration: none;">Cancel</a>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+function togglePass(id) {
+    const input = document.getElementById(id);
+    const icon = input.nextElementSibling;
+    if (input.type === "password") {
+        input.type = "text";
+        icon.classList.replace("bi-eye-slash", "bi-eye");
+    } else {
+        input.type = "password";
+        icon.classList.replace("bi-eye", "bi-eye-slash");
+    }
+}
+</script>
 @endsection
