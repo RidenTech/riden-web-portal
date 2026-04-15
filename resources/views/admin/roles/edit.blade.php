@@ -1,6 +1,6 @@
 @extends('admin.layout.master')
 
-@section('title', 'Edit Admin Role')
+@section('title', 'Admin Roles')
 
 @push('styles')
     <link href="{{ asset('assets/css/addadmin.css') }}?v={{ time() }}" rel="stylesheet" type="text/css" />
