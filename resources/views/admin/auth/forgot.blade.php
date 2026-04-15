@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RIDEN | Forgot Password</title>
+    <title>RIDEN ADMIN</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('assets/images/icon.png') }}">
     <!-- Google Fonts -->
@@ -23,7 +23,7 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{{ asset('assets/images/login-bg.png') }}');
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('assets/images/login.jpg') }}');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -124,7 +124,7 @@
         }
 
         .back-link {
-            color: var(--accent-color);
+            color: #fff;
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 500;
@@ -133,7 +133,7 @@
 
         .back-link:hover {
             opacity: 0.8;
-            color: var(--accent-color);
+            color: #d4d4d4ff;
         }
 
         .invalid-feedback {

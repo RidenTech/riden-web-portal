@@ -4,13 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RIDEN | Login</title>
+    <title>RIDEN ADMIN </title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('assets/images/icon.png') }}">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
     <style>
         :root {
@@ -23,7 +25,7 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{{ asset('assets/images/login-bg.png') }}');
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('assets/images/login.jpg') }}');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -111,7 +113,7 @@
         }
 
         .forgot-link {
-            color: var(--accent-color);
+            color: #fff;
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 500;
@@ -120,7 +122,7 @@
 
         .forgot-link:hover {
             opacity: 0.8;
-            color: var(--accent-color);
+            color: #d4d4d4ff;
         }
 
         .btn-login {
@@ -157,8 +159,8 @@
 
         .btn-login:hover {
             transform: translateY(-2px);
+            background: var(--accent-color);
             box-shadow: 0 10px 20px -10px var(--accent-color);
-            background: #D10000;
             color: white;
         }
 
@@ -176,13 +178,32 @@
             font-size: 0.8rem;
             color: #ff6b6b;
         }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-sub);
+            z-index: 10;
+            transition: color 0.2s;
+        }
+
+        .password-toggle:hover {
+            color: white;
+        }
     </style>
 </head>
 
 <body>
     <div class="login-glass-card">
         <div class="brand-logo">RIDEN</div>
-        <h2 class="welcome-title">Administrative Login</h2>
+        <h2 class="welcome-title">Admin Login</h2>
         <p class="welcome-subtitle">Please enter your credentials to continue</p>
 
         <form action="{{ route('admin.login.post') }}" method="POST">
@@ -200,8 +221,11 @@
 
             <div class="mb-4">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" name="password" class="form-control premium-input @error('password') is-invalid @enderror" id="password"
-                    placeholder="••••••••" required>
+                <div class="password-wrapper">
+                    <input type="password" name="password" class="form-control premium-input @error('password') is-invalid @enderror" id="password"
+                        placeholder="••••••••" required>
+                    <i class="bi bi-eye password-toggle" id="togglePassword"></i>
+                </div>
                 @error('password')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -219,10 +243,28 @@
                 <a href="{{ route('admin.forgot') }}" class="forgot-link">Forgot Password?</a>
             </div>
 
-            <button type="submit" class="btn btn-login w-100">Access Dashboard</button>
+            <button type="submit" class="btn btn-login w-100">Login</button>
         </form>
     </div>
 
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePassword = document.querySelector('#togglePassword');
+            const password = document.querySelector('#password');
+
+            togglePassword.addEventListener('click', function() {
+                // Toggle the type attribute
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                
+                // Toggle the eye icon
+                this.classList.toggle('bi-eye');
+                this.classList.toggle('bi-eye-slash');
+            });
+        });
     <!-- Bootstrap Bundle -->
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- SweetAlert2 JS -->

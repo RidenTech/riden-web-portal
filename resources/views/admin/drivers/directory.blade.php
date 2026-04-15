@@ -10,8 +10,17 @@
 <div class="col-12 drivers-wrapper">
     <!-- Header -->
     <div class="drivers-header riden-list-header">
-        <h3 class="passenger-page-title mb-0">Driver Management</h3>
+       
         
+            <form class="riden-header-search flex-grow-1" style="max-width: 400px; ">
+            <span class="riden-header-search-icon-circle">
+                <i class="bi bi-search"></i>
+            </span>
+            <input type="text"
+                   class="form-control form-control-sm"
+                   placeholder="Search by name, email, phone number">
+        </form>
+
         <div class="header-actions">
             <a href="{{ route('admin.drivers.create') }}" class="btn-figma-red-pill">
             <a href="{{ route('admin.drivers.create') }}" class="btn-figma-blue-pill">

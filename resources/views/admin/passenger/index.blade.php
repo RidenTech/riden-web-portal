@@ -5,22 +5,30 @@
 @endsection
 
 @push('styles')
-    <link href="{{ asset('assets/css/passenger.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/css/drivers.css') }}" rel="stylesheet" type="text/css" />
 @endpush
 
 @section('content')
-<div class="col-12 passengers-wrapper px-0">
+<div class="col-12 drivers-wrapper">
     <!-- Header Actions Row (Below Topbar) -->
-    <div class="passengers-header riden-list-header">
-        <h3 class="passenger-page-title mb-0">Passenger Management</h3>
-     <div class="header-actions">
+    <div class="drivers-header riden-list-header">
+        <form class="riden-header-search flex-grow-1" style="max-width: 400px; ">
+            <span class="riden-header-search-icon-circle">
+                <i class="bi bi-search"></i>
+            </span>
+            <input type="text"
+                   class="form-control form-control-sm"
+                   placeholder="Search by name, email, phone number">
+        </form>
+
+        <div class="header-actions">
             <a href="{{ route('admin.passenger.create') }}" class="btn-figma-red-pill">
                 <i class="bi bi-person-plus-fill me-2"></i> Add New Passenger
             </a>
-            <a href="#" class="btn-download-passengers">
+            <a href="#" class="btn-download-excel">
                 <i class="bi bi-file-earmark-excel-fill"></i> Download
             </a>
-            <div class="date-picker-passengers">
+            <div class="date-picker-drivers">
                 <i class="bi bi-calendar3"></i>
                 <span>{{ date('d/m/Y') }} - {{ date('d/m/Y') }}</span>
     <div class="riden-list-header ">
@@ -38,6 +46,11 @@
                 <span>23/04/2025 - 23/04/2025</span>
             </div>
         </div>
+    </div>
+
+    <div class="riden-tabs-container">
+        <a href="#" class="riden-tab-item active">Active Passengers</a>
+        <a href="#" class="riden-tab-item">Inactive <span class="count">(0)</span></a>
     </div>
 
     <!-- Table Container -->
@@ -58,9 +71,9 @@
                         <td class="ps-4">
                             <div class="d-flex align-items-center gap-3">
                                 @if($p->avatar)
-                                    <img src="{{ asset('storage/'.$p->avatar) }}" class="avatar-sm-figma" alt="Avatar">
+                                    <img src="{{ asset('storage/'.$p->avatar) }}" class="driver-avatar" alt="Avatar">
                                 @else
-                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($p->first_name . ' ' . $p->last_name) }}&background=random" class="avatar-sm-figma" alt="Avatar">
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($p->first_name . ' ' . $p->last_name) }}&background=random" class="driver-avatar" alt="Avatar">
                                 @endif
                                 <span class="fw-semibold">{{ $p->first_name }} {{ $p->last_name }}</span>
                             </div>
@@ -93,7 +106,7 @@
     </div>
 
     <!-- Pagination -->
-    <div class="d-flex justify-content-end mt-4 me-2">
+    <div class="pagination-drivers mt-4">
         {{ $passengers->links() }}
     </div>
 </div>
