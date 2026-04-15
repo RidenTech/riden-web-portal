@@ -187,6 +187,42 @@ class PassengerAuthController extends Controller
     }
 
     /**
+     * Toggle the status of the passenger (Block/Unblock) via API
+     */
+    public function toggleStatus(Request $request, $id)
+    {
+        $passenger = Passenger::findOrFail($id);
+        $passenger->status = ($passenger->status == 'Active') ? 'inactive' : 'Active';
+        $passenger->save();
+
+        // Optional: Revoke tokens if blocked
+        if ($passenger->status !== 'Active') {
+            $passenger->tokens()->delete();
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Passenger status updated to ' . $passenger->status,
+            'data' => $passenger
+        ]);
+    }
+
+    /**
+     * Remove the passenger via API
+     */
+    public function destroy(Request $request, $id)
+    {
+        $passenger = Passenger::findOrFail($id);
+        $passenger->tokens()->delete();
+        $passenger->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Passenger deleted successfully'
+        ]);
+    }
+
+    /**
      * Logout passenger
      */
     public function logout(Request $request)
