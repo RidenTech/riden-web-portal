@@ -5,11 +5,11 @@
 @endsection
 
 @push('styles')
-    <link href="{{ asset('assets/css/passenger.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/css/drivers.css') }}" rel="stylesheet" type="text/css" />
 @endpush
 
 @section('content')
-<div class="col-12 passengers-wrapper px-0">
+<div class="col-12 drivers-wrapper">
     <!-- Header Actions Row (Below Topbar) -->
     <!-- 1. Header Actions Row -->
     <div class="riden-list-header px-4 mt-4">
@@ -47,9 +47,9 @@
                         <td class="ps-4">
                             <div class="d-flex align-items-center gap-3">
                                 @if($p->avatar)
-                                    <img src="{{ asset('storage/'.$p->avatar) }}" class="avatar-sm-figma" alt="Avatar">
+                                    <img src="{{ asset('storage/'.$p->avatar) }}" class="driver-avatar" alt="Avatar">
                                 @else
-                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($p->first_name . ' ' . $p->last_name) }}&background=random" class="avatar-sm-figma" alt="Avatar">
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($p->first_name . ' ' . $p->last_name) }}&background=random" class="driver-avatar" alt="Avatar">
                                 @endif
                                 <span class="fw-semibold">{{ $p->first_name }} {{ $p->last_name }}</span>
                             </div>
@@ -76,7 +76,7 @@
     </div>
 
     <!-- Pagination -->
-    <div class="d-flex justify-content-end mt-4 me-2">
+    <div class="pagination-drivers mt-4">
         {{ $passengers->links() }}
     </div>
 </div>

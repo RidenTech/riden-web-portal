@@ -8,6 +8,9 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- SweetAlert2 CSS -->
     <link href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
@@ -72,8 +75,11 @@
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" name="password" class="form-control premium-input @error('password') is-invalid @enderror" id="password"
-                                    placeholder="Create a password" required>
+                                <div class="password-field-wrapper">
+                                    <input type="password" name="password" class="form-control premium-input @error('password') is-invalid @enderror" id="password"
+                                        placeholder="Create a password" required>
+                                    <i class="bi bi-eye password-toggle"></i>
+                                </div>
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -82,8 +88,11 @@
                             </div>
                             <div class="mb-4">
                                 <label for="password_confirmation" class="form-label">Confirm Password</label>
-                                <input type="password" name="password_confirmation" class="form-control premium-input" id="password_confirmation"
-                                    placeholder="Confirm your password" required>
+                                <div class="password-field-wrapper">
+                                    <input type="password" name="password_confirmation" class="form-control premium-input" id="password_confirmation"
+                                        placeholder="Confirm your password" required>
+                                    <i class="bi bi-eye password-toggle"></i>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-login w-100">Sign Up</button>
                             <div class="text-center mt-3">
@@ -96,6 +105,24 @@
         </div>
     </div>
 
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.querySelectorAll('.password-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const input = this.parentElement.querySelector('input');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    this.classList.remove('bi-eye');
+                    this.classList.add('bi-eye-slash');
+                } else {
+                    input.type = 'password';
+                    this.classList.remove('bi-eye-slash');
+                    this.classList.add('bi-eye');
+                }
+            });
+        });
     <!-- Bootstrap Bundle -->
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- SweetAlert2 JS -->
