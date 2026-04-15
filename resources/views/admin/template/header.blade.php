@@ -37,7 +37,7 @@
             --}}
 
             <div class="riden-topbar__title flex-grow-1 d-none d-sm-block">
-                @if(!$showHeaderSearch)
+                
                     <div class="riden-topbar__h1">
                         @hasSection('title')
                             @yield('title')
@@ -45,18 +45,7 @@
                             {{ $headerTitle }}
                         @endif
                     </div>
-                @else
-                    <div class="mt-1">
-                        <form class="riden-header-search col-lg-5">
-                            <span class="riden-header-search-icon-circle">
-                                <i class="bi bi-search"></i>
-                            </span>
-                            <input type="text"
-                                   class="form-control form-control-sm"
-                                   placeholder="{{ $headerSearchPlaceholder }}">
-                        </form>
-                    </div>
-                @endif
+              
             </div>
         </div>
 

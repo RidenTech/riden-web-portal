@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RIDEN ADMIN</title>
+    <title>RIDEN | Webportal</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('assets/images/icon.png') }}">
     <!-- Google Fonts -->
@@ -121,6 +121,19 @@
             box-shadow: 0 10px 20px -10px var(--accent-color);
             background: #D10000;
             color: white;
+        }
+
+        .btn-action:active {
+            transform: translateY(0);
+            background: var(--accent-color) !important;
+            opacity: 0.9;
+            color:white !important;
+        }
+
+        .btn-action:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(209, 0, 0, 0.2);
+            background: var(--accent-color);
         }
 
         .back-link {
