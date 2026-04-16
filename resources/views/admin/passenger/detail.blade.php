@@ -32,7 +32,7 @@
                         <i class="bi bi-star-fill" style="opacity: 0.3;"></i>
                     </div>
                     <span class="ms-2 fw-semibold">(4.5)</span>
-                    <span class="ms-3 status-badge {{ strtolower($passenger->status) == 'active' ? 'online' : (strtolower($passenger->status) == 'blocked' ? 'blocked' : 'suspended') }}">{{ $passenger->status }}</span>
+                    <span class="ms-3 status-badge {{ strtolower($passenger->status) == 'active' ? 'online' : 'blocked' }}">{{ $passenger->status }}</span>
                 </div>
             </div>
         </div>
@@ -79,15 +79,15 @@
         <!-- Sidebar Navigation -->
         <div class="col-lg-4">
             <div class="driver-nav-list pt-1" id="passengerTabList" role="tablist">
-                <a href="#personal" class="driver-nav-item active border-0 w-100 text-start text-decoration-none" data-bs-toggle="pill" data-bs-target="#personal" role="tab">
+                <a class="driver-nav-item active border-0 w-100 text-start text-decoration-none" id="personal-tab" data-bs-toggle="pill" data-bs-target="#personal" role="tab" type="button">
                     <div class="icon-wrapper"><i class="bi bi-person-fill"></i></div>
                     Personal Information
                 </a>
-                <a href="#rides" class="driver-nav-item border-0 w-100 text-start text-decoration-none" data-bs-toggle="pill" data-bs-target="#rides" role="tab">
+                <a class="driver-nav-item border-0 w-100 text-start text-decoration-none" id="rides-tab" data-bs-toggle="pill" data-bs-target="#rides" role="tab" type="button">
                     <div class="icon-wrapper"><i class="bi bi-truck"></i></div>
                     All Rides
                 </a>
-                <a href="#payment" class="driver-nav-item border-0 w-100 text-start text-decoration-none" data-bs-toggle="pill" data-bs-target="#payment" role="tab">
+                <a class="driver-nav-item border-0 w-100 text-start text-decoration-none" id="payment-tab" data-bs-toggle="pill" data-bs-target="#payment" role="tab" type="button">
                     <div class="icon-wrapper"><i class="bi bi-credit-card-fill"></i></div>
                     Payment Methods
                 </a>
@@ -96,64 +96,18 @@
             <!-- Action Buttons -->
             <div class="driver-action-buttons">
                 @if($passenger->status == 'Active')
-                    <form action="{{ route('admin.passenger.toggleStatus', $passenger->id) }}" method="POST">
-                        @csrf @method('PATCH')
-                        <button type="submit" class="btn-driver-action btn-driver-solid-red">
-                            <i class="bi bi-slash-circle-fill"></i> Block Passenger
-                        </button>
-                    </form>
+                    <button class="btn-driver-action btn-driver-solid-red" data-bs-toggle="modal" data-bs-target="#toggleStatusModal">
+                        <i class="bi bi-slash-circle-fill"></i> Block Passenger
+                    </button>
                 @else
-                    <form action="{{ route('admin.passenger.toggleStatus', $passenger->id) }}" method="POST">
-                        @csrf @method('PATCH')
-                        <button type="submit" class="btn-driver-action btn-driver-solid-red" >
-                            <i class="bi bi-check-circle-fill"></i> Unblock Passenger
-                        </button>
-                    </form>
+                    <button class="btn-driver-action btn-driver-solid-red" data-bs-toggle="modal" data-bs-target="#toggleStatusModal">
+                        <i class="bi bi-check-circle-fill"></i> Unblock Passenger
+                    </button>
                 @endif
 
-                <button class="btn-driver-action btn-driver-outline-red" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                <button class="btn-driver-action btn-driver-outline-red" data-bs-toggle="modal" data-bs-target="#deletePassengerModal">
                     <i class="bi bi-trash-fill text-danger"></i> Delete Passenger
                 </button>
-        <!-- 3. Sidebar & Content Grid -->
-        <div class="row g-2 mt-0">
-            <!-- Sidebar -->
-            <div class="col-lg-4">
-                <div class="sidebar-glass-card h-100 d-flex flex-column py-4">
-                    <div class="nav-figma-list" id="passengerTab" role="tablist">
-                        <a class="nav-figma-item active" id="personal-tab" data-bs-toggle="tab" href="#personal" role="tab">
-                            <div class="ico-box"><i class="bi bi-person-fill"></i></div>
-                            Personal Information
-                        </a>
-                        <a class="nav-figma-item" id="rides-tab" data-bs-toggle="tab" href="#rides" role="tab">
-                            <div class="ico-box"><i class="bi bi-truck"></i></div>
-                            All Rides
-                        </a>
-                        <a class="nav-figma-item" id="payment-tab" data-bs-toggle="tab" href="#payment" role="tab">
-                            <div class="ico-box"><i class="bi bi-credit-card-fill"></i></div>
-                            Payment Methods
-                        </a>
-                    </div>
-                    
-                    <div class="sidebar-figma-actions mt-auto">
-                        <form action="{{ route('admin.passenger.toggleStatus', $passenger->id) }}" method="POST" onsubmit="event.preventDefault(); window.confirmAction('{{ strtolower($passenger->status) == 'active' ? 'Block Passenger?' : 'Unblock Passenger?' }}', '{{ strtolower($passenger->status) == 'active' ? 'They will lose access to the app.' : 'They will regain access to the app.' }}', '{{ strtolower($passenger->status) == 'active' ? 'warning' : 'success' }}', 'Yes, Proceed').then((r) => { if(r.isConfirmed) this.submit(); })">
-                            @csrf
-                            @method('PATCH')
-                            <button type="submit" class="btn-figma-red-solid mb-3">
-                                <i class="bi {{ strtolower($passenger->status) == 'active' ? 'bi-slash-circle-fill' : 'bi-check-circle-fill' }}"></i>
-                                {{ strtolower($passenger->status) == 'active' ? 'Block Passenger' : 'Unblock Passenger' }}
-                            </button>
-                        </form>
-                        
-                        <form action="{{ route('admin.passenger.delete', $passenger->id) }}" method="POST" onsubmit="event.preventDefault(); window.confirmDelete('Delete Passenger?', 'This action is irreversible and will remove all associated data.').then((r) => { if(r.isConfirmed) this.submit(); })">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn-figma-red-outline">
-                                <i class="bi bi-trash-fill text-danger"></i>
-                                Delete Passenger
-                            </button>
-                        </form>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -161,7 +115,7 @@
         <div class="col-lg-8">
             <div class="tab-content h-100" id="passengerTabContent">
                 <!-- Personal Info Section -->
-                <div class="tab-pane fade show active" id="personal">
+                <div class="tab-pane fade show active" id="personal" role="tabpanel">
                     <div class="driver-info-card">
                         <div class="driver-info-card-header" style="background: var(--riden-red) !important; display: flex; justify-content: space-between; align-items: center;">
                             <div class="d-flex align-items-center gap-2">
@@ -177,15 +131,6 @@
                                 <div class="col-md-6">
                                     <label class="label-view">Full Name</label>
                                     <p class="value-view">{{ $passenger->first_name }} {{ $passenger->last_name }}</p>
-                    </div>
-
-                    <!-- Personal Information Tab -->
-                    <div class="tab-pane fade" id="personal">
-                        <div class="main-card-figma">
-                            <div class="card-header-red-figma d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-person-fill"></i>
-                                    <h5 class="mb-0">Personal Information</h5>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="label-view">Email Address</label>
@@ -209,7 +154,7 @@
                 </div>
 
                 <!-- All Rides Section -->
-                <div class="tab-pane fade" id="rides">
+                <div class="tab-pane fade" id="rides" role="tabpanel">
                     <div class="driver-info-card">
                         <div class="driver-info-card-header" style="background: var(--riden-red) !important;">
                             <i class="bi bi-car-front-fill"></i>
@@ -223,7 +168,7 @@
                 </div>
                 
                 <!-- Payment Methods Section -->
-                <div class="tab-pane fade" id="payment">
+                <div class="tab-pane fade" id="payment" role="tabpanel">
                     <div class="driver-info-card">
                         <div class="driver-info-card-header" style="background: var(--riden-red) !important;">
                             <i class="bi bi-credit-card-fill"></i>
@@ -257,7 +202,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -266,34 +210,29 @@
 @include('admin.passenger.modals')
 
 @endsection
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const tabLinks = document.querySelectorAll('.nav-figma-item');
-    const tabPanes = document.querySelectorAll('.tab-pane');
 
 @push('scripts')
 <script>
-    // Manual fallback for tab switching if Bootstrap JS fails
-    document.querySelectorAll('.driver-nav-item').forEach(link => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-            
-            // Remove active from all siblings
-            document.querySelectorAll('.driver-nav-item').forEach(l => l.classList.remove('active'));
-            // Add active to clicked
-            this.classList.add('active');
-            
-            // Hide all panes
-            document.querySelectorAll('.tab-pane').forEach(pane => {
-                pane.classList.remove('show', 'active');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tab switching logic for driver-nav-item
+        const tabList = document.querySelectorAll('.driver-nav-item');
+        tabList.forEach(item => {
+            item.addEventListener('click', function (event) {
+                event.preventDefault();
+                
+                // Hide all panes
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('active', 'show');
+                });
+                
+                // Remove active from all nav items
+                tabList.forEach(nav => nav.classList.remove('active'));
+                
+                // Show target pane
+                const targetId = this.getAttribute('data-bs-target');
+                document.querySelector(targetId).classList.add('active', 'show');
+                this.classList.add('active');
             });
-            
-            // Show target pane
-            const targetId = this.getAttribute('data-bs-target');
-            const targetPane = document.querySelector(targetId);
-            if (targetPane) {
-                targetPane.classList.add('show', 'active');
-            }
         });
     });
 </script>
