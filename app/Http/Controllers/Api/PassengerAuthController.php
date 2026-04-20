@@ -122,7 +122,7 @@ class PassengerAuthController extends Controller
     /**
      * Update passenger profile
      */
-    public function updateProfile(Request $request)
+    public function updateProfile(Request $request, $id = null)
     {
         $passenger = $request->user();
 
