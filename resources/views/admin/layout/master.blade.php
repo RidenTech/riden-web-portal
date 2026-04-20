@@ -58,11 +58,11 @@
                 }
             });
 
-            @if(session('status'))
+            @if(session('status') || session('success'))
                 RidenSwal.fire({
                     icon: 'success',
                     title: 'Success!',
-                    text: '{{ session('status') }}',
+                    text: '{{ session('status') ?? session('success') }}',
                     timer: 3000,
                     showConfirmButton: false
                 });

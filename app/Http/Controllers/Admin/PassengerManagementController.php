@@ -39,10 +39,11 @@ class PassengerManagementController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'phone' => 'required|string|max:20',
             'gender' => 'required|in:Male,Female,Other',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        Passenger::create([
-            'unique_id' => 'RIDEN-P' . strtoupper(Str::random(6)),
+        $data = [
+            'unique_id' => '#' . rand(10000, 99999),
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
@@ -50,10 +51,16 @@ class PassengerManagementController extends Controller
             'phone' => $request->phone,
             'gender' => $request->gender,
             'status' => 'Active',
-        ]);
+        ];
+
+        if ($request->hasFile('avatar')) {
+            $data['avatar'] = $request->file('avatar')->store('passengers/avatars', 'public');
+        }
+
+        Passenger::create($data);
 
         return redirect()->route('admin.passenger.management')
-            ->with('success', 'Passenger added successfully.');
+            ->with('status', 'Passenger added successfully.');
     }
 
     /**
@@ -88,17 +95,23 @@ class PassengerManagementController extends Controller
             'phone' => 'required|string|max:20',
             'gender' => 'required|in:Male,Female,Other',
             'password' => 'nullable|string|min:8',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->except(['password']);
+        $data = $request->except(['password', 'avatar']);
+        
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
+        }
+
+        if ($request->hasFile('avatar')) {
+            $data['avatar'] = $request->file('avatar')->store('passengers/avatars', 'public');
         }
 
         $passenger->update($data);
 
         return redirect()->route('admin.passenger.detail', $passenger->id)
-            ->with('success', 'Passenger updated successfully.');
+            ->with('status', 'Passenger updated successfully.');
     }
 
     /**
@@ -124,6 +137,6 @@ class PassengerManagementController extends Controller
 
         $message = $passenger->status == 'Active' ? 'Passenger unblocked successfully.' : 'Passenger blocked successfully.';
         
-        return redirect()->back()->with('success', $message);
+        return redirect()->back()->with('status', $message);
     }
 }

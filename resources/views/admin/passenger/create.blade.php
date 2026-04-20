@@ -3,318 +3,219 @@
 @section('title', 'Passenger Management')
 
 @push('styles')
-    <link href="{{ asset('assets/css/passenger.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('assets/css/drivers.css') }}?v={{ time() }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/css/addadmin.css') }}?v={{ time() }}" rel="stylesheet" type="text/css" />
+    <style>
+        /* Senior UI Refinement: Parsley Custom Styling */
+        input.parsley-error, 
+        select.parsley-error {
+            background-color: #FFF5F5 !important;
+            border-color: var(--riden-red) !important;
+            box-shadow: 0 0 0 5px rgba(225, 29, 72, 0.05) !important;
+        }
+        .parsley-errors-list {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0 0 0;
+            color: var(--riden-red);
+            font-size: 11px;
+            font-weight: 700;
+            display: none;
+        }
+        .parsley-errors-list.filled {
+            display: block;
+        }
+        .riden-phone {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .riden-flag {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #f8f9fa;
+            border: 1.5px solid #E5E7EB;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .image-preview-box {
+            width: 80px;
+            height: 80px;
+            border-radius: 15px;
+            background: #f8f9fa;
+            border: 2px dashed #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+    </style>
 @endpush
 
 @section('content')
-<div class="col-12 driver-detail-wrapper px-0">
-    <form action="{{ route('admin.passenger.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
+<div class="col-12 riden-addadmin-wrap">
 
-        <!-- 1. Profile Header Placeholder (Matched with Driver) -->
-        <div class="profile-row-driver mb-4">
-            <div class="profile-card-left">
-                <a href="{{ route('admin.passenger.management') }}" class="back-btn-driver">
-                    <i class="bi bi-chevron-left"></i>
-                </a>
-                <div class="placeholder-avatar-ring">
-                    <i class="bi bi-person-plus-fill"></i>
-                </div>
-                <div class="driver-identity">
-                    <h4>Add New Passenger</h4>
-                    <div class="driver-rating-line">
-                        <span class="text-muted fw-semibold">Fill in the details to register a new passenger</span>
-                    </div>
-                </div>
-            </div>
-            <div class="since-date-view text-muted">
-                {{ date('M d, Y') }}
-            </div>
-        </div>
-
-        <!-- 3. Navigation & Detail Grid -->
-        <div class="row g-2 mt-0">
-            <!-- Sidebar Navigation -->
-            <div class="col-lg-4">
-                <div class="driver-nav-list pt-1" id="driverTabList" role="tablist">
-                    <a href="#personal" class="driver-nav-item active border-0 w-100 text-start text-decoration-none" data-bs-toggle="pill" data-bs-target="#personal" role="tab">
-                        <div class="icon-wrapper"><i class="bi bi-person-fill"></i></div>
-                        Personal Information
-                    </a>
-                    <a href="#security" class="driver-nav-item border-0 w-100 text-start text-decoration-none" data-bs-toggle="pill" data-bs-target="#security" role="tab">
-                        <div class="icon-wrapper"><i class="bi bi-shield-lock-fill"></i></div>
-                        Account Security
-                    </a>
-                </div>
-
-                <!-- Action Button -->
-                <div class="driver-action-buttons mt-4">
-                    <button type="submit" class="btn-download-excel border-0 mb-3 py-3 w-100 justify-content-center">
-                        <i class="bi bi-check-circle-fill"></i> Complete Registration
-                    </button>
-                    <a href="{{ route('admin.passenger.management') }}" class="btn-driver-action btn-driver-outline-red text-decoration-none">
-                        Cancel and Return
-                    </a>
-                </div>
-            </div>
-
-            <!-- Detail Content -->
-            <div class="col-lg-8">
-                <div class="tab-content h-100" id="driverTabContent">
-                    <!-- Personal Info Section -->
-                    <div class="tab-pane fade show active" id="personal">
-                        <div class="driver-info-card">
-                            <div class="driver-info-card-header" style="background: var(--riden-red) !important;">
-                                <i class="bi bi-person-fill"></i>
-                                <h5>Personal Details</h5>
-                            </div>
-                            <div class="driver-info-grid px-4 py-4">
-                                <div class="row g-4">
-                                    <div class="col-md-12 mb-2">
-                                        <label class="figma-label">Profile Image</label>
-                                        <div class="figma-input-wrapper" style="border-style: dashed;">
-                                            <i class="bi bi-image figma-input-icon"></i>
-                                            <input type="file" name="avatar" class="figma-input" accept="image/*">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="figma-label">First Name</label>
-                                        <div class="figma-input-wrapper">
-                                            <i class="bi bi-person figma-input-icon"></i>
-                                            <input type="text" name="first_name" class="figma-input" placeholder="e.g. John" value="{{ old('first_name') }}" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="figma-label">Last Name</label>
-                                        <div class="figma-input-wrapper">
-                                            <i class="bi bi-person figma-input-icon"></i>
-                                            <input type="text" name="last_name" class="figma-input" placeholder="e.g. Doe" value="{{ old('last_name') }}" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="figma-label">Email Address</label>
-                                        <div class="figma-input-wrapper">
-                                            <i class="bi bi-envelope figma-input-icon"></i>
-                                            <input type="email" name="email" class="figma-input" placeholder="john.doe@example.com" value="{{ old('email') }}" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="figma-label">Phone Number</label>
-                                        <div class="figma-input-wrapper">
-                                            <i class="bi bi-telephone figma-input-icon"></i>
-                                            <input type="text" name="phone" class="figma-input" placeholder="+1 234 567 890" value="{{ old('phone') }}" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="figma-label">Gender</label>
-                                        <div class="figma-input-wrapper">
-                                            <i class="bi bi-gender-ambiguous figma-input-icon"></i>
-                                            <select name="gender" class="figma-input figma-select" required>
-                                                <option value="" disabled selected>Select gender</option>
-                                                <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
-                                                <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
-                                                <option value="Other" {{ old('gender') == 'Other' ? 'selected' : '' }}>Other</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Security Section -->
-                    <div class="tab-pane fade" id="security">
-                        <div class="driver-info-card">
-                            <div class="driver-info-card-header" style="background: var(--riden-red) !important;">
-                                <i class="bi bi-shield-lock-fill"></i>
-                                <h5>Account Security</h5>
-                            </div>
-                            <div class="driver-info-grid px-4 py-4">
-                                <div class="row g-4">
-                                    <div class="col-md-6">
-                                        <label class="figma-label">Password</label>
-                                        <div class="figma-input-wrapper">
-                                            <i class="bi bi-lock figma-input-icon"></i>
-                                            <input type="password" name="password" class="figma-input" placeholder="••••••••" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="figma-label">Confirm Password</label>
-                                        <div class="figma-input-wrapper">
-                                            <i class="bi bi-shield-lock figma-input-icon"></i>
-                                            <input type="password" name="password_confirmation" class="figma-input" placeholder="••••••••" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 mt-2">
-                                        <div class="alert alert-info border-0 rounded-4" style="background: rgba(59, 130, 246, 0.05);">
-                                            <i class="bi bi-info-circle-fill me-2 text-primary"></i>
-                                            <small class="text-muted fw-semibold">Password must be at least 8 characters long and include confirmation.</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
-@endsection
-
-@push('scripts')
-<script>
-    // Manual fallback for tab switching
-    document.querySelectorAll('.driver-nav-item').forEach(link => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-            
-            document.querySelectorAll('.driver-nav-item').forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-            
-            document.querySelectorAll('.tab-pane').forEach(pane => {
-                pane.classList.remove('show', 'active');
-            });
-            
-            const targetId = this.getAttribute('data-bs-target');
-            const targetPane = document.querySelector(targetId);
-            if (targetPane) {
-                targetPane.classList.add('show', 'active');
-            }
-        });
-    });
-</script>
-@endpush
-@section('title')
-    Add New Passenger | Riden Admin
-@endsection
-
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('assets/css/passenger.css') }}">
-@endpush
-
-@section('content')
-<div class="col-12 px-0">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h3 class="passenger-page-title mb-0">Add New Passenger</h3>
-            <p class="text-muted small fw-semibold">Register a new passenger to the system</p>
-        </div>
-        <a href="{{ route('admin.passenger.management') }}" class="back-btn-small">
+    <!-- Subheader with Back Button -->
+    <div class="riden-addadmin-head mb-4">
+        <a href="{{ route('admin.passenger.management') }}" class="riden-addadmin-back text-decoration-none">
             <i class="bi bi-chevron-left"></i>
         </a>
+        <h2 class="riden-addadmin-title mb-0">Add New Passenger</h2>
     </div>
 
-    <div class="figma-form-card">
-        <form action="{{ route('admin.passenger.store') }}" method="POST">
+    <!-- Main Card -->
+    <div class="card riden-addadmin-card border-0 shadow-sm p-4" style="border-radius: 30px;">
+        <form id="passengerRegisterForm" action="{{ route('admin.passenger.store') }}" method="POST" enctype="multipart/form-data" data-parsley-validate>
             @csrf
             
+            <div class="riden-addadmin-section mb-4 d-flex justify-content-between align-items-center text-uppercase fw-bold" style="color:var(--riden-red); letter-spacing: 1px;">
+                <span>Passenger Details</span>
+                <span class="text-muted small fw-normal text-none" style="font-size: 14px; text-transform: none;">{{ date('M d, Y') }}</span>
+            </div>
+
             <div class="row g-4">
-                <!-- First Name -->
-                <div class="col-md-6">
-                    <label class="figma-label">First Name</label>
-                    <div class="figma-input-wrapper">
-                        <i class="bi bi-person figma-input-icon"></i>
-                        <input type="text" name="first_name" class="figma-input @error('first_name') is-invalid @enderror" value="{{ old('first_name') }}" placeholder="e.g. John" required>
-                    </div>
-                    @error('first_name')
-                        <div class="text-danger small mt-1 fw-bold">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <!-- Last Name -->
-                <div class="col-md-6">
-                    <label class="figma-label">Last Name</label>
-                    <div class="figma-input-wrapper">
-                        <i class="bi bi-person figma-input-icon"></i>
-                        <input type="text" name="last_name" class="figma-input @error('last_name') is-invalid @enderror" value="{{ old('last_name') }}" placeholder="e.g. Doe" required>
-                    </div>
-                    @error('last_name')
-                        <div class="text-danger small mt-1 fw-bold">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <!-- Email -->
-                <div class="col-md-6">
-                    <label class="figma-label">Email Address</label>
-                    <div class="figma-input-wrapper">
-                        <i class="bi bi-envelope figma-input-icon"></i>
-                        <input type="email" name="email" class="figma-input @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="john.doe@example.com" required>
-                    </div>
-                    @error('email')
-                        <div class="text-danger small mt-1 fw-bold">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <!-- Phone Number -->
-                <div class="col-md-6">
-                    <label class="figma-label">Phone Number</label>
-                    <div class="figma-input-wrapper">
-                        <i class="bi bi-telephone figma-input-icon"></i>
-                        <input type="text" name="phone" class="figma-input @error('phone') is-invalid @enderror" value="{{ old('phone') }}" placeholder="+1 234 567 890" required>
-                    </div>
-                    @error('phone')
-                        <div class="text-danger small mt-1 fw-bold">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <!-- Password -->
-                <div class="col-md-6">
-                    <label class="figma-label">Password</label>
-                    <div class="figma-input-wrapper">
-                        <i class="bi bi-lock figma-input-icon"></i>
-                        <input type="password" name="password" class="figma-input @error('password') is-invalid @enderror" placeholder="••••••••" required>
-                    </div>
-                    @error('password')
-                        <div class="text-danger small mt-1 fw-bold">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <!-- Confirm Password -->
-                <div class="col-md-6">
-                    <label class="figma-label">Confirm Password</label>
-                    <div class="figma-input-wrapper">
-                        <i class="bi bi-shield-lock figma-input-icon"></i>
-                        <input type="password" name="password_confirmation" class="figma-input" placeholder="••••••••" required>
+                <!-- Profile Image Selection -->
+                <div class="col-12 mb-2">
+                    <label class="riden-field-label fw-bold mb-2">PROFILE IMAGE</label>
+                    <div class="d-flex align-items-center gap-4">
+                        <div class="figma-input-wrapper flex-grow-1" style="border: 2px dashed #ddd; border-radius: 15px; padding: 15px; background: #fafafa;">
+                            <input type="file" name="avatar" id="passengerAvatarInput" class="form-control border-0 bg-transparent" accept="image/*">
+                        </div>
+                        <div class="image-preview-box" id="avatarPreviewBox">
+                            <i class="bi bi-person-fill text-muted fs-2"></i>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Gender -->
                 <div class="col-md-6">
-                    <label class="figma-label">Gender</label>
-                    <div class="figma-input-wrapper">
-                        <i class="bi bi-gender-ambiguous figma-input-icon"></i>
-                        <select name="gender" class="figma-input figma-select @error('gender') is-invalid @enderror" required>
-                            <option value="" disabled {{ old('gender') ? '' : 'selected' }}>Select gender</option>
+                    <div class="mb-2">
+                        <label class="riden-field-label fw-bold mb-2">FIRST NAME</label>
+                        <input type="text" name="first_name" class="form-control riden-input" placeholder="e.g. John" value="{{ old('first_name') }}" required data-parsley-trigger="change" style="border-radius: 12px; padding: 12px 18px;">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <label class="riden-field-label fw-bold mb-2">LAST NAME</label>
+                        <input type="text" name="last_name" class="form-control riden-input" placeholder="e.g. Doe" value="{{ old('last_name') }}" required data-parsley-trigger="change" style="border-radius: 12px; padding: 12px 18px;">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <label class="riden-field-label fw-bold mb-2">EMAIL ADDRESS</label>
+                        <input type="email" name="email" class="form-control riden-input" placeholder="john.doe@example.com" value="{{ old('email') }}" required data-parsley-type="email" data-parsley-trigger="change" style="border-radius: 12px; padding: 12px 18px;">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <label class="riden-field-label fw-bold mb-2">PHONE NUMBER</label>
+                        <div class="riden-phone">
+                            <div class="riden-flag">
+                                <img src="https://flagcdn.com/w40/ca.png" alt="CA" style="width: 20px;">
+                                <span>+1</span>
+                            </div>
+                            <input type="text" name="phone" class="form-control riden-input flex-grow-1" placeholder="000 000 0000" value="{{ old('phone') }}" required data-parsley-trigger="change" style="border-radius: 12px; padding: 12px 18px;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <label class="riden-field-label fw-bold mb-2">GENDER</label>
+                        <select name="gender" class="form-select riden-input" required data-parsley-errors-container="#gender-error" style="border-radius: 12px; padding: 12px 18px;">
+                            <option value="" disabled selected>Select gender</option>
                             <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
                             <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
                             <option value="Other" {{ old('gender') == 'Other' ? 'selected' : '' }}>Other</option>
                         </select>
+                        <div id="gender-error"></div>
                     </div>
-                    @error('gender')
-                        <div class="text-danger small mt-1 fw-bold">{{ $message }}</div>
-                    @enderror
                 </div>
+            </div>
 
-                <!-- Actions -->
-                <div class="col-12 mt-5 pt-3 border-top">
-                    <div class="d-flex align-items-center gap-3">
-                        <button type="submit" class="btn-figma-red-solid px-5" style="width: auto;">
-                            Save Passenger Information
-                        </button>
-                        <a href="{{ route('admin.passenger.management') }}" class="text-decoration-none text-muted fw-bold small ms-2">
-                            Cancel and Return
-                        </a>
+            <div class="riden-addadmin-section my-5 text-uppercase fw-bold" style="color:var(--riden-red); letter-spacing: 1px;">ACCOUNT SECURITY</div>
+            
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <label class="riden-field-label fw-bold mb-2">PASSWORD</label>
+                        <div class="position-relative">
+                            <input type="password" id="password" name="password" class="form-control riden-input pe-5" placeholder="••••••••" required data-parsley-minlength="8" data-parsley-trigger="change" style="border-radius: 12px; padding: 12px 18px;">
+                            <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 opacity-50 cursor-pointer" onclick="togglePass('password')"></i>
+                        </div>
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <label class="riden-field-label fw-bold mb-2">CONFIRM PASSWORD</label>
+                        <div class="position-relative">
+                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control riden-input pe-5" placeholder="••••••••" required data-parsley-equalto="#password" data-parsley-trigger="change" style="border-radius: 12px; padding: 12px 18px;">
+                            <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 opacity-50 cursor-pointer" onclick="togglePass('password_confirmation')"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="riden-actions d-flex justify-content-end gap-3 pt-4 border-top mt-4">
+                <button type="submit" class="btn btn-riden-danger px-5 py-3 fw-bold" style="border-radius: 15px; background: var(--riden-red); border: none; color: #fff;">Complete Registration</button>
+                <a href="{{ route('admin.passenger.management') }}" class="btn btn-riden-outline px-5 py-3 fw-bold d-flex align-items-center justify-content-center" style="text-decoration: none; border: 2px solid #ddd; border-radius: 15px; color: #333;">Cancel</a>
             </div>
         </form>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // 1. Initialize Parsley Validation
+        const $form = $('#passengerRegisterForm');
+        if ($form.length) {
+            $form.parsley({
+                errorClass: 'parsley-error',
+                successClass: 'parsley-success',
+                errorsWrapper: '<ul class="parsley-errors-list"></ul>',
+                errorTemplate: '<li></li>'
+            });
+        }
+
+        // 2. Real-time Image Preview Logic
+        const avatarInput = document.getElementById('passengerAvatarInput');
+        const previewBox = document.getElementById('avatarPreviewBox');
+
+        if (avatarInput && previewBox) {
+            avatarInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewBox.innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                        previewBox.style.border = '2px solid var(--riden-red)';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    });
+
+    function togglePass(id) {
+        const input = document.getElementById(id);
+        const icon = input.nextElementSibling;
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.replace("bi-eye-slash", "bi-eye");
+        } else {
+            input.type = "password";
+            icon.classList.replace("bi-eye", "bi-eye-slash");
+        }
+    }
+</script>
+@endpush
