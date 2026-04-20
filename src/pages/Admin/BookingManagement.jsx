@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Table, Badge, SearchBar, Tabs } from '@/components/UI';
+import { Table, Badge, SearchBar, Tabs, DateRangePicker, DatePickerStyles } from '@/components/UI';
+import { useNavigate } from 'react-router-dom';
+import { startOfWeek } from 'date-fns';
 
 export default function BookingManagement() {
+    const navigate = useNavigate();
     const [type, setType] = useState('ongoing');
+    const [startDate, setStartDate] = useState(startOfWeek(new Date()));
+    const [endDate, setEndDate] = useState(new Date());
+    const [exportOpen, setExportOpen] = useState(false);
 
     const ongoingBookings = [
         { id: '#34567', driver: 'Theresa Webb', passenger: 'Wade Warren', fare: '$45.00', status: 'online' },
@@ -19,20 +25,51 @@ export default function BookingManagement() {
 
     return (
         <AdminLayout title="Booking Management">
+            <DatePickerStyles />
             {/* Header Row */}
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
                 <SearchBar
                     placeholder="Search by ID, passenger or driver"
-                    className="w-full lg:w-[400px]"
+                    className="w-full lg:w-[360px]"
                 />
 
-                <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-                    <button className="flex items-center gap-2 px-6 py-2.5 bg-white border border-[#E5E7EB] rounded-[14px] text-[13px] font-[700] text-[#111] hover:bg-gray-50 transition-all">
-                        <i className="bi bi-file-earmark-excel-fill text-[#1D7E4D]"></i> Download
-                    </button>
-                    <div className="flex items-center gap-2 px-4 py-2.5 bg-white border border-[#E5E7EB] rounded-[14px] text-[13px] font-[700] text-[#6B7280]">
-                        <i className="bi bi-calendar3"></i>
-                        <span>23/04/2025 - 23/04/2025</span>
+                <div className="flex items-center gap-1 w-full lg:w-auto">
+                    <DateRangePicker
+                        startDate={startDate}
+                        endDate={endDate}
+                        onStartDateChange={setStartDate}
+                        onEndDateChange={setEndDate}
+                    />
+                    <div className="relative">
+                        <button
+                            onClick={() => setExportOpen(!exportOpen)}
+                            className="flex rounded-full items-center gap-1 px-6 py-3 bg-white border border-[#E5E7EB] text-[13px] font-[700] text-[#111] hover:bg-gray-50 transition-all"
+                        >
+                            <i className="bi bi-file-earmark-excel-fill text-[#1D7E4D]"></i> Export
+                            <i className={`bi bi-chevron-down text-[#1D7E4D] text-sm transition-all ${exportOpen ? 'rotate-180' : ''}`}></i>
+                        </button>
+                        {exportOpen && (
+                            <div className="absolute right-0 mt-2 w-44 bg-white border border-[#E5E7EB] rounded-2xl shadow-lg overflow-hidden py-1 z-10">
+                                <button
+                                    className="w-full text-left px-4 py-2 hover:bg-gray-50 text-[13px] font-[600] text-[#111] border-b border-[#F3F4F6] transition-colors"
+                                    onClick={() => setExportOpen(false)}
+                                >
+                                    <i className="bi bi-filetype-csv mr-2 text-[#1D7E4D]"></i> CSV Format
+                                </button>
+                                <button
+                                    className="w-full text-left px-4 py-2 hover:bg-gray-50 text-[13px] font-[600] text-[#111] transition-colors"
+                                    onClick={() => setExportOpen(false)}
+                                >
+                                    <i className="bi bi-filetype-pdf mr-2 text-[#E72929]"></i> PDF Format
+                                </button>
+                                <button
+                                    className="w-full text-left px-4 py-2 hover:bg-gray-50 text-[13px] font-[600] text-[#111] transition-colors border-t border-[#F3F4F6]"
+                                    onClick={() => setExportOpen(false)}
+                                >
+                                    <i className="bi bi-file-earmark-excel-fill mr-2 text-[#1D7E4D]"></i> Excel Format
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -52,16 +89,24 @@ export default function BookingManagement() {
                 {bookings.map((booking) => (
                     <tr
                         key={booking.id}
+                        onClick={() => navigate('/bookings/detail', { state: { bookingStatus: booking.status } })}
                         className="cursor-pointer hover:bg-black/[0.02] transition-colors border-b border-[#F3F4F6]"
-                        onClick={() => window.location.href = '/bookings/detail'}
                     >
                         <td className="py-[18px] px-[30px]">
                             <span className="text-[13px] font-[800] text-[#D10000] bg-red-50 px-3 py-1.5 rounded-[10px] italic tracking-tight">
                                 {booking.id}
                             </span>
                         </td>
-                        <td className="py-[18px] px-[30px] text-[14px] font-[700] text-[#111]">{booking.driver}</td>
-                        <td className="py-[18px] px-[30px] text-[14px] font-[700] text-[#111]">{booking.passenger}</td>
+                        <td className="py-[18px] px-[30px] text-[14px] font-[700] text-[#111]">
+                            <div className="flex items-center gap-3">
+                                <span className="font-[700] text-[#111]">{booking.driver}</span>
+                            </div>
+                        </td>
+                        <td className="py-[18px] px-[30px] text-[14px] font-[700] text-[#111]">
+                            <div className="flex items-center gap-3">
+                                <span className="font-[700] text-[#111]">{booking.passenger}</span>
+                            </div>
+                        </td>
                         <td className="py-[18px] px-[30px] text-[14px] font-[800] text-[#D10000]">{booking.fare}</td>
                         <td className="py-[18px] px-[30px]">
                             <Badge variant={booking.status}>{booking.status === 'online' ? 'Ongoing' : booking.status === 'danger' ? 'Cancelled' : 'Completed'}</Badge>

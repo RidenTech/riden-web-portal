@@ -128,20 +128,20 @@ export const MiniChart = ({ variant = 'green', data = [30, 50, 40, 75, 100, 60, 
 };
 
 export const Tabs = ({ options, activeTab, onTabChange, className = '' }) => (
-    <div className={`flex gap-10 border-b-2 border-[#ECF0F1] mb-8 ${className}`}>
+    <div className={`flex justify-between items-center  mb-4 ${className}`}>
         {options.map((opt) => (
             <button
                 key={opt.id}
                 onClick={() => onTabChange(opt.id)
                 }
-                className={`pb-4 text-[14px] font-[800] transition-all duration-300 border-b-4 ${activeTab === opt.id
-                    ? 'border-[#D10000] text-[#D10000]'
-                    : 'border-transparent text-[#111] hover:text-[#D10000]/60'
+                className={`px-10 w-full  py-4 text-lg font-[700] transition-all duration-300  ${activeTab === opt.id
+                    ? 'bg-[#D10000] text-white rounded-full'
+                    : 'border-b-2 border-[#ECF0F1] text-[#111] hover:text-[#D10000]'
                     }`}
             >
                 {opt.label || opt.id}
                 {opt.count !== undefined && (
-                    <span className="ml-2 py-0.5 px-2 bg-[#F3F4F6] text-[#6B7280] rounded-full text-[11px] font-[700]">
+                    <span className="text-sm ">
                         ({opt.count})
                     </span>
                 )}

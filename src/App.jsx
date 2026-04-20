@@ -5,11 +5,10 @@ import ForgotPassword from './pages/Auth/ForgotPassword';
 import Dashboard from './pages/Admin/Dashboard';
 import DriverManagement from './pages/Admin/DriverManagement';
 import DriverCreate from './pages/Admin/DriverCreate';
-import DriverEdit from './pages/Admin/DriverEdit';
+
 import DriverDetail from './pages/Admin/DriverDetail';
 import PassengerManagement from './pages/Admin/PassengerManagement';
 import PassengerCreate from './pages/Admin/PassengerCreate';
-import PassengerEdit from './pages/Admin/PassengerEdit';
 import PassengerDetail from './pages/Admin/PassengerDetail';
 import FareManagement from './pages/Admin/FareManagement';
 import CommissionManagement from './pages/Admin/CommissionManagement';
@@ -43,12 +42,11 @@ function App() {
         {/* Admin Protected Routes */}
         <Route path="/drivers" element={<DriverManagement />} />
         <Route path="/drivers/create" element={<DriverCreate />} />
-        <Route path="/drivers/edit" element={<DriverEdit />} />
+
         <Route path="/drivers/detail" element={<DriverDetail />} />
 
         <Route path="/passenger" element={<PassengerManagement />} />
         <Route path="/passenger/create" element={<PassengerCreate />} />
-        <Route path="/passenger/edit" element={<PassengerEdit />} />
         <Route path="/passenger/detail" element={<PassengerDetail />} />
 
         <Route path="/fare-management" element={<FareManagement />} />

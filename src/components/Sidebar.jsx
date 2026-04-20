@@ -73,10 +73,10 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
                     })}
                 </nav>
 
-                <div className="mt-auto p-4 border-t border-white/10">
+                <div className="mt-auto p-2 border-t border-white/10">
                     <button
                         onClick={handleLogout}
-                        className={`w-full flex items-center gap-4  py-2 px-3 rounded-r-full bg-white text-[#D10000] font-[800] text-[14px] transition-all duration-300 ${isCollapsed ? 'justify-center' : 'hover:bg-white/10'}`}
+                        className={`w-full flex items-center gap-4  py-2 px-3 rounded-full bg-white text-[#D10000] font-[800] text-[14px] transition-all duration-300 ${isCollapsed ? 'justify-center' : 'hover:bg-white/10'}`}
                         title="Logout"
                     >
                         <i className="bi bi-box-arrow-right text-lg w-[24px] text-center shrink-0" aria-hidden="true"></i>
