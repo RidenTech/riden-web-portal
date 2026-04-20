@@ -133,6 +133,12 @@ class PassengerManagementController extends Controller
     {
         $passenger = Passenger::findOrFail($id);
         $passenger->status = ($passenger->status == 'Active') ? 'inactive' : 'Active';
+        
+        // Instant Mobile Sync: Revoke tokens if blocked
+        if ($passenger->status !== 'Active') {
+            $passenger->tokens()->delete();
+        }
+        
         $passenger->save();
 
         $message = $passenger->status == 'Active' ? 'Passenger unblocked successfully.' : 'Passenger blocked successfully.';

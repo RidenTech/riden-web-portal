@@ -1,307 +1,430 @@
 @extends('admin.layout.master')
 
-@section('title', 'Driver Profile ')
+@section('title', 'Driver Profile Details')
 
 @push('styles')
     <link href="{{ asset('assets/css/drivers.css') }}?v={{ time() }}" rel="stylesheet" type="text/css" />
     <style>
-        .doc-card-premium {
+        /* Senior UI Detail Refinement */
+        .driver-detail-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .premium-detail-card {
             background: #fff;
-            border: 1px solid #E5E7EB;
+            border-radius: 25px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            margin-bottom: 30px;
+        }
+
+        .profile-hero-section {
+            background: linear-gradient(135deg, #fdf2f2 0%, #fff 100%);
+            padding: 40px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .hero-avatar-wrapper {
+            position: relative;
+        }
+
+        .hero-avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            object-fit: cover;
+        }
+
+        .status-badge-hero {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            padding: 5px 15px;
             border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            border: 2px solid #fff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .hero-info h2 {
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: #1a202c;
+        }
+
+        .id-pill-premium {
+            background: rgba(209, 0, 0, 0.1);
+            color: #D10000;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        /* Unified Sections Styling */
+        .detail-section-premium {
+            padding: 40px;
+        }
+
+        .section-header-red {
+            color: var(--riden-red);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-header-red::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #f0f0f0;
+        }
+
+        .data-unit-premium {
+            margin-bottom: 25px;
+        }
+
+        .data-unit-premium label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #A0AEC0;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .data-unit-premium span {
+            font-weight: 600;
+            color: #2D3748;
+            font-size: 1rem;
+        }
+
+        .section-divider-premium {
+            margin: 20px 0 40px 0;
+            border-top: 1px solid #f7fafc;
+        }
+
+        /* Document Display */
+        .doc-grid-premium {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .doc-card-premium {
+            background: #f8fafc;
+            border: 1px solid #EDF2F7;
+            border-radius: 16px;
             padding: 20px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
+            gap: 15px;
             transition: all 0.2s;
         }
+
         .doc-card-premium:hover {
             border-color: var(--riden-red);
+            background: #fff;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
-        .doc-icon {
+
+        .doc-icon-box {
             width: 50px;
             height: 50px;
-            background: #FFEEEE;
-            color: var(--riden-red);
+            background: #fff;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            color: var(--riden-red);
+            font-size: 1.4rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        .btn-view-doc {
-            background: #f3f4f6;
-            color: #111;
-            padding: 8px 16px;
+
+        .btn-view-premium {
+            background: #fff;
+            color: #4A5568;
+            border: 1px solid #E2E8F0;
             border-radius: 10px;
+            padding: 6px 12px;
+            font-size: 0.75rem;
             font-weight: 700;
-            font-size: 13px;
-            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-view-premium:hover {
+            background: var(--riden-red);
+            color: #fff;
+            border-color: var(--riden-red);
+        }
+
+        /* Stats Strip */
+        .stats-strip-premium {
+            background: #111;
+            padding: 25px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .stat-item-premium {
+            text-align: center;
+        }
+
+        .stat-item-premium i {
+            color: var(--riden-red);
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .stat-item-premium h5 {
+            margin: 0;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        .stat-item-premium p {
+            margin: 0;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            opacity: 0.6;
         }
     </style>
 @endpush
 
 @section('content')
-<div class="col-12 driver-detail-wrapper px-0">
-    <!-- 1. Profile Header -->
-    <div class="profile-row-driver">
-        <div class="profile-card-left">
-            <a href="{{ route('admin.drivers.directory') }}" class="back-btn-driver">
-                <i class="bi bi-chevron-left"></i>
-            </a>
-            <div class="driver-avatar-view-wrapper">
-                @if($driver->avatar)
-                    <img src="{{ asset('storage/'.$driver->avatar) }}" class="driver-avatar-view-img" alt="">
-                @else
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode($driver->first_name . ' ' . $driver->last_name) }}&background=random" class="driver-avatar-view-img" alt="">
-                @endif
-            </div>
-            <div class="driver-identity">
-                <h4>{{ $driver->first_name }} {{ $driver->last_name }}</h4>
-                <div class="driver-rating-line">
-                    <div class="stars text-warning d-flex gap-1">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill" style="opacity: 0.3;"></i>
-                    </div>
-                    <span class="ms-2 fw-semibold">(4.0)</span>
-                    <span class="ms-3 status-badge {{ strtolower($driver->status) == 'active' ? 'online' : (strtolower($driver->status) == 'blocked' ? 'blocked' : 'suspended') }}">{{ $driver->status }}</span>
-                </div>
-            </div>
+<div class="riden-addadmin-wrap">
+    <!-- Header/Breadcrumbs -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-0">Profile Overview</h3>
+            <span class="text-muted small">Managing Driver Account Records</span>
         </div>
-        <div class="d-flex align-items-center gap-3">
-            <div class="since-date-view text-muted">
-                Registered: {{ $driver->created_at->format('M d, Y') }}
-            </div>
-            <a href="{{ route('admin.drivers.edit', $driver->id) }}" class="btn-figma-blue-pill py-2 px-4 shadow-sm" style="width: auto; font-size: 13px; border: 1px solid rgba(255,255,255,0.2);">
-                <i class="bi bi-pencil-square me-2"></i> Edit Profile
+        <div class="d-flex gap-2">
+            <a href="{{ route('admin.drivers.directory') }}" class="btn-back-premium">
+                <i class="bi bi-arrow-left"></i> <span>Directory</span>
+            </a>
+            <a href="{{ route('admin.drivers.edit', $driver->id) }}" class="btn-figma-blue-pill shadow-sm" style="height: 42px; border: none;">
+                <i class="bi bi-pencil-square me-1"></i> Edit Profile
             </a>
         </div>
     </div>
 
-    <!-- 2. Stats Banner -->
-    <div class="driver-stats-banner mt-2">
-        <div class="driver-stat-unit">
-            <div class="driver-stat-circle">
+    <div class="driver-detail-container">
+        <!-- Stats Strip -->
+        <div class="stats-strip-premium px-5">
+            <div class="stat-item-premium">
                 <i class="bi bi-truck"></i>
+                <h5>0</h5>
+                <p>Total Rides</p>
             </div>
-            <div class="driver-stat-data">
-                <label>Total Rides</label>
-                <div class="stat-value">0</div>
+            <div class="stat-item-premium">
+                <i class="bi bi-star-fill"></i>
+                <h5>5.0</h5>
+                <p>Avg Rating</p>
             </div>
-        </div>
-        <div class="driver-divider"></div>
-        <div class="driver-stat-unit">
-            <div class="driver-stat-circle">
-                <i class="bi bi-check-circle-fill"></i>
+            <div class="stat-item-premium">
+                <i class="bi bi-wallet2"></i>
+                <h5>$0.00</h5>
+                <p>Earnings</p>
             </div>
-            <div class="driver-stat-data">
-                <label>Completed</label>
-                <div class="stat-value">0</div>
-            </div>
-        </div>
-        <div class="driver-divider"></div>
-        <div class="driver-stat-unit">
-            <div class="driver-stat-circle">
-                <i class="bi bi-currency-dollar"></i>
-            </div>
-            <div class="driver-stat-data">
-                <label>Revenue</label>
-                <div class="stat-value">$0.00</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. Navigation & Detail Grid -->
-    <div class="row g-2 mt-0">
-        <!-- Sidebar Navigation -->
-        <div class="col-lg-4">
-            <div class="driver-nav-list pt-1" id="driverTabList" role="tablist">
-                <a href="#personal" class="driver-nav-item active border-0 w-100 text-start text-decoration-none" data-bs-toggle="pill" data-bs-target="#personal" role="tab">
-                    <div class="icon-wrapper"><i class="bi bi-person-fill"></i></div>
-                    Personal Information
-                </a>
-                <a href="#vehicle" class="driver-nav-item border-0 w-100 text-start text-decoration-none" data-bs-toggle="pill" data-bs-target="#vehicle" role="tab">
-                <a href="#vehicle" class="driver-nav-item" data-bs-toggle="tab">
-                    <div class="icon-wrapper"><i class="bi bi-truck"></i></div>
-                    Vehicle Information
-                </a>
-                <a href="#documents" class="driver-nav-item border-0 w-100 text-start text-decoration-none" data-bs-toggle="pill" data-bs-target="#documents" role="tab">
-                    <div class="icon-wrapper"><i class="bi bi-file-earmark-text-fill"></i></div>
-                    Documents
-                </a>
-                <a href="#rides" class="driver-nav-item border-0 w-100 text-start text-decoration-none" data-bs-toggle="pill" data-bs-target="#rides" role="tab">
-                    <div class="icon-wrapper"><i class="bi bi-map-fill"></i></div>
-                    All Rides
-                </a>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="driver-action-buttons">
-                @if($driver->status == 'Active')
-                    <form action="{{ route('admin.drivers.toggleStatus', $driver->id) }}" method="POST" onsubmit="event.preventDefault(); window.confirmAction('Block Driver?', 'They will not be able to log in until unblocked.', 'warning', 'Yes, block them').then((r) => { if(r.isConfirmed) this.submit(); })">
-                        @csrf @method('PATCH')
-                        <input type="hidden" name="status" value="Blocked">
-                        <button type="submit" class="btn-driver-action btn-driver-solid-red">
-                            <i class="bi bi-slash-circle-fill"></i> Block Driver
-                        </button>
-                    </form>
-                @else
-                    <form action="{{ route('admin.drivers.toggleStatus', $driver->id) }}" method="POST" onsubmit="event.preventDefault(); window.confirmAction('Activate Driver?', 'They will be allowed to log in and use the platform.', 'success', 'Yes, activate').then((r) => { if(r.isConfirmed) this.submit(); })">
-                        @csrf @method('PATCH')
-                        <input type="hidden" name="status" value="Active">
-                        <button type="submit" class="btn-driver-action btn-driver-solid-red" style="background-color: #28a745 !important;">
-                            <i class="bi bi-check-circle-fill"></i> Activate Driver
-                        </button>
-                    </form>
-                @endif
-
-                <form action="{{ route('admin.drivers.delete', $driver->id) }}" method="POST" onsubmit="event.preventDefault(); window.confirmDelete('Delete Driver?', 'All records for this driver will be permanently removed.').then((r) => { if(r.isConfirmed) this.submit(); })">
-                    @csrf @method('DELETE')
-                    <button type="submit" class="btn-driver-action btn-driver-outline-red">
-                        <i class="bi bi-trash-fill text-danger"></i> Delete Driver
-                    </button>
-                </form>
+            <div class="stat-item-premium">
+                <i class="bi bi-calendar-check"></i>
+                <h5>{{ $driver->created_at->format('M Y') }}</h5>
+                <p>Joined Since</p>
             </div>
         </div>
 
-        <!-- Detail Content -->
-        <div class="col-lg-8">
-            <div class="tab-content h-100" id="driverTabContent">
-                <!-- Personal Info Section -->
-                <div class="tab-pane fade show active" id="personal">
-                    <div class="driver-info-card">
-                        <div class="driver-info-card-header" style="background: var(--riden-red) !important;">
-                            <i class="bi bi-person-fill"></i>
-                            <h5>Personal Details</h5>
-                        </div>
-                        <div class="driver-info-grid">
-                            <div class="row g-4">
-                                <div class="col-md-6">
-                                    <label class="label-view">Full Name</label>
-                                    <p class="value-view">{{ $driver->first_name }} {{ $driver->last_name }}</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="label-view">Email Address</label>
-                                    <p class="value-view">{{ $driver->email }}</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="label-view">Phone Number</label>
-                                    <p class="value-view">{{ $driver->phone }}</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="label-view">Gender</label>
-                                    <p class="value-view">{{ $driver->gender }}</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="label-view">Unique ID</label>
-                                    <p class="value-view red-text">{{ $driver->unique_id }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <div class="premium-detail-card shadow-sm">
+            <!-- Profile Hero -->
+            <div class="profile-hero-section">
+                <div class="hero-avatar-wrapper">
+                    @if($driver->avatar)
+                        <img src="{{ asset('storage/'.$driver->avatar) }}" class="hero-avatar" alt="">
+                    @else
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode($driver->first_name . ' ' . $driver->last_name) }}&background=EBF4FF&color=3182CE&bold=true" class="hero-avatar" alt="">
+                    @endif
+                    <span class="status-badge-hero {{ strtolower($driver->status) == 'active' ? 'online' : (strtolower($driver->status) == 'blocked' ? 'blocked' : 'suspended') }}">
+                        {{ $driver->status }}
+                    </span>
                 </div>
-
-                <!-- Vehicle Info Section -->
-                <div class="tab-pane fade" id="vehicle">
-                    <div class="driver-info-card">
-                        <div class="driver-info-card-header" style="background: var(--riden-red) !important;">
-                            <i class="bi bi-car-front-fill"></i>
-                        <div class="driver-info-card-header" style="background: #111 !important;">
-                            <i class="bi bi-truck"></i>
-                            <h5>Vehicle Specifications</h5>
-                        </div>
-                        <div class="driver-info-grid">
-                            @if($driver->vehicle)
-                                <div class="row g-4">
-                                    <div class="col-md-6">
-                                        <label class="label-view">Model</label>
-                                        <p class="value-view">{{ $driver->vehicle->model }}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="label-view">Year</label>
-                                        <p class="value-view">{{ $driver->vehicle->year }}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="label-view">Color</label>
-                                        <p class="value-view">{{ $driver->vehicle->color }}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="label-view">License Plate</label>
-                                        <p class="value-view fw-bold">{{ $driver->vehicle->license_plate }}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="label-view">Type</label>
-                                        <p class="value-view">{{ $driver->vehicle->vehicle_type ?? 'Sedan' }}</p>
-                                    </div>
-                                </div>
-                            @else
-                                <div class="text-center py-5">
-                                    <p class="text-muted">No vehicle information found.</p>
-                                </div>
-                            @endif
-                        </div>
+                <div class="hero-info">
+                    <span class="id-pill-premium mb-2 d-inline-block">{{ $driver->unique_id }}</span>
+                    <h2>{{ $driver->first_name }} {{ $driver->last_name }}</h2>
+                    <div class="text-muted small">
+                        <i class="bi bi-envelope me-1"></i> {{ $driver->email }} • 
+                        <i class="bi bi-telephone me-1"></i> {{ $driver->phone }}
                     </div>
                 </div>
                 
-                <!-- Documents Section -->
-                <div class="tab-pane fade" id="documents">
-                    <div class="driver-info-card">
-                        <div class="driver-info-card-header" style="background: var(--riden-red) !important;">
-                            <i class="bi bi-file-earmark-text-fill"></i>
-                            <h5>Stored Documents</h5>
+                <div class="ms-auto d-flex flex-column gap-2">
+                    @if($driver->status == 'Active')
+                        <form action="{{ route('admin.drivers.toggleStatus', $driver->id) }}" method="POST" id="blockForm">
+                            @csrf @method('PATCH')
+                            <input type="hidden" name="status" value="Blocked">
+                            <button type="button" class="btn btn-outline-danger rounded-pill px-4 fw-bold w-100" onclick="confirmStatusChange('Block Driver?', 'They will be instantly restricted from all mobile services.', 'Blocked')">
+                                <i class="bi bi-slash-circle me-1"></i> Block Account
+                            </button>
+                        </form>
+                    @else
+                        <form action="{{ route('admin.drivers.toggleStatus', $driver->id) }}" method="POST" id="activateForm">
+                            @csrf @method('PATCH')
+                            <input type="hidden" name="status" value="Active">
+                            <button type="button" class="btn btn-success rounded-pill px-4 fw-bold w-100" onclick="confirmStatusChange('Activate Driver?', 'Access to mobile app will be restored immediately.', 'Active')">
+                                <i class="bi bi-check-circle me-1"></i> Activate Account
+                            </button>
+                        </form>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Unified Details Body -->
+            <div class="detail-section-premium">
+                
+                <!-- 1. PERSONAL INFORMATION -->
+                <div class="section-header-red">
+                    <i class="bi bi-person-lines-fill"></i> Personal Information
+                </div>
+                <div class="row row-cols-md-3 g-2">
+                    <div class="col">
+                        <div class="data-unit-premium">
+                            <label>First Name</label>
+                            <span>{{ $driver->first_name }}</span>
                         </div>
-                        <div class="driver-info-grid">
-                            @forelse($driver->documents as $doc)
-                                <div class="doc-card-premium">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="doc-icon">
-                                            @if(Str::endsWith($doc->file_path, '.pdf'))
-                                                <i class="bi bi-file-earmark-pdf"></i>
-                                            @else
-                                                <i class="bi bi-file-earmark-image"></i>
-                                            @endif
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0 fw-bold">{{ $doc->document_name }}</h6>
-                                            <small class="text-muted">{{ $doc->status }} • {{ $doc->created_at->format('d M Y') }}</small>
-                                        </div>
-                                    </div>
-                                    <button type="button" 
-                                            class="btn-view-doc border-0" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#docPreviewModal"
-                                            data-bs-url="{{ asset('storage/'.$doc->file_path) }}"
-                                            data-bs-title="{{ $doc->document_name }}">
-                                        View Document
-                                    </button>
-                                </div>
-                            @empty
-                                <div class="text-center py-5">
-                                    <p class="text-muted">No documents uploaded.</p>
-                                </div>
-                            @endforelse
+                    </div>
+                    <div class="col">
+                        <div class="data-unit-premium">
+                            <label>Last Name</label>
+                            <span>{{ $driver->last_name }}</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="data-unit-premium">
+                            <label>Gender</label>
+                            <span>{{ $driver->gender }}</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="data-unit-premium">
+                            <label>Joined Date</label>
+                            <span>{{ $driver->created_at->format('d M, Y') }}</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="data-unit-premium">
+                            <label>Current Status</label>
+                            <span class="text-danger fw-bold">{{ $driver->status }}</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="data-unit-premium">
+                            <label>Riden Unique ID</label>
+                            <span class="fw-bold">{{ $driver->unique_id }}</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- All Rides Section -->
-                <div class="tab-pane fade" id="rides">
-                    <div class="driver-info-card">
-                        <div class="driver-info-card-header" style="background: var(--riden-red) !important;">
-                            <i class="bi bi-map-fill"></i>
-                            <h5>Recent Ride History</h5>
+                <div class="section-divider-premium"></div>
+
+                <!-- 2. VEHICLE INFORMATION -->
+                <div class="section-header-red">
+                    <i class="bi bi-truck"></i> Vehicle Specifications
+                </div>
+                @if($driver->vehicle)
+                    <div class="row row-cols-md-3 g-2">
+                        <div class="col">
+                            <div class="data-unit-premium">
+                                <label>Model</label>
+                                <span>{{ $driver->vehicle->model }}</span>
+                            </div>
                         </div>
-                        <div class="driver-info-grid text-center py-5">
-                            <img src="{{ asset('assets/img/no-data.svg') }}" alt="" style="width: 150px; opacity: 0.5;">
-                            <p class="text-muted mt-3">No ride data available yet.</p>
+                        <div class="col">
+                            <div class="data-unit-premium">
+                                <label>License Plate</label>
+                                <span class="badge bg-dark px-3 py-2 fs-6">{{ $driver->vehicle->license_plate }}</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="data-unit-premium">
+                                <label>Model Year</label>
+                                <span>{{ $driver->vehicle->year }}</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="data-unit-premium">
+                                <label>Vehicle Color</label>
+                                <span>{{ $driver->vehicle->color }}</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="data-unit-premium">
+                                <label>Vehicle Type</label>
+                                <span>{{ $driver->vehicle->vehicle_type ?? 'Sedan' }}</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="data-unit-premium">
+                                <label>Document Status</label>
+                                <span class="text-success"><i class="bi bi-check-circle-fill me-1"></i> Verified</span>
+                            </div>
                         </div>
                     </div>
+                @else
+                    <div class="bg-light p-4 rounded-4 text-center text-muted small">
+                        <i class="bi bi-info-circle me-1"></i> No vehicle data associated with this profile.
+                    </div>
+                @endif
+
+                <div class="section-divider-premium"></div>
+
+                <!-- 3. DOCUMENTS -->
+                <div class="section-header-red">
+                    <i class="bi bi-file-earmark-lock-fill"></i> Verified Documents
                 </div>
+                <div class="doc-grid-premium">
+                    @forelse($driver->documents as $doc)
+                        <div class="doc-card-premium">
+                            <div class="doc-icon-box">
+                                <i class="bi {{ Str::endsWith($doc->file_path, '.pdf') ? 'bi-file-earmark-pdf' : 'bi-file-earmark-image' }}"></i>
+                            </div>
+                            <div class="flex-grow-1 overflow-hidden">
+                                <h6 class="mb-0 fw-bold text-truncate" style="font-size: 0.85rem;">{{ $doc->document_name }}</h6>
+                                <p class="text-muted mb-0" style="font-size: 0.65rem;">Updated: {{ $doc->updated_at->format('d M, Y') }}</p>
+                            </div>
+                            <button type="button" 
+                                    class="btn-view-premium"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#docPreviewModal"
+                                    data-bs-url="{{ asset('storage/'.$doc->file_path) }}"
+                                    data-bs-title="{{ $doc->document_name }}">
+                                VIEW
+                            </button>
+                        </div>
+                    @empty
+                        <div class="col-12 text-center py-4 bg-light rounded-4 text-muted small">
+                            No account documents uploaded.
+                        </div>
+                    @endforelse
+                </div>
+
             </div>
         </div>
     </div>
@@ -322,7 +445,7 @@
                 </div>
             </div>
             <div class="modal-footer border-0 p-3">
-                <button type="button" class="btn btn-secondary rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Close Preview</button>
+                <button type="button" class="btn btn-secondary rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Close</button>
                 <a id="docDownloadBtn" href="#" download class="btn btn-danger rounded-pill px-4 fw-bold">Download File</a>
             </div>
         </div>
@@ -331,78 +454,66 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // Manual fallback for tab switching if Bootstrap JS fails
-    document.querySelectorAll('.driver-nav-item').forEach(link => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-            
-            // Remove active from all siblings
-            document.querySelectorAll('.driver-nav-item').forEach(l => l.classList.remove('active'));
-            // Add active to clicked
-            this.classList.add('active');
-            
-            // Hide all panes
-            document.querySelectorAll('.tab-pane').forEach(pane => {
-                pane.classList.remove('show', 'active');
-            });
-            
-            // Show target pane
-            const targetId = this.getAttribute('data-bs-target');
-            const targetPane = document.querySelector(targetId);
-            if (targetPane) {
-                targetPane.classList.add('show', 'active');
-            }
-        });
-    });
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. Modal Logic (Standard Bootstrap 5 Pattern)
-    const modalEl = document.getElementById('docPreviewModal');
-    if (modalEl) {
-        modalEl.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const url = button.getAttribute('data-bs-url');
-            const title = button.getAttribute('data-bs-title');
-            
-            const frame = document.getElementById('docPreviewFrame');
-            const img = document.getElementById('docPreviewImg');
-            const downloadBtn = document.getElementById('docDownloadBtn');
-            const titleEl = document.getElementById('docPreviewTitle');
-            
-            if (titleEl) titleEl.innerText = title;
-            if (downloadBtn) downloadBtn.href = url;
-            
-            // Clear previous
-            img.classList.add('d-none');
-            frame.classList.add('d-none');
-            img.src = '';
-            frame.src = '';
-            
-            if (url.toLowerCase().endsWith('.pdf')) {
-                frame.classList.remove('d-none');
-                frame.src = url;
-            } else {
-                img.classList.remove('d-none');
-                img.src = url;
+    function confirmStatusChange(title, text, status) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: status === 'Blocked' ? 'warning' : 'info',
+            showCancelButton: true,
+            confirmButtonColor: status === 'Blocked' ? '#D10000' : '#28a745',
+            cancelButtonColor: '#718096',
+            confirmButtonText: status === 'Blocked' ? 'Yes, Block Account' : 'Yes, Activate Account',
+            borderRadius: '20px'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if(status === 'Blocked') document.getElementById('blockForm').submit();
+                else document.getElementById('activateForm').submit();
             }
         });
     }
 
-    // 2. Tab Navigation Logic
-    const tabLinks = document.querySelectorAll('.driver-nav-item');
-    const tabPanes = document.querySelectorAll('.tab-pane');
-
-    tabLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            tabLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-            tabPanes.forEach(pane => pane.classList.remove('show', 'active'));
-            const targetId = this.getAttribute('href').substring(1);
-            const targetPane = document.getElementById(targetId);
-            if (targetPane) targetPane.classList.add('show', 'active');
-        });
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalEl = document.getElementById('docPreviewModal');
+        if (modalEl) {
+            modalEl.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const url = button.getAttribute('data-bs-url');
+                const title = button.getAttribute('data-bs-title');
+                
+                const frame = document.getElementById('docPreviewFrame');
+                const img = document.getElementById('docPreviewImg');
+                const downloadBtn = document.getElementById('docDownloadBtn');
+                const titleEl = document.getElementById('docPreviewTitle');
+                
+                if (titleEl) titleEl.innerText = title;
+                if (downloadBtn) downloadBtn.href = url;
+                
+                img.classList.add('d-none');
+                frame.classList.add('d-none');
+                img.src = '';
+                frame.src = '';
+                
+                if (url.toLowerCase().endsWith('.pdf')) {
+                    frame.classList.remove('d-none');
+                    frame.src = url;
+                } else {
+                    img.classList.remove('d-none');
+                    img.src = url;
+                }
+            });
+        }
     });
-});
+
+    @if(session('status'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Action Successful',
+            text: "{{ session('status') }}",
+            confirmButtonColor: '#D10000',
+            timer: 3000
+        });
+    @endif
 </script>
 @endpush
