@@ -14,6 +14,7 @@
                     <button type="button" class="btn btn-light px-4 fw-bold" data-bs-dismiss="modal" style="border-radius: 12px;">Cancel</button>
                     <form action="{{ route('admin.passenger.toggleStatus', $passenger->id) }}" method="POST">
                         @csrf
+                        @method('PATCH')
                         <button type="submit" class="btn btn-danger px-4 fw-bold" style="border-radius: 12px; background: var(--riden-red); border: none;">
                             Yes, Proceed
                         </button>

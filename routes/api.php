@@ -16,7 +16,7 @@ Route::prefix('passenger')->group(function () {
     Route::post('/login', [PassengerAuthController::class, 'login']);
 
     // Protected routes
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware(['auth:sanctum', 'passenger.active'])->group(function () {
         Route::get('/profile', [PassengerAuthController::class, 'profile']);
         Route::get('/detail/{id}', [PassengerAuthController::class, 'profile']); // Reuse profile logic for detail
         Route::post('/profile/update', [PassengerAuthController::class, 'updateProfile']);

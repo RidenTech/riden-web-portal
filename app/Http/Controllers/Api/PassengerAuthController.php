@@ -7,6 +7,7 @@ use App\Models\Passenger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PassengerAuthController extends Controller
@@ -34,7 +35,7 @@ class PassengerAuthController extends Controller
         }
 
         $passenger = Passenger::create([
-            'unique_id' => 'RIDEN-P' . strtoupper(Str::random(6)),
+            'unique_id' => '#' . rand(10000, 99999),
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
@@ -128,8 +129,10 @@ class PassengerAuthController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:passengers,email,' . $passenger->id,
             'phone' => 'required|string|max:20|unique:passengers,phone,' . $passenger->id,
             'gender' => 'nullable|string|in:Male,Female,Other',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -140,12 +143,24 @@ class PassengerAuthController extends Controller
             ], 422);
         }
 
-        $passenger->update($request->only(['first_name', 'last_name', 'phone', 'gender']));
+        $data = $request->only(['first_name', 'last_name', 'email', 'phone', 'gender']);
+
+        // Handle Avatar Upload if provided
+        if ($request->hasFile('avatar')) {
+             if ($passenger->avatar) {
+                Storage::disk('public')->delete($passenger->avatar);
+            }
+            $data['avatar'] = $request->file('avatar')->store('passengers/avatars', 'public');
+        }
+
+        // Force persistent update
+        $passenger->update($data);
+        $passenger->save(); // Senior standard: ensure persistence call
 
         return response()->json([
             'status' => 'success',
             'message' => 'Profile updated successfully',
-            'data' => $passenger
+            'data' => $passenger->fresh()
         ]);
     }
 

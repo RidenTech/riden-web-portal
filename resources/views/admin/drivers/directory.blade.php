@@ -23,7 +23,6 @@
 
         <div class="header-actions">
             <a href="{{ route('admin.drivers.create') }}" class="btn-figma-red-pill">
-            <a href="{{ route('admin.drivers.create') }}" class="btn-figma-blue-pill">
                 <i class="bi bi-person-plus-fill me-2"></i> Add New Driver
             </a>
             <a href="#" class="btn-download-excel">

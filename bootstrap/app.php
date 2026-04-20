@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin.module' => \App\Http\Middleware\AdminModuleMiddleware::class,
             'admin.active' => \App\Http\Middleware\EnsureAdminActive::class,
+            'passenger.active' => \App\Http\Middleware\CheckPassengerStatus::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
