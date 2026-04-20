@@ -19,8 +19,8 @@ Route::prefix('passenger')->group(function () {
     Route::middleware(['auth:sanctum', 'passenger.active'])->group(function () {
         Route::get('/profile', [PassengerAuthController::class, 'profile']);
         Route::get('/detail/{id}', [PassengerAuthController::class, 'profile']); // Reuse profile logic for detail
-        Route::post('/profile/update', [PassengerAuthController::class, 'updateProfile']);
-        Route::post('/update/{id}', [PassengerAuthController::class, 'updateProfile']); // Handle mobile app's direct ID route
+        Route::match(['POST', 'PUT', 'PATCH'], '/profile/update', [PassengerAuthController::class, 'updateProfile']);
+        Route::match(['POST', 'PUT', 'PATCH'], '/update/{id}', [PassengerAuthController::class, 'updateProfile']);
         Route::post('/password/update', [PassengerAuthController::class, 'updatePassword']);
         Route::patch('/status/{id}', [PassengerAuthController::class, 'toggleStatus']);
         Route::delete('/delete/{id}', [PassengerAuthController::class, 'destroy']);
