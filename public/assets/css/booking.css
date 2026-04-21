@@ -21,35 +21,113 @@
     margin: 0;
 }
 
-.date-range-picker {
+/* Global Search Styling (Screenshot 2 Top) */
+.riden-global-search {
+    background: #f4f4f4;
+    padding: 10px 25px;
+    border-radius: 40px;
+    max-width: 450px;
+}
+
+.input-group-riden {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.search-icon-riden {
+    color: #FF2E2E;
+    font-size: 20px;
+}
+
+.form-control-riden {
+    background: transparent;
+    border: none;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    color: #888;
+}
+
+.form-control-riden:focus {
+    outline: none;
+}
+
+/* Header Actions & Date Range */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-download-riden {
+    background: #FF2E2E;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.riden-date-range {
     background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
     padding: 8px 15px;
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Riden Actions Row (Tabs + Add Booking) */
+.riden-actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.riden-tabs-pill {
+    background: #fff;
+    border: 1px solid #E5E7EB;
+    border-radius: 50px;
+    padding: 5px;
+    display: flex;
+    gap: 5px;
+}
+
+.tab-pill {
+    padding: 10px 25px;
+    border-radius: 50px;
     font-size: 14px;
     font-weight: 700;
-    color: #333;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    color: #666;
+    transition: all 0.3s;
 }
 
-.date-range-picker i {
-    color: var(--riden-red);
+.tab-pill.active {
+    background: #FF2E2E;
+    color: #fff !important;
 }
 
-
-
-/* Table Section */
-.booking-card {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 25px;
-    border: 1px solid #E5E7EB;
-    overflow: hidden;
-    box-shadow: var(--riden-shadow);
+.btn-add-booking {
+    background: #FF2E2E;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .booking-table thead th {
@@ -73,7 +151,7 @@
     font-weight: 800;
 }
 
-.status-badge {
+.status-badge-riden {
     padding: 6px 15px;
     border-radius: 8px;
     font-weight: 700;
@@ -81,14 +159,14 @@
     display: inline-block;
 }
 
-.status-completed {
-    background: #e1f7ef;
-    color: #10b981;
+.status-ongoing-green {
+    background: #EBFDF5;
+    color: #10B981;
 }
 
-.status-cancelled {
-    background: #ffebeb;
-    color: #ff5c5c;
+.status-previous-grey {
+    background: #F3F4F6;
+    color: #6B7280;
 }
 
 /* Pagination */
@@ -131,164 +209,146 @@
     color: #999;
 }
 
-/* Booking Detail Page Refined */
+/* Booking /* Booking Detail Page - Elite Overhaul */
 .booking-detail-wrapper {
-    padding: 20px;
-    font-family: 'Inter', sans-serif;
+    padding: 10px 0;
 }
 
-.detail-header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.back-link {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    text-decoration: none;
-    color: #000;
-    font-size: 24px;
-    font-weight: 800;
-}
-
-.status-pill {
+.status-pill-riden {
     padding: 8px 25px;
     border-radius: 12px;
-    background: #28a745;
     color: #fff;
     font-weight: 700;
     font-size: 14px;
 }
 
-.booking-id-tag {
-    display: inline-block;
-    padding: 10px 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    font-weight: 800;
-    font-size: 16px;
-    color: #000;
-}
-
-.detail-date {
-    font-weight: 700;
-    color: #333;
-}
-
-.booking-main-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    gap: 30px;
-    margin-top: 20px;
-}
-
-.white-card {
+.booking-badge-elite {
     background: #fff;
-    border-radius: 25px;
+    border: 1.5px solid #111;
+    border-radius: 10px;
+    padding: 6px 18px;
+    font-weight: 800;
+    font-size: 17px;
+    color: #111;
+}
+
+.booking-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 35px;
+    margin-top: 25px;
+}
+
+/* Map Section Premium Placeholder */
+.map-placeholder-card {
+    background: #fff;
+    border-radius: 30px;
     border: 1px solid #E5E7EB;
     overflow: hidden;
-    height: fit-content;
+    box-shadow: var(--riden-shadow);
 }
 
-.map-box {
-    height: 450px;
+.map-visual-placeholder {
+    height: 480px;
     background-size: cover;
     background-position: center;
-    border-radius: 25px;
-    border: 1px solid #E5E7EB;
     position: relative;
+    background-color: #f7f7f7;
 }
 
-.map-controls {
+.map-zoom-controls {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
+    bottom: 25px;
+    right: 25px;
     display: flex;
     flex-direction: column;
     background: #fff;
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.map-ctrl-btn {
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.map-zoom-controls button {
+    width: 40px;
+    height: 40px;
     border: none;
     background: #fff;
-    font-size: 20px;
+    font-size: 22px;
     color: #666;
+    transition: background 0.2s;
 }
 
-.map-ctrl-btn:first-child {
-    border-bottom: 1px solid #eee;
+.map-zoom-controls button:first-child {
+    border-bottom: 1px solid #f0f0f0;
 }
 
-.section-label {
+/* Elite Info Column (Right) */
+.elite-ride-card {
+    background: #fff;
+    border-radius: 30px;
+    border: 1px solid #E5E7EB;
+    padding: 30px;
+    box-shadow: var(--riden-shadow);
+}
+
+.ride-header-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 25px;
+    color: #000;
+}
+
+.premium-section-label {
     background: #FF2E2E;
-    /* Red as in image */
     color: #fff;
     padding: 10px 20px;
     border-radius: 10px;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 15px;
     margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    display: block;
+    width: 100%;
 }
 
-.detail-card-inner {
-    padding: 30px;
-}
-
-.ride-type-title {
-    font-size: 22px;
-    font-weight: 800;
-    margin-bottom: 25px;
-}
-
-.person-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.person-basics {
+.user-meta-riden {
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
-.person-avatar {
-    width: 55px;
-    height: 55px;
-    border-radius: 10px;
+.avatar-elite {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
     object-fit: cover;
 }
 
-.person-name {
+.name-elite {
     font-weight: 800;
-    font-size: 16px;
-    margin: 0;
+    font-size: 17px;
+    margin: 0 0 3px 0;
 }
 
-.person-meta {
+.stats-elite {
     font-size: 12px;
     color: #888;
     font-weight: 600;
 }
 
-.call-circle {
-    width: 45px;
-    height: 45px;
+.driver-info-elite, .passenger-info-elite {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.action-circles {
+    display: flex;
+    gap: 12px;
+}
+
+.circle-btn-riden {
+    width: 48px;
+    height: 48px;
     border: 1.5px solid #FF2E2E;
     border-radius: 50%;
     display: flex;
@@ -296,176 +356,147 @@
     justify-content: center;
     color: #FF2E2E;
     font-size: 20px;
+    background: transparent;
+    transition: all 0.2s;
+    text-decoration: none;
 }
 
-.vehicle-row {
+.circle-btn-riden:hover {
+    background: #FF2E2E;
+    color: #fff;
+}
+
+.vehicle-strip-elite {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
-    margin-bottom: 25px;
+    gap: 12px;
+    padding: 15px 0;
+    border-top: 1.5px solid #f8f8f8;
 }
 
-.vehicle-img {
-    width: 80px;
-    height: 45px;
-    object-fit: contain;
+.dot-indicator {
+    color: #000;
+    font-size: 8px;
 }
 
 .vehicle-text {
     font-weight: 700;
-    font-size: 14px;
+    font-size: 15px;
     color: #000;
 }
 
-.path-container {
+/* Elite Timeline */
+.elite-timeline {
     padding-left: 10px;
-    margin-bottom: 30px;
 }
 
-.path-point {
+.timeline-item-riden {
     position: relative;
-    padding-left: 35px;
-    padding-bottom: 30px;
+    padding-left: 40px;
+    padding-bottom: 35px;
 }
 
-.path-point:last-child {
+.timeline-item-riden:last-child {
     padding-bottom: 0;
 }
 
-.path-point::before {
-    content: '';
+.timeline-item-riden::before {
+    content: "";
     position: absolute;
     left: 4px;
-    top: 24px;
-    width: 1px;
-    height: calc(100% - 24px);
-    border-left: 2px dotted #ccc;
+    top: 25px;
+    height: calc(100% - 25px);
+    border-left: 1.5px dotted #ddd;
 }
 
-.path-point:last-child::before {
+.timeline-item-riden:last-child::before {
     display: none;
 }
 
-.point-icon {
+.icon-origin, .icon-destination {
     position: absolute;
     left: 0;
     top: 5px;
-    font-size: 12px;
 }
 
-.point-icon.origin {
-    color: #000;
-}
+.icon-origin { color: #000; font-size: 12px; }
+.icon-destination { color: #FF2E2E; font-size: 20px; left: -4px; top: 0; }
 
-.point-icon.dest {
-    color: #FF2E2E;
-    font-size: 18px;
-    left: -3px;
-}
-
-.point-labels h7 {
-    display: block;
-    font-weight: 800;
+.timeline-data h5 {
     font-size: 16px;
+    font-weight: 800;
     color: #000;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
 }
 
-.point-labels p {
-    font-size: 12px;
+.timeline-data p {
+    font-size: 13px;
     color: #888;
     font-weight: 600;
     margin: 0;
 }
 
-.stats-grid-row {
+/* Stats Strip */
+.elite-stats-strip {
     display: flex;
     justify-content: space-between;
-    padding: 20px 0;
-    border-top: 1px solid #eee;
-    margin-bottom: 25px;
+    padding: 25px 0;
+    border-top: 1.5px solid #f8f8f8;
     text-align: center;
 }
 
-.stat-item h8 {
+.label-stat {
     display: block;
     font-size: 11px;
     font-weight: 700;
-    color: #888;
+    color: #999;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
-.stat-item p {
+.val-stat {
     font-weight: 800;
-    font-size: 14px;
-    margin: 0;
+    font-size: 16px;
+    color: #000;
 }
 
-.pay-footer {
+/* Payment Footer Elite */
+.elite-payment-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
+    padding-top: 25px;
+    border-top: 1.5px solid #f8f8f8;
 }
 
-.pay-footer h9 {
+.pay-label {
     font-weight: 700;
-    font-size: 13px;
+    font-size: 14px;
+    color: #000;
 }
 
-.card-brand {
+.payment-brand-box {
     display: flex;
     align-items: center;
-    gap: 10px;
-}
-
-.brand-info {
+    gap: 12px;
     text-align: right;
 }
 
-.brand-info strong {
+.brand-name {
     display: block;
-    font-size: 13px;
+    font-weight: 800;
+    font-size: 14px;
+    color: #000;
 }
 
-.brand-info span {
-    color: #888;
+.brand-sub {
     font-size: 12px;
+    color: #888;
+    font-weight: 600;
 }
 
-/* Reviews Card */
-.review-card {
-    margin-top: 30px;
-    background: #fff;
-    border-radius: 25px;
-    border: 1px solid #E5E7EB;
-    padding: 30px;
-}
-
-.review-star-row {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 15px;
-}
-
-.review-text {
-    font-size: 13px;
-    color: #555;
-    font-weight: 500;
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-.tip-message {
-    font-size: 13px;
-    font-weight: 500;
-}
-
-.tip-message strong {
-    color: #FF2E2E;
+@media (max-width: 1200px) {
+    .booking-detail-grid {
+        grid-template-columns: 1fr;
+    }
 }
