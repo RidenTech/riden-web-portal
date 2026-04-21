@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { startOfWeek } from 'date-fns';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Table, ConfirmationModal, useToast, SearchBar, DateRangePicker, DatePickerStyles } from '@/components/UI';
+import { Table, ConfirmationModal, useToast, SearchBar, DateRangePicker, DatePickerStyles, Pagination } from '@/components/UI';
 
 export default function PassengerRequest() {
     const { showToast } = useToast();
@@ -34,7 +34,7 @@ export default function PassengerRequest() {
         if (type === 'approve') {
             showToast(`${targetData.name}'s request approved successfully.`, 'success');
         } else {
-            showToast(`${targetData.name}'s request rejected.`, 'error');
+            showToast(`${targetData.name}'s request has been rejected.`, 'error');
         }
 
         closeModal();
@@ -121,6 +121,7 @@ export default function PassengerRequest() {
                     </tr>
                 ))}
             </Table>
+            <Pagination totalItems={requests.length} />
 
             <ConfirmationModal
                 isOpen={modalConfig.isOpen}

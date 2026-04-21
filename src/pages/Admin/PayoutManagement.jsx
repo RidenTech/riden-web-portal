@@ -1,49 +1,79 @@
 import React, { useState } from 'react';
+import { startOfWeek } from 'date-fns';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Badge, Button, Table, SearchBar, Tabs, Pagination } from '@/components/UI';
+import { Badge, Button, Table, SearchBar, Pagination, DateRangePicker, DatePickerStyles, Tabs } from '@/components/UI';
 
 export default function PayoutManagement() {
-    const [section, setSection] = useState('upcoming');
+    const [view, setView] = useState('payouts'); // 'payouts' or 'instant-requests'
+    const [tab, setTab] = useState('upcoming'); // 'upcoming' or 'previous'
+    const [startDate, setStartDate] = useState(startOfWeek(new Date()));
+    const [endDate, setEndDate] = useState(new Date());
 
     const drivers = [
-        { name: 'Wade Warren', id: '#34567', rides: '45', amount: '$50.00', date: '22 March 2025', img: 'https://i.pravatar.cc/100?img=1', status: 'Paid' },
-        { name: 'Jacob Jones', id: '#34568', rides: '45', amount: '$50.00', date: '22 March 2025', img: 'https://i.pravatar.cc/100?img=2', status: 'Pending' },
-        { name: 'Bessie Cooper', id: '#34569', rides: '45', amount: '$50.00', date: '22 March 2025', img: 'https://i.pravatar.cc/100?img=3', status: 'Paid' },
+        { name: 'Wade Warren', id: '#34567', rides: '45', amount: '$50.00', date: '22 March 2025', img: 'https://i.pravatar.cc/100?img=11', instant: true },
+        { name: 'Jacob Jones', id: '#34567', rides: '45', amount: '$50.00', date: '22 March 2025', img: 'https://i.pravatar.cc/100?img=12' },
+        { name: 'Bessie Cooper', id: '#34567', rides: '45', amount: '$50.00', date: '22 March 2025', img: 'https://i.pravatar.cc/100?img=13' },
+        { name: 'Theresa Webb', id: '#34567', rides: '45', amount: '$50.00', date: '22 March 2025', img: 'https://i.pravatar.cc/100?img=14' },
+        { name: 'Jerome Bell', id: '#34567', rides: '45', amount: '$50.00', date: '22 March 2025', img: 'https://i.pravatar.cc/100?img=15' },
+        { name: 'Robert Fox', id: '#34567', rides: '45', amount: '$50.00', date: '22 March 2025', img: 'https://i.pravatar.cc/100?img=16', instant: true },
+        { name: 'Kathryn Murphy', id: '#34567', rides: '45', amount: '$50.00', date: '22 March 2025', img: 'https://i.pravatar.cc/100?img=17' },
+        { name: 'Savannah Nguyen', id: '#34567', rides: '45', amount: '$50.00', date: '22 March 2025', img: 'https://i.pravatar.cc/100?img=18' },
+        { name: 'Floyd Miles', id: '#34567', rides: '45', amount: '$50.00', date: '22 March 2025', img: 'https://i.pravatar.cc/100?img=19' },
+        { name: 'Devon Lane', id: '#34567', rides: '45', amount: '$50.00', date: '22 March 2025', img: 'https://i.pravatar.cc/100?img=20' },
     ];
 
-    return (
-        <AdminLayout title="Payments">
-            {/* Header Actions */}
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
-                <SearchBar
-                    placeholder="Search transactions..."
-                    className="w-full lg:w-[400px]"
-                />
+    const upcomingHeaders = ['Name', 'Unique ID', 'Total Rides', 'Total Amount'];
+    const previousHeaders = ['Name', 'Unique ID', 'Total Rides', 'Total Amount', 'Payout Date', 'Receipt'];
+    const instantHeaders = ['Name', 'Unique ID', 'Total Rides', 'Total Amount', 'Action'];
 
-                <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-                    <Button variant="pill" className="flex-1 lg:flex-none">
-                        Instant Payout Requests(12)
-                    </Button>
-                    <div className="flex items-center gap-2 px-4 py-2.5 bg-white border border-[#E5E7EB] rounded-[14px] text-[13px] font-[700] text-[#6B7280]">
-                        <i className="bi bi-calendar3"></i>
-                        <span>23/04/2025 - 23/04/2025</span>
-                    </div>
+    return (
+        <AdminLayout title={view === 'payouts' ? "Payments" : "Instant Payout Requests"}>
+            <DatePickerStyles />
+            {/* Header Actions */}
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
+                <div className="flex items-center gap-4 w-full lg:w-auto">
+                    {view === 'instant-requests' && (
+                        <button
+                            onClick={() => setView('payouts')}
+                            className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors"
+                        >
+                            <i className="bi bi-chevron-left text-sm"></i>
+                        </button>
+                    )}
+                    <SearchBar
+                        placeholder="Search by ID or driver name"
+                        className="w-full lg:w-[360px]"
+                    />
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+                    {view === 'payouts' && (
+                        <Button variant="pill" className="flex-none" onClick={() => setView('instant-requests')}>
+                            Instant Payout Requests(12)
+                        </Button>
+                    )}
+                    <DateRangePicker
+                        startDate={startDate}
+                        endDate={endDate}
+                        onStartDateChange={setStartDate}
+                        onEndDateChange={setEndDate}
+                    />
                 </div>
             </div>
-
-            {/* Tabs */}
             <Tabs
-                activeTab={section}
-                onTabChange={setSection}
+                activeTab={tab}
+                onTabChange={setTab}
                 options={[
                     { id: 'upcoming', label: 'Upcoming Payments' },
-                    { id: 'previous', label: 'Previous Transactions' },
-                    { id: 'instant', label: 'Instant Payouts' }
+                    { id: 'previous', label: 'Previous Transactions', count: 14 }
                 ]}
             />
 
-            {/* Table */}
-            <Table headers={['Name', 'Unique ID', 'Total Rides', 'Total Amount', ...(section === 'previous' ? ['Payout Date'] : []), 'Action']} headerBg="bg-[#FFF1F2]">
+
+            <Table
+                headers={view === 'instant-requests' ? instantHeaders : (tab === 'upcoming' ? upcomingHeaders : previousHeaders)}
+                headerBg="bg-[#FFF1F2]"
+            >
                 {drivers.map((d, i) => (
                     <tr key={i} className="hover:bg-black/[0.03] transition-colors border-b border-[#F3F4F6]">
                         <td className="py-[18px] px-[30px]">
@@ -51,36 +81,47 @@ export default function PayoutManagement() {
                                 <div className="w-[44px] h-[44px] rounded-full border-2 border-white shadow-sm overflow-hidden">
                                     <img src={d.img} className="w-full h-full object-cover" />
                                 </div>
-                                <span className="text-[14px] font-[800] text-[#111]">{d.name}</span>
+                                <span className="text-[14px] font-[600] text-[#111]">{d.name}</span>
                             </div>
                         </td>
-                        <td className="py-[18px] px-[30px] text-[14px] font-[800] text-[#D10000]">{d.id}</td>
-                        <td className="py-[18px] px-[30px] text-[14px] font-[800] text-[#111]">{d.rides}</td>
-                        <td className="py-[18px] px-[30px] text-[14px] font-[800] text-[#111]">{d.amount}</td>
-                        {section === 'previous' && (
+                        <td className="py-[18px] px-[30px] text-[14px] font-[600] text-gray-500">{d.id}</td>
+                        <td className="py-[18px] px-[30px] text-[14px] font-[600] text-[#111]">{d.rides}</td>
+                        <td className="py-[18px] px-[30px] text-[14px] font-[700] text-[#111]">{d.amount}</td>
+
+                        {view === 'payouts' && tab === 'previous' && (
+                            <>
+                                <td className="py-[18px] px-[30px]">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-[14px] font-[600] text-[#111]">{d.date}</span>
+                                        {d.instant && (
+                                            <span className="px-3 py-1 bg-[#D10000] text-white text-[10px] font-[700] rounded-lg uppercase">
+                                                instant payout
+                                            </span>
+                                        )}
+                                    </div>
+                                </td>
+                                <td className="py-[18px] px-[30px]">
+                                    <button className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-[#D10000] transition-colors">
+                                        <i className="bi bi-file-earmark-text-fill text-xl"></i>
+                                    </button>
+                                </td>
+                            </>
+                        )}
+
+                        {view === 'instant-requests' && (
                             <td className="py-[18px] px-[30px]">
-                                <div className="flex items-center gap-3">
-                                    <span className="text-[14px] font-[500] text-[#4B5563]">{d.date}</span>
-                                    <Badge variant="active">Paid</Badge>
-                                </div>
+                                <button className="px-6 py-2 bg-[#ECFDF3] text-[#12B76A] text-[13px] font-[700] rounded-lg hover:bg-[#D1FADF] transition-all">
+                                    Approve
+                                </button>
                             </td>
                         )}
-                        <td className="py-[18px] px-[30px] text-right">
-                            <div className="flex justify-end gap-3">
-                                {section === 'instant' ? (
-                                    <button className="px-6 py-2 bg-[#10B981] text-white text-[12px] font-[800] rounded-[10px] hover:bg-black transition-all shadow-md shadow-green-100 uppercase italic">Approve</button>
-                                ) : section === 'previous' ? (
-                                    <button className="w-10 h-10 rounded-xl bg-red-50 text-[#D10000] flex items-center justify-center hover:bg-[#D10000] hover:text-white transition-all"><i className="bi bi-file-earmark-pdf text-xl"></i></button>
-                                ) : (
-                                    <button className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all"><i className="bi bi-eye-fill text-xl"></i></button>
-                                )}
-                            </div>
-                        </td>
                     </tr>
                 ))}
             </Table>
 
-            <Pagination totalItems={payouts.length} />
+            <div className="mt-8">
+                <Pagination totalItems={drivers.length} />
+            </div>
         </AdminLayout>
     );
 }

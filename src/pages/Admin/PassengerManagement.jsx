@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Table, Badge, Button, SearchBar, DateRangePicker, DatePickerStyles } from '@/components/UI';
+import { Table, Badge, Button, SearchBar, DateRangePicker, DatePickerStyles, Pagination } from '@/components/UI';
 import { startOfWeek } from 'date-fns';
 
 export default function PassengerManagement() {
@@ -97,6 +97,7 @@ export default function PassengerManagement() {
                     </tr>
                 ))}
             </Table>
+            <Pagination totalItems={passengers.length} />
         </AdminLayout>
     );
 }

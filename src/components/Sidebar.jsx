@@ -46,8 +46,17 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
         { label: 'Promo code Management', icon: 'bi bi-tag', href: '/promo-management', permission: 'Promo code Management' },
         { label: 'Fare Management', icon: 'bi bi-cash-coin', href: '/fare-management', permission: 'Fare Management' },
         { label: 'Commission Management', icon: 'bi bi-percent', href: '/commission-management', permission: 'Commission Management' },
-        { label: 'Payments', icon: 'bi bi-credit-card', href: '/payout-management', permission: 'Payment Management' },
-        { label: 'Support Ticket', icon: 'bi bi-life-preserver', href: '/support', permission: 'Support Ticket' },
+        { label: 'Drivers Payouts', icon: 'bi bi-credit-card', href: '/payout-management', permission: 'Payment Management' },
+        { label: 'Report Management', icon: 'bi bi-file-earmark-text', href: '/report-management', permission: 'Report Management' },
+        {
+            label: 'Support Ticket',
+            icon: 'bi bi-life-preserver',
+            permission: 'Support Ticket',
+            subItems: [
+                { label: 'Complaint Tickets', href: '/support' },
+                { label: 'Report an Issue', href: '/support/report' }
+            ]
+        },
         { label: 'Manage Notifications', icon: 'bi bi-bell', href: '/alerts', permission: 'Notifications' },
         { label: 'CMS Management', icon: 'bi bi-window', href: '/cms-management', permission: 'CMS management' },
     ];
@@ -127,7 +136,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
                                 )}
 
                                 {hasSub && isExpanded && !isCollapsed && (
-                                    <div className="flex flex-col gap-1 my-1 ml-9 relative before:absolute before:left-[3px] before:top-2 before:bottom-2 before:w-[2px] before:bg-white/20">
+                                    <div className="flex flex-col gap-1 my-1 ml-10 relative">
                                         {(() => {
                                             const activeSubHref = item.subItems
                                                 .filter(s => url === s.href || url.startsWith(s.href + '/'))
@@ -139,12 +148,12 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
                                                     <Link
                                                         key={idx}
                                                         to={sub.href}
-                                                        className={`py-2 px-4 rounded-r-full text-[12.5px] font-[600] transition-all relative ${subActive
+                                                        className={`py-2 px-3 rounded-r-full text-[12.5px] font-[600] transition-all relative ${subActive
                                                             ? 'text-white font-[800] bg-white/20'
                                                             : 'text-white/70 hover:text-white hover:bg-white/5'
                                                             }`}
                                                     >
-                                                        <span className={`absolute left-[-16px] top-1/2 -translate-y-1/2 w-2 h-2 rounded-full transition-all ${subActive ? 'bg-white scale-100' : 'bg-transparent scale-0'}`}></span>
+                                                        <span className={`absolute left-[-16px] top-1/2 -translate-y-1/2 w-2 h-2 rounded-full transition-all ${subActive ? 'bg-white scale-100' : 'bg-white/50 scale-50'}`}></span>
                                                         {sub.label}
                                                     </Link>
                                                 );

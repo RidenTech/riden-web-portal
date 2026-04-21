@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Table, Badge, Button, SearchBar, Tabs, DateRangePicker, DatePickerStyles } from '@/components/UI';
+import { Table, Badge, Button, SearchBar, Tabs, DateRangePicker, DatePickerStyles, Pagination } from '@/components/UI';
 import { useNavigate } from 'react-router-dom';
 import { startOfWeek } from 'date-fns';
 
@@ -112,6 +112,7 @@ export default function DriverManagement() {
                     </tr>
                 ))}
             </Table>
+            <Pagination totalItems={filteredDrivers.length} />
         </AdminLayout>
     );
 }

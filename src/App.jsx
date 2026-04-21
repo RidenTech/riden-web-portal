@@ -23,6 +23,7 @@ import VehicleCreate from './pages/Admin/VehicleCreate';
 import VehicleEdit from './pages/Admin/VehicleEdit';
 import VehicleDetail from './pages/Admin/VehicleDetail';
 import SupportTicket from './pages/Admin/SupportTicket';
+import ReportManagement from './pages/Admin/ReportManagement';
 import Analytics from './pages/Admin/Analytics';
 import CMSManagement from './pages/Admin/CMSManagement';
 import AdminProfile from './pages/Admin/AdminProfile';
@@ -66,6 +67,8 @@ function App() {
           <Route path="/vehicles/edit" element={<VehicleEdit />} />
           <Route path="/vehicles/detail" element={<VehicleDetail />} />
           <Route path="/support" element={<SupportTicket />} />
+          <Route path="/support/report" element={<SupportTicket />} />
+          <Route path="/report-management" element={<ReportManagement />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/cms-management" element={<CMSManagement />} />
           <Route path="/profile" element={<AdminProfile />} />

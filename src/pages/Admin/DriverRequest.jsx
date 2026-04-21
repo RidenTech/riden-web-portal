@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { startOfWeek } from 'date-fns';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Table, ConfirmationModal, useToast, SearchBar, DateRangePicker, DatePickerStyles } from '@/components/UI';
+import { Table, Button, Badge, SearchBar, DateRangePicker, DatePickerStyles, ConfirmationModal, Pagination, useToast } from '@/components/UI';
 
 export default function DriverRequest() {
     const { showToast } = useToast();
@@ -34,7 +34,7 @@ export default function DriverRequest() {
         if (type === 'approve') {
             showToast(`${targetData.name}'s request approved successfully.`, 'success');
         } else {
-            showToast(`${targetData.name}'s request rejected.`, 'error');
+            showToast(`${targetData.name}'s request has been rejected.`, 'error');
         }
 
         closeModal();
@@ -121,6 +121,8 @@ export default function DriverRequest() {
                     </tr>
                 ))}
             </Table>
+
+            <Pagination totalItems={requests.length} />
 
             <ConfirmationModal
                 isOpen={modalConfig.isOpen}

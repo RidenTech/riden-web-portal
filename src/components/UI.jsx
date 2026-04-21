@@ -2,13 +2,13 @@ import React, { createContext, useContext, useState, useCallback } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-export const Table = ({ headers, children, headerBg = 'bg-[#FFEEEE]', tableClassName = '', headerAlign = '' }) => (
+export const Table = ({ headers, children, headerBg = 'bg-[#FFEEEE]', tableClassName = '', headerAlign = '', headerTextColor = 'text-[#222]' }) => (
     <div className="overflow-x-auto rounded-[30px] border border-[#E5E7EB] shadow-riden">
         <table className={`w-full text-left border-collapse ${tableClassName}`}>
             <thead>
                 <tr className={`${headerBg}`}>
                     {headers.map((header, i) => (
-                        <th key={i} className={`py-[22px] px-[30px] text-sm font-[800] text-[#222] capitalize whitespace-nowrap ${headerAlign}`}>
+                        <th key={i} className={`py-[22px] px-[30px] text-sm font-[800] ${headerTextColor} capitalize whitespace-nowrap ${headerAlign}`}>
                             {header}
                         </th>
                     ))}
@@ -356,6 +356,28 @@ export const ConfirmationModal = ({ isOpen, onClose, onConfirm, type = "approve"
     );
 };
 
+export const ImageModal = ({ isOpen, onClose, imageUrl }) => {
+    if (!isOpen) return null;
+    return (
+        <div className="fixed inset-0 z-[3000] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-md animate-fade-in" onClick={onClose}></div>
+            <div className="relative max-w-[90vw] max-h-[90vh] z-10 animate-scale-up group">
+                <button
+                    onClick={onClose}
+                    className="absolute -top-12 right-0 w-10 h-10 bg-white/20 hover:bg-white/40 text-white rounded-full flex items-center justify-center transition-all"
+                >
+                    <i className="bi bi-x-lg"></i>
+                </button>
+                <img
+                    src={imageUrl}
+                    className="w-full h-full object-contain rounded-2xl shadow-2xl border-4 border-white/10"
+                    alt="Preview"
+                />
+            </div>
+        </div>
+    );
+};
+
 const ToastContext = createContext(null);
 
 export const ToastProvider = ({ children }) => {
@@ -366,17 +388,60 @@ export const ToastProvider = ({ children }) => {
         setToasts(prev => [...prev, { id, message, type }]);
         setTimeout(() => {
             setToasts(prev => prev.filter(t => t.id !== id));
-        }, 3000);
+        }, 4000);
     }, []);
+
+    const getToastStyle = (type) => {
+        switch (type) {
+            case 'error':
+            case 'delete':
+                return 'bg-[#111111] text-white shadow-black/20';
+            case 'success':
+            case 'add':
+            case 'update':
+            case 'info':
+            default:
+                return 'bg-[#12B76A] text-white shadow-green-100';
+        }
+    };
+
+    const getToastIcon = (type) => {
+        switch (type) {
+            case 'error':
+                return 'bi-exclamation-triangle-fill';
+            case 'delete':
+                return 'bi-trash3-fill';
+            case 'success':
+            case 'add':
+            case 'update':
+                return 'bi-check-all';
+            case 'info':
+            default:
+                return 'bi-info-circle-fill';
+        }
+    };
 
     return (
         <ToastContext.Provider value={{ showToast }}>
             {children}
-            <div className="fixed top-24 right-4 z-[9999] flex flex-col gap-2 pointer-events-none">
+            <div className="fixed top-12 right-4 z-[9999] flex flex-col gap-3 pointer-events-none">
                 {toasts.map(toast => (
-                    <div key={toast.id} className={`px-6 py-4 rounded-xl shadow-xl flex items-center gap-3 animate-fade-in ${toast.type === 'success' ? 'bg-[#12B76A] text-white' : 'bg-[#F03D3D] text-white'}`}>
-                        <i className={`bi ${toast.type === 'success' ? 'bi-check-circle-fill' : 'bi-info-circle-fill'} text-xl`}></i>
-                        <span className="font-[700] text-[14px]">{toast.message}</span>
+                    <div key={toast.id} className={`min-w-[320px] px-6 py-4 rounded-[20px] shadow-2xl flex items-center justify-between gap-4 animate-slide-in-right pointer-events-auto border-l-4 ${getToastStyle(toast.type)} ${toast.type === 'error' || toast.type === 'delete' ? 'border-red-500' : 'border-white/20'}`}>
+                        <div className="flex items-center gap-3">
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${toast.type === 'error' || toast.type === 'delete' ? 'bg-red-500' : 'bg-white/20'}`}>
+                                <i className={`bi ${getToastIcon(toast.type)} text-lg`}></i>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="font-[800] text-[14px] uppercase tracking-wide">{toast.type}</span>
+                                <span className="font-[600] text-[13px] opacity-90">{toast.message}</span>
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => setToasts(prev => prev.filter(t => t.id !== toast.id))}
+                            className="w-6 h-6 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
+                        >
+                            <i className="bi bi-x text-xl"></i>
+                        </button>
                     </div>
                 ))}
             </div>

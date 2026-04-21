@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { startOfWeek } from 'date-fns';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Button, Badge, Table, Label, InputWrapper, Input, SearchBar, DeleteModal, DateRangePicker, DatePickerStyles } from '@/components/UI';
+import { Button, Badge, Table, Label, InputWrapper, Input, SearchBar, DeleteModal, DateRangePicker, DatePickerStyles, Pagination, useToast } from '@/components/UI';
 import { Link } from 'react-router-dom';
 
 export default function PromoManagement() {
+    const { showToast } = useToast();
     const [view, setView] = useState('list');
     const [startDate, setStartDate] = useState(startOfWeek(new Date()));
     const [endDate, setEndDate] = useState(new Date());
@@ -24,6 +25,7 @@ export default function PromoManagement() {
 
     const confirmDelete = () => {
         console.log('Deleting promo:', selectedPromo);
+        showToast(`Promo ${selectedPromo?.code} has been deleted permanently`, "delete");
         setIsDeleteModalOpen(false);
     };
 
@@ -95,7 +97,15 @@ export default function PromoManagement() {
                                 </td>
                                 <td className="py-[18px] px-[30px] text-right">
                                     <div className="flex justify-end gap-3">
-                                        <button onClick={() => setView('edit')} className="w-8 h-8 rounded-lg bg-[#EBFFD5]/30 text-[#10B981] flex items-center justify-center hover:bg-[#10B981] hover:text-white transition-all"><i className="bi bi-pencil-square"></i></button>
+                                        <button
+                                            onClick={() => {
+                                                showToast("Edit mode active - You can now modify the promo details", "info");
+                                                setView('edit');
+                                            }}
+                                            className="w-8 h-8 rounded-lg bg-[#EBFFD5]/30 text-[#10B981] flex items-center justify-center hover:bg-[#10B981] hover:text-white transition-all"
+                                        >
+                                            <i className="bi bi-pencil-square"></i>
+                                        </button>
                                         <button onClick={() => handleDeleteClick(p)} className="w-8 h-8 rounded-lg bg-[#FEF2F2] text-[#EF4444] flex items-center justify-center hover:bg-[#EF4444] hover:text-white transition-all"><i className="bi bi-trash3-fill"></i></button>
                                     </div>
                                 </td>
@@ -109,6 +119,7 @@ export default function PromoManagement() {
                         onConfirm={confirmDelete}
                         itemName={selectedPromo?.code}
                     />
+                    <Pagination totalItems={promos.length} />
                 </>
             )}
 
@@ -168,8 +179,25 @@ export default function PromoManagement() {
                         </div>
 
                         <div className="flex justify-end gap-3 pt-8 border-t border-gray-50">
-                            <Button onClick={() => setView('list')} className="px-12 py-3.5 font-black uppercase tracking-widest shadow-xl shadow-red-100">{view === 'add' ? 'Save Code' : 'Update Code'}</Button>
-                            <Button onClick={() => setView('list')} variant="outline" className="px-12 py-3.5 border-gray-200 text-gray-400 font-black uppercase tracking-widest">Cancel</Button>
+                            <Button
+                                onClick={() => {
+                                    showToast(view === 'add' ? "New promo code has been created" : "Promo code updated successfully", "success");
+                                    setView('list');
+                                }}
+                                className="px-12 py-3.5 font-black uppercase tracking-widest shadow-xl shadow-red-100"
+                            >
+                                {view === 'add' ? 'Save Code' : 'Update Code'}
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    showToast("Action cancelled", "info");
+                                    setView('list');
+                                }}
+                                variant="outline"
+                                className="px-12 py-3.5 border-gray-200 text-gray-400 font-black uppercase tracking-widest"
+                            >
+                                Cancel
+                            </Button>
                         </div>
                     </div>
                 </div>

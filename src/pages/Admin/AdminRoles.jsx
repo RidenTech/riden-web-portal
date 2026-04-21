@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Table, Button, SearchBar, DeleteModal, Pagination, DateRangePicker, DatePickerStyles } from '@/components/UI';
+import { Table, Button, SearchBar, DeleteModal, Pagination, DateRangePicker, DatePickerStyles, useToast } from '@/components/UI';
 import { Link } from 'react-router-dom';
 import { startOfWeek } from 'date-fns';
 
 export default function AdminRoles() {
+    const { showToast } = useToast();
     const [startDate, setStartDate] = useState(startOfWeek(new Date()));
     const [endDate, setEndDate] = useState(new Date());
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -26,6 +27,7 @@ export default function AdminRoles() {
 
     const confirmDelete = () => {
         console.log('Deleting admin:', selectedAdmin);
+        showToast(`Admin ${selectedAdmin?.name} has been removed`, "delete");
         setIsDeleteModalOpen(false);
         // Add actual deletion logic here
     };
