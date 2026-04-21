@@ -1,36 +1,84 @@
 import React, { useState } from 'react';
+import { startOfWeek } from 'date-fns';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Button, Badge, Table, Label, InputWrapper, Input, SearchBar } from '@/components/UI';
+import { Button, Badge, Table, Label, InputWrapper, Input, SearchBar, DeleteModal, DateRangePicker, DatePickerStyles } from '@/components/UI';
 import { Link } from 'react-router-dom';
 
 export default function PromoManagement() {
     const [view, setView] = useState('list');
+    const [startDate, setStartDate] = useState(startOfWeek(new Date()));
+    const [endDate, setEndDate] = useState(new Date());
+    const [exportOpen, setExportOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [selectedPromo, setSelectedPromo] = useState(null);
+
     const promos = [
         { code: '43562783', discount: '20%', start: 'March 24, 2024', end: 'July 24, 2024', status: 'active' },
         { code: '43562784', discount: '15%', start: 'April 01, 2024', end: 'June 01, 2024', status: 'inactive' },
     ];
 
+    const handleDeleteClick = (promo) => {
+        setSelectedPromo(promo);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = () => {
+        console.log('Deleting promo:', selectedPromo);
+        setIsDeleteModalOpen(false);
+    };
+
     return (
         <AdminLayout title="Promo Code Management">
+            <DatePickerStyles />
             {view === 'list' && (
                 <>
                     {/* Header Row */}
-                    <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
+                    <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
                         <SearchBar
                             placeholder="Search by code or date"
-                            className="w-full lg:w-[400px]"
+                            className="w-full lg:w-[360px]"
                         />
 
-                        <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-                            <Button variant="pill" onClick={() => setView('add')} className="flex-1 lg:flex-none">
+                        <div className="flex items-center gap-2 w-full lg:w-auto">
+                            <Button variant="pill" onClick={() => setView('add')} className="flex-none">
                                 <i className="bi bi-plus-circle-fill mr-2"></i> Add New Code
                             </Button>
-                            <button className="flex items-center gap-2 px-6 py-2.5 bg-white border border-[#E5E7EB] rounded-[14px] text-[13px] font-[700] text-[#111] hover:bg-gray-50 transition-all">
-                                <i className="bi bi-file-earmark-excel-fill text-[#1D7E4D]"></i> Download
-                            </button>
-                            <div className="flex items-center gap-2 px-4 py-2.5 bg-white border border-[#E5E7EB] rounded-[14px] text-[13px] font-[700] text-[#6B7280]">
-                                <i className="bi bi-calendar3"></i>
-                                <span>23/04/2025 - 23/04/2025</span>
+                            <DateRangePicker
+                                startDate={startDate}
+                                endDate={endDate}
+                                onStartDateChange={setStartDate}
+                                onEndDateChange={setEndDate}
+                            />
+                            <div className="relative">
+                                <button
+                                    onClick={() => setExportOpen(!exportOpen)}
+                                    className="flex rounded-full items-center gap-2 px-6 py-3 bg-white border border-[#E5E7EB] text-[13px] font-[700] text-[#111] hover:bg-gray-50 transition-all shadow-sm"
+                                >
+                                    <i className="bi bi-file-earmark-excel-fill text-[#12B76A] text-[16px]"></i> Export
+                                    <i className={`bi bi-chevron-down text-[#111] text-[12px] transition-transform ${exportOpen ? 'rotate-180' : ''}`}></i>
+                                </button>
+                                {exportOpen && (
+                                    <div className="absolute right-0 mt-2 w-[180px] bg-white border border-[#E5E7EB] rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] overflow-hidden py-2 z-[20]">
+                                        <button
+                                            className="w-full flex items-center px-5 py-2.5 hover:bg-gray-50 text-[13px] font-[600] text-[#111] border-b border-[#F3F4F6] transition-colors"
+                                            onClick={() => setExportOpen(false)}
+                                        >
+                                            <i className="bi bi-filetype-csv mr-3 text-[#12B76A] text-[16px]"></i> CSV Format
+                                        </button>
+                                        <button
+                                            className="w-full flex items-center px-5 py-2.5 hover:bg-gray-50 text-[13px] font-[600] text-[#111] transition-colors border-b border-[#F3F4F6]"
+                                            onClick={() => setExportOpen(false)}
+                                        >
+                                            <i className="bi bi-filetype-pdf mr-3 text-[#F03D3D] text-[16px]"></i> PDF Format
+                                        </button>
+                                        <button
+                                            className="w-full flex items-center px-5 py-2.5 hover:bg-gray-50 text-[13px] font-[600] text-[#111] transition-colors"
+                                            onClick={() => setExportOpen(false)}
+                                        >
+                                            <i className="bi bi-file-earmark-excel-fill mr-3 text-[#12B76A] text-[16px]"></i> Excel Format
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -48,30 +96,38 @@ export default function PromoManagement() {
                                 <td className="py-[18px] px-[30px] text-right">
                                     <div className="flex justify-end gap-3">
                                         <button onClick={() => setView('edit')} className="w-8 h-8 rounded-lg bg-[#EBFFD5]/30 text-[#10B981] flex items-center justify-center hover:bg-[#10B981] hover:text-white transition-all"><i className="bi bi-pencil-square"></i></button>
-                                        <button className="w-8 h-8 rounded-lg bg-[#FEF2F2] text-[#EF4444] flex items-center justify-center hover:bg-[#EF4444] hover:text-white transition-all"><i className="bi bi-trash3-fill"></i></button>
+                                        <button onClick={() => handleDeleteClick(p)} className="w-8 h-8 rounded-lg bg-[#FEF2F2] text-[#EF4444] flex items-center justify-center hover:bg-[#EF4444] hover:text-white transition-all"><i className="bi bi-trash3-fill"></i></button>
                                     </div>
                                 </td>
                             </tr>
                         ))}
                     </Table>
+
+                    <DeleteModal
+                        isOpen={isDeleteModalOpen}
+                        onClose={() => setIsDeleteModalOpen(false)}
+                        onConfirm={confirmDelete}
+                        itemName={selectedPromo?.code}
+                    />
                 </>
             )}
 
             {(view === 'add' || view === 'edit') && (
-                <div className="max-w-4xl mx-auto space-y-6">
-                    <div className="flex items-center gap-4">
-                        <button onClick={() => setView('list')} className="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
-                            <i className="bi bi-chevron-left"></i>
+                <div className=" mx-auto space-y-6">
+                    <div className="flex items-center gap-2">
+
+                        <button onClick={() => setView('list')} className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors">
+                            <i className="bi bi-chevron-left text-sm"></i>
                         </button>
                         <h2 className="text-xl font-bold text-gray-900 tracking-tight">{view === 'add' ? 'Add New Promo Code' : 'Edit Promo Code'}</h2>
                     </div>
 
-                    <div className="bg-white p-10 rounded-[30px] shadow-sm border border-[#E5E7EB]">
-                        <div className="bg-[#D10000] text-white px-8 py-3.5 rounded-[14px] text-sm font-bold mb-10 inline-block uppercase tracking-wider italic">
+                    <div className="bg-white p-6 rounded-[30px] shadow-sm border border-[#E5E7EB]">
+                        <div className="bg-[#d10000]  rounded-full  p-4 text-[14px] font-bold text-white uppercase tracking-widest mb-4 flex items-center gap-2">
                             Code Details
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 px-4">
                             <div>
                                 <Label>Code</Label>
                                 <InputWrapper icon="bi bi-tag">
@@ -92,11 +148,11 @@ export default function PromoManagement() {
                             </div>
                         </div>
 
-                        <div className="bg-[#D10000] text-white px-8 py-3.5 rounded-[14px] text-sm font-bold mb-10 inline-block uppercase tracking-wider italic">
+                        <div className="bg-[#d10000]  rounded-full  p-4 text-[14px] font-bold text-white uppercase tracking-widest mb-4 flex items-center gap-2">
                             Date Management
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 px-4">
                             <div>
                                 <Label>Starting Date</Label>
                                 <InputWrapper icon="bi bi-calendar-event">
@@ -112,8 +168,8 @@ export default function PromoManagement() {
                         </div>
 
                         <div className="flex justify-end gap-3 pt-8 border-t border-gray-50">
-                            <Button onClick={() => setView('list')} className="px-12 py-3.5 italic font-black uppercase tracking-widest shadow-xl shadow-red-100">{view === 'add' ? 'Save Code' : 'Update Code'}</Button>
-                            <Button onClick={() => setView('list')} variant="outline" className="px-12 py-3.5 border-gray-200 text-gray-400 italic font-black uppercase tracking-widest">Cancel</Button>
+                            <Button onClick={() => setView('list')} className="px-12 py-3.5 font-black uppercase tracking-widest shadow-xl shadow-red-100">{view === 'add' ? 'Save Code' : 'Update Code'}</Button>
+                            <Button onClick={() => setView('list')} variant="outline" className="px-12 py-3.5 border-gray-200 text-gray-400 font-black uppercase tracking-widest">Cancel</Button>
                         </div>
                     </div>
                 </div>

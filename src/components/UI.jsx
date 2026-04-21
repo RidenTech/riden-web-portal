@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-export const Table = ({ headers, children, headerBg = 'bg-[#FFEEEE]' }) => (
+export const Table = ({ headers, children, headerBg = 'bg-[#FFEEEE]', tableClassName = '', headerAlign = '' }) => (
     <div className="overflow-x-auto rounded-[30px] border border-[#E5E7EB] shadow-riden">
-        <table className="w-full text-left border-collapse">
+        <table className={`w-full text-left border-collapse ${tableClassName}`}>
             <thead>
                 <tr className={`${headerBg}`}>
                     {headers.map((header, i) => (
-                        <th key={i} className={`py-[22px] px-[30px] text-sm font-[800] text-[#222] capitalize`}>
+                        <th key={i} className={`py-[22px] px-[30px] text-sm font-[800] text-[#222] capitalize whitespace-nowrap ${headerAlign}`}>
                             {header}
                         </th>
                     ))}
@@ -309,4 +309,83 @@ export const DeleteModal = ({ isOpen, onClose, onConfirm, title = "Are you sure?
             ` }} />
         </div>
     );
+};
+
+export const ConfirmationModal = ({ isOpen, onClose, onConfirm, type = "approve", targetName = "", actionName = "" }) => {
+    if (!isOpen) return null;
+    const isApprove = type === 'approve';
+    return (
+        <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-fade-in" onClick={onClose}></div>
+            <div className="bg-white rounded-[24px] p-8 w-full max-w-[420px] relative z-10 shadow-2xl animate-scale-up text-center border border-gray-100">
+                <div className="flex items-center justify-center mx-auto mb-6">
+                    {isApprove ? (
+                        <svg width="56" height="56" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24 0L29.35 6.27L37.5 5.25L40.03 13.06L47.53 16.34L45.41 24L47.53 31.66L40.03 34.94L37.5 42.75L29.35 41.73L24 48L18.65 41.73L10.5 42.75L7.97 34.94L0.47 31.66L2.59 24L0.47 16.34L7.97 13.06L10.5 5.25L18.65 6.27L24 0Z" fill="#12B76A" />
+                            <path d="M20 30L14 24L16.8 21.2L20 24.4L31.2 13.2L34 16L20 30Z" fill="white" />
+                        </svg>
+                    ) : (
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="24" r="24" fill="#F03D3D" />
+                            <path d="M30 18L18 30" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M18 18L30 30" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    )}
+                </div>
+                <p className="text-[16px] font-[500] text-[#111] mb-8 leading-relaxed">
+                    Are you sure to {isApprove ? 'approve' : 'Reject'} the <span className="text-[#F03D3D]">{targetName}</span>
+                    <br />
+                    {actionName} request
+                </p>
+                <div className="flex gap-4">
+                    <button
+                        onClick={onConfirm}
+                        className="flex-1 py-3.5 bg-[#F03D3D] hover:bg-[#D10000] text-white rounded-[12px] font-[800] text-[16px] transition-all"
+                    >
+                        Confirm
+                    </button>
+                    <button
+                        onClick={onClose}
+                        className="flex-1 py-3.5 bg-white text-[#111] border border-[#111] rounded-[12px] font-[800] text-[16px] hover:bg-gray-50 transition-all font-black"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const ToastContext = createContext(null);
+
+export const ToastProvider = ({ children }) => {
+    const [toasts, setToasts] = useState([]);
+
+    const showToast = useCallback((message, type = 'success') => {
+        const id = Date.now();
+        setToasts(prev => [...prev, { id, message, type }]);
+        setTimeout(() => {
+            setToasts(prev => prev.filter(t => t.id !== id));
+        }, 3000);
+    }, []);
+
+    return (
+        <ToastContext.Provider value={{ showToast }}>
+            {children}
+            <div className="fixed top-24 right-4 z-[9999] flex flex-col gap-2 pointer-events-none">
+                {toasts.map(toast => (
+                    <div key={toast.id} className={`px-6 py-4 rounded-xl shadow-xl flex items-center gap-3 animate-fade-in ${toast.type === 'success' ? 'bg-[#12B76A] text-white' : 'bg-[#F03D3D] text-white'}`}>
+                        <i className={`bi ${toast.type === 'success' ? 'bi-check-circle-fill' : 'bi-info-circle-fill'} text-xl`}></i>
+                        <span className="font-[700] text-[14px]">{toast.message}</span>
+                    </div>
+                ))}
+            </div>
+        </ToastContext.Provider>
+    );
+};
+
+export const useToast = () => {
+    const context = useContext(ToastContext);
+    if (!context) throw new Error("useToast must be used within ToastProvider");
+    return context;
 };

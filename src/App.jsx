@@ -1,15 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastProvider } from './components/UI';
 import Login from './pages/Auth/Login';
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import Dashboard from './pages/Admin/Dashboard';
 import DriverManagement from './pages/Admin/DriverManagement';
 import DriverCreate from './pages/Admin/DriverCreate';
-
 import DriverDetail from './pages/Admin/DriverDetail';
+import DriverRequest from './pages/Admin/DriverRequest';
 import PassengerManagement from './pages/Admin/PassengerManagement';
 import PassengerCreate from './pages/Admin/PassengerCreate';
 import PassengerDetail from './pages/Admin/PassengerDetail';
+import PassengerRequest from './pages/Admin/PassengerRequest';
 import FareManagement from './pages/Admin/FareManagement';
 import CommissionManagement from './pages/Admin/CommissionManagement';
 import PromoManagement from './pages/Admin/PromoManagement';
@@ -33,47 +35,50 @@ import ManageNotifications from './pages/Admin/ManageNotifications';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/auth/login" element={<Login />} />
-        <Route path="/auth/forgot" element={<ForgotPassword />} />
+    <ToastProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/forgot" element={<ForgotPassword />} />
 
-        {/* Admin Protected Routes */}
-        <Route path="/drivers" element={<DriverManagement />} />
-        <Route path="/drivers/create" element={<DriverCreate />} />
+          {/* Admin Protected Routes */}
+          <Route path="/drivers" element={<DriverManagement />} />
+          <Route path="/drivers/create" element={<DriverCreate />} />
+          <Route path="/drivers/detail" element={<DriverDetail />} />
+          <Route path="/drivers/requests" element={<DriverRequest />} />
 
-        <Route path="/drivers/detail" element={<DriverDetail />} />
+          <Route path="/passenger" element={<PassengerManagement />} />
+          <Route path="/passenger/create" element={<PassengerCreate />} />
+          <Route path="/passenger/detail" element={<PassengerDetail />} />
+          <Route path="/passenger/requests" element={<PassengerRequest />} />
 
-        <Route path="/passenger" element={<PassengerManagement />} />
-        <Route path="/passenger/create" element={<PassengerCreate />} />
-        <Route path="/passenger/detail" element={<PassengerDetail />} />
+          <Route path="/fare-management" element={<FareManagement />} />
+          <Route path="/commission-management" element={<CommissionManagement />} />
+          <Route path="/promo-management" element={<PromoManagement />} />
+          <Route path="/payout-management" element={<PayoutManagement />} />
 
-        <Route path="/fare-management" element={<FareManagement />} />
-        <Route path="/commission-management" element={<CommissionManagement />} />
-        <Route path="/promo-management" element={<PromoManagement />} />
-        <Route path="/payout-management" element={<PayoutManagement />} />
+          <Route path="/bookings" element={<BookingManagement />} />
+          <Route path="/bookings/detail" element={<BookingDetail />} />
 
-        <Route path="/bookings" element={<BookingManagement />} />
-        <Route path="/bookings/detail" element={<BookingDetail />} />
+          <Route path="/vehicles" element={<VehicleManagement />} />
+          <Route path="/vehicles/create" element={<VehicleCreate />} />
+          <Route path="/vehicles/edit" element={<VehicleEdit />} />
+          <Route path="/vehicles/detail" element={<VehicleDetail />} />
+          <Route path="/support" element={<SupportTicket />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/cms-management" element={<CMSManagement />} />
+          <Route path="/profile" element={<AdminProfile />} />
 
-        <Route path="/vehicles" element={<VehicleManagement />} />
-        <Route path="/vehicles/create" element={<VehicleCreate />} />
-        <Route path="/vehicles/edit" element={<VehicleEdit />} />
-        <Route path="/vehicles/detail" element={<VehicleDetail />} />
-        <Route path="/support" element={<SupportTicket />} />
-        <Route path="/analytics" element={<Analytics />} />
-        <Route path="/cms-management" element={<CMSManagement />} />
-        <Route path="/profile" element={<AdminProfile />} />
-
-        <Route path="/admin-roles" element={<AdminRoles />} />
-        <Route path="/admin-roles/create" element={<AdminCreate />} />
-        <Route path="/admin-roles/edit" element={<AdminEdit />} />
-        <Route path="/admin-roles/detail" element={<AdminDetail />} />
-        <Route path="/alerts" element={<ManageNotifications />} />
-        <Route path="/reviews" element={<ReviewManagement />} />
-      </Routes>
-    </Router>
+          <Route path="/admin-roles" element={<AdminRoles />} />
+          <Route path="/admin-roles/create" element={<AdminCreate />} />
+          <Route path="/admin-roles/edit" element={<AdminEdit />} />
+          <Route path="/admin-roles/detail" element={<AdminDetail />} />
+          <Route path="/alerts" element={<ManageNotifications />} />
+          <Route path="/reviews" element={<ReviewManagement />} />
+        </Routes>
+      </Router>
+    </ToastProvider>
   );
 }
 
