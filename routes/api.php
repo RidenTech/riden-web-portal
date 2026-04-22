@@ -83,12 +83,36 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [App\Http\Controllers\Api\Admin\VehicleApiController::class, 'destroy']);
         });
 
+        // Roles & Permissions
+        Route::prefix('roles')->group(function () {
+            Route::get('/', [App\Http\Controllers\Api\Admin\AdminRoleApiController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\Api\Admin\AdminRoleApiController::class, 'store']);
+            Route::patch('/{id}', [App\Http\Controllers\Api\Admin\AdminRoleApiController::class, 'update']);
+            Route::delete('/{id}', [App\Http\Controllers\Api\Admin\AdminRoleApiController::class, 'destroy']);
+        });
+
+        // Support Tickets
+        Route::prefix('support')->group(function () {
+            Route::get('/', [App\Http\Controllers\Api\Admin\AdminSupportApiController::class, 'index']);
+            Route::get('/{id}', [App\Http\Controllers\Api\Admin\AdminSupportApiController::class, 'show']);
+            Route::post('/{id}/reply', [App\Http\Controllers\Api\Admin\AdminSupportApiController::class, 'reply']);
+        });
+
+        // Reviews & Ratings
+        Route::get('/reviews', function() { return response()->json(['status' => 'success', 'data' => []]); });
+
+        // Notifications & Alerts
+        Route::prefix('alerts')->group(function () {
+            Route::get('/', function() { return response()->json(['status' => 'success', 'data' => []]); });
+            Route::post('/send', function() { return response()->json(['status' => 'success', 'message' => 'Alert sent']); });
+        });
+
         // Settings (Fare, Commission, CMS, Promo)
-        // These can be handled by a generic settings controller or separate ones later
         Route::prefix('settings')->group(function () {
             Route::get('/fare', function() { return response()->json(['status' => 'success', 'data' => []]); });
             Route::get('/commission', function() { return response()->json(['status' => 'success', 'data' => []]); });
             Route::get('/cms', function() { return response()->json(['status' => 'success', 'data' => []]); });
+            Route::get('/promo', function() { return response()->json(['status' => 'success', 'data' => []]); });
         });
     });
 });
