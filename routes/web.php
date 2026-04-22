@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminRoleController;
 use App\Http\Controllers\Admin\PassengerManagementController;
 use App\Http\Controllers\Admin\DriverManagementController;
 use App\Http\Controllers\Admin\BookingManagementController;
+use App\Http\Controllers\Admin\VehicleManagementController;
 
 // Root Redirect to Admin Login or Dashboard
 Route::get('/', function () {
@@ -59,14 +60,9 @@ Route::prefix('admin')->group(function () {
         });
 
         Route::middleware(['admin.module:Booking Management'])->group(function () {
-            Route::get('/booking-management', function () {
-                return view('admin.booking.index');
-            })->name('admin.booking.management');
-
-            Route::get('/booking-management/detail/{id}', function ($id) {
-                return view('admin.booking.detail', ['id' => $id]);
-            })->name('admin.booking.detail');
             Route::get('/booking-management', [BookingManagementController::class, 'index'])->name('admin.booking.management');
+            Route::get('/booking-management/create', [BookingManagementController::class, 'create'])->name('admin.booking.create');
+            Route::post('/booking-management/store', [BookingManagementController::class, 'store'])->name('admin.booking.store');
             Route::get('/booking-management/detail/{id}', [BookingManagementController::class, 'show'])->name('admin.booking.detail');
         });
 
@@ -151,6 +147,13 @@ Route::prefix('admin')->group(function () {
                 return view('admin.promo.detail');
             })->name('admin.promo.detail');
         });
+        // Vehicle Management
+        Route::get('/vehicle-management', [VehicleManagementController::class, 'index'])->name('admin.vehicle.management');
+        Route::get('/vehicle-management/create', [VehicleManagementController::class, 'create'])->name('admin.vehicle.create');
+        Route::post('/vehicle-management/store', [VehicleManagementController::class, 'store'])->name('admin.vehicle.store');
+        Route::get('/vehicle-management/edit/{id}', [VehicleManagementController::class, 'edit'])->name('admin.vehicle.edit');
+        Route::post('/vehicle-management/update/{id}', [VehicleManagementController::class, 'update'])->name('admin.vehicle.update');
+        Route::get('/vehicle-management/delete/{id}', [VehicleManagementController::class, 'destroy'])->name('admin.vehicle.delete');
     });
 });
 

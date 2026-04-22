@@ -5,7 +5,7 @@
         ['label' => 'Admin Roles', 'icon' => 'bi bi-person', 'url' => route('admin.roles.index'), 'permission' => 'Admin Roles'],
         ['label' => 'Driver Management', 'icon' => 'bi bi-person-badge', 'url' => route('admin.drivers.directory'), 'permission' => 'Driver Management'],
         ['label' => 'Passenger Management', 'icon' => 'bi bi-people', 'url' => route('admin.passenger.management'), 'permission' => 'Passenger Management'],
-        ['label' => 'Vehicle Management', 'icon' => 'bi bi-truck', 'url' => '#', 'permission' => 'Vehicles Management'],
+        ['label' => 'Vehicle Management', 'icon' => 'bi bi-truck', 'url' => route('admin.vehicle.management'), 'permission' => 'Vehicles Management'],
         ['label' => 'Booking Management', 'icon' => 'bi bi-calendar-check', 'url' => route('admin.booking.management'), 'permission' => 'Booking Management'],
         ['label' => 'Reviews & Ratings', 'icon' => 'bi bi-star', 'url' => route('admin.reviews.ratings'), 'permission' => 'Reviews & Ratings'],
         ['label' => 'Promo code Management', 'icon' => 'bi bi-tag', 'url' => route('admin.promo.index'), 'permission' => 'Promo code Management'],
