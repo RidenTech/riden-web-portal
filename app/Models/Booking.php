@@ -27,6 +27,12 @@ class Booking extends Model
         'completed_time',
     ];
 
+    protected $casts = [
+        'pickup_time' => 'datetime',
+        'completed_time' => 'datetime',
+        'fare' => 'decimal:2',
+    ];
+
     public function passenger()
     {
         return $this->belongsTo(Passenger::class);
