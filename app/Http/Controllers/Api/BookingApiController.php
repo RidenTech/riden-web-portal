@@ -78,7 +78,7 @@ class BookingApiController extends Controller
                 'fare' => $request->fare,
                 'payment_method' => $request->payment_method,
                 'payment_status' => ($request->payment_method == 'Cash') ? 'Unpaid' : 'Paid',
-                'status' => 'Pending',
+                'status' => 'pending', // Fixed: Must be lowercase to match database enum
                 'vehicle_id' => $request->vehicle_id,
             ]);
 
@@ -168,3 +168,4 @@ class BookingApiController extends Controller
         }
     }
 }
+
