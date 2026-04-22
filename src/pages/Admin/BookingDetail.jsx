@@ -6,17 +6,17 @@ import { Badge } from '@/components/UI';
 // Fake data keyed by status type for demonstration
 const fakeBookings = {
     online: {
-        id: '#34526',
+        id: '#98738',
         date: 'Sunday March 23, 2023',
         status: 'ongoing',
         statusLabel: 'Ongoing',
         title: 'Ongoing Ride',
         driver: { name: 'Sergio Morsis', rides: 43, reviews: 31, avatar: '11' },
-        vehicle: { name: 'Black Suzuki Alto, (BKG-220)', image: null },
+        vehicle: { name: 'Black Suzuki Alto', vehNo: 'xyz 3457', image: null },
         pickup: { label: 'Office', address: '2972 Westheimer Rd. Santa Ana, Illinois 85486' },
         dropoff: { label: 'Coffee shop', address: '1901 Thornridge Cir. Shiloh, Hawaii 81063' },
         distance: '0.2 km',
-        time: '2 min',
+        time: '15 min',
         fare: '$25.00',
         passenger: { name: 'Guy Hawkins', rides: 43, reviews: 31, avatar: '12' },
         payment: { brand: 'visa', last4: '234' },
@@ -28,7 +28,7 @@ const fakeBookings = {
         statusLabel: 'Completed',
         title: 'Completed Ride',
         driver: { name: 'Sergio Morsis', rides: 43, reviews: 21, avatar: '11' },
-        vehicle: { name: 'Black Suzuki Alto, (BKG-220)', image: null },
+        vehicle: { name: 'Black Suzuki Alto', vehNo: 'ABC 1234', image: null },
         pickup: { label: 'Office', address: '2972 Westheimer Rd. Santa Ana, Illinois 85486' },
         dropoff: { label: 'Coffee shop', address: '1901 Thornridge Cir. Shiloh, Hawaii 81063' },
         distance: '0.2 km',
@@ -47,7 +47,7 @@ const fakeBookings = {
         statusLabel: 'Cancelled',
         title: 'Cancelled Ride',
         driver: { name: 'Sergio Morsis', rides: 43, reviews: 31, avatar: '11' },
-        vehicle: { name: 'Black Suzuki Alto, (BKG-220)', image: null },
+        vehicle: { name: 'Black Suzuki Alto', vehNo: 'LMN 5678', image: null },
         pickup: { label: 'Office', address: '2972 Westheimer Rd. Santa Ana, Illinois 85486' },
         dropoff: { label: 'Coffee shop', address: '1901 Thornridge Cir. Shiloh, Hawaii 81063' },
         distance: '0.2 km',
@@ -73,14 +73,27 @@ export default function BookingDetail() {
     return (
         <AdminLayout title="Booking Management">
             {/* Back + Header */}
-            <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                    <Link to="/bookings" className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors bg-white">
-                        <i className="bi bi-chevron-left text-sm"></i>
-                    </Link>
-                    <h2 className="text-xl font-black text-gray-900">Booking Detail</h2>
+            <div className="flex flex-col gap-3 mb-6">
+                <div className="flex justify-between items-center gap-3">
+
+                    <div className="flex items-center gap-3">
+                        <Link to="/bookings" className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors bg-white">
+                            <i className="bi bi-chevron-left text-sm"></i>
+                        </Link>
+                        <h2 className="text-xl font-black text-gray-900">Booking Detail</h2>
+                    </div>
+
+                    <Badge variant={statusVariant}>{booking.statusLabel}</Badge>
                 </div>
-                <Badge variant={statusVariant}>{booking.statusLabel}</Badge>
+                <div className="flex items-center justify-between">
+                    <span className="bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm font-black text-gray-900 shadow-sm">
+                        Booking ID {booking.id}
+                    </span>
+                    <span className="text-sm font-bold text-gray-500">{booking.date}</span>
+
+                </div>
+
+
             </div>
 
             {/* Main 2-col layout */}
@@ -88,14 +101,6 @@ export default function BookingDetail() {
 
                 {/* LEFT — Map */}
                 <div className="flex flex-col gap-4">
-                    {/* ID + Date */}
-                    <div className="flex items-center justify-between">
-                        <span className="bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm font-black text-gray-900 shadow-sm">
-                            Booking ID {booking.id}
-                        </span>
-                        <span className="text-sm font-bold text-gray-500">{booking.date}</span>
-                    </div>
-
                     {/* Map iframe */}
                     <div className="relative rounded-[22px] overflow-hidden h-[420px] border border-gray-100 shadow-sm">
                         <iframe
@@ -156,11 +161,7 @@ export default function BookingDetail() {
 
                 {/* RIGHT — Ride Details */}
                 <div className="flex flex-col gap-4">
-                    {/* Spacer to align with left column's ID/date row */}
-                    <div className="hidden lg:flex items-center justify-between opacity-0 pointer-events-none">
-                        <span className="text-sm font-black">Booking ID {booking.id}</span>
-                        <span className="text-sm font-bold text-gray-500">{booking.date}</span>
-                    </div>
+
 
                     <div className="bg-white rounded-[22px] border border-gray-100 shadow-sm overflow-hidden">
                         <div className="px-6 pt-5 pb-2">
@@ -192,13 +193,19 @@ export default function BookingDetail() {
                                 </div>
 
                                 {/* Vehicle */}
-                                <div className="flex items-center gap-3 mt-3 px-1 py-3 border-t border-gray-50">
+                                <div className="flex items-center gap-3 mt-3 px-1 py-3 border-t border-gray-50 text-[14px]">
                                     <div className="w-14 h-10 rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center shrink-0">
                                         <i className="bi bi-car-front-fill text-lg text-gray-400"></i>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 bg-black rounded-full shrink-0"></div>
-                                        <span className="text-sm font-bold text-gray-900">{booking.vehicle.name}</span>
+                                    <div className="flex flex-col">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-2 h-2 bg-black rounded-full shrink-0"></div>
+                                            <span className="font-bold text-gray-900">{booking.vehicle.name}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 mt-0.5">
+                                            <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">Veh No:</span>
+                                            <span className="text-xs font-black text-[#D10000] bg-red-50 px-2 py-0.5 rounded-lg border border-red-100">{booking.vehicle.vehNo}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

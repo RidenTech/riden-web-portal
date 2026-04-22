@@ -18,6 +18,7 @@ import PromoManagement from './pages/Admin/PromoManagement';
 import PayoutManagement from './pages/Admin/PayoutManagement';
 import BookingManagement from './pages/Admin/BookingManagement';
 import BookingDetail from './pages/Admin/BookingDetail';
+import BookingCreate from './pages/Admin/BookingCreate';
 import VehicleManagement from './pages/Admin/VehicleManagement';
 import VehicleCreate from './pages/Admin/VehicleCreate';
 import VehicleEdit from './pages/Admin/VehicleEdit';
@@ -60,12 +61,13 @@ function App() {
           <Route path="/payout-management" element={<PayoutManagement />} />
 
           <Route path="/bookings" element={<BookingManagement />} />
+          <Route path="/bookings/create" element={<BookingCreate />} />
           <Route path="/bookings/detail" element={<BookingDetail />} />
 
           <Route path="/vehicles" element={<VehicleManagement />} />
           <Route path="/vehicles/create" element={<VehicleCreate />} />
           <Route path="/vehicles/edit" element={<VehicleEdit />} />
-          <Route path="/vehicles/detail" element={<VehicleDetail />} />
+          <Route path="/vehicles/detail/:id" element={<VehicleDetail />} />
           <Route path="/support" element={<SupportTicket />} />
           <Route path="/support/report" element={<SupportTicket />} />
           <Route path="/report-management" element={<ReportManagement />} />

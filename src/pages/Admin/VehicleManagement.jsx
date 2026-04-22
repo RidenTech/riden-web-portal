@@ -1,83 +1,102 @@
 import React from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Badge, Button, SearchBar, Pagination } from '@/components/UI';
+import { Table, Badge, Button, SearchBar, Pagination } from '@/components/UI';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function VehicleManagement() {
+    const navigate = useNavigate();
     const vehicles = [
-        { id: '1', name: 'Suzuki Alto', registration: 'BKG-220', color: 'Black', type: 'Standard', driver: 'Theresa Webb', status: 'Active', image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=300' },
-        { id: '2', name: 'Honda Civic', registration: 'KCD-123', color: 'White', type: 'Premium', driver: 'Ralph Edwards', status: 'Active', image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=300' },
-        { id: '3', name: 'Toyota Aqua', registration: 'ABC-456', color: 'Silver', type: 'Standard', driver: 'Dianne Russell', status: 'Pending', image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=300' },
-        { id: '4', name: 'Nissan Dayz', registration: 'DEF-789', color: 'Blue', type: 'Budget', driver: 'Esther Howard', status: 'Active', image: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?q=80&w=300' },
+        {
+            id: '1',
+            driverId: '#19976',
+            name: 'alto',
+            model: '2000',
+            plateNo: 'faa 3124',
+            category: 'Sedan',
+            seats: '4 Seats',
+            image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=200'
+        },
+        {
+            id: '2',
+            driverId: '#19977',
+            name: 'civic',
+            model: '2022',
+            plateNo: 'lea 5678',
+            category: 'Premium',
+            seats: '4 Seats',
+            image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=200'
+        },
     ];
 
     return (
         <AdminLayout title="Vehicle Management">
             {/* Search & Actions */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
                 <SearchBar
-                    placeholder="Search by registration or model..."
+                    placeholder="Search by name, email, phone number"
                     className="w-full md:w-96"
                 />
                 <div className="flex gap-4 w-full md:w-auto">
-                    <Button variant="outline" className="flex-1 md:flex-none uppercase italic tracking-widest font-bold">
-                        <i className="bi bi-filter text-lg text-[#D10000]"></i>
-                        Filters
+
+                    <Button variant="pill" className="flex-1 lg:flex-none" onClick={() => navigate('/vehicles/create')}>
+                        <i className="bi bi-person-plus-fill"></i> Add Vehicle
                     </Button>
-                    <Link to="/vehicles/create" className="flex-1 md:flex-none">
-                        <Button className="w-full md:w-auto px-10 uppercase italic tracking-widest font-black shadow-lg shadow-red-100 h-[52px]">
-                            <i className="bi bi-plus-lg mr-2"></i>
-                            Add New Vehicle
-                        </Button>
-                    </Link>
                 </div>
             </div>
 
-            {/* Grid View */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            {/* Table View */}
+            <Table headers={['Car Image', 'Driver ID', 'Car Name', 'Model No', 'Plate No', 'Category', 'No of Seats']}>
                 {vehicles.map((v) => (
-                    <Link key={v.id} to="/vehicles/detail" className="group border border-[#E5E7EB] rounded-[30px] overflow-hidden hover:shadow-2xl hover:shadow-red-50/50 transition-all duration-500 bg-white block">
-                        <div className="relative h-56 overflow-hidden">
-                            <img src={v.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                            <div className="absolute top-4 right-4">
-                                <Badge variant={v.status === 'Active' ? 'active' : 'warning'}>{v.status}</Badge>
+                    <tr
+                        key={v.id}
+                        onClick={() => navigate(`/vehicles/detail/${v.id}`)}
+                        className="cursor-pointer hover:bg-black/[0.02] transition-colors border-b border-[#F3F4F6]"
+                    >
+                        <td className="py-[18px] px-[30px]">
+                            <div className="w-16 h-12 bg-gray-50 border border-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                                {v.image ? (
+                                    <img src={v.image} className="w-full h-full object-cover" alt={v.name} />
+                                ) : (
+                                    <span className="text-[10px] font-bold text-gray-300 uppercase text-center">No Image</span>
+                                )}
                             </div>
-                            <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/90 to-transparent">
-                                <h4 className="text-white text-[18px] font-[900] uppercase italic tracking-tight">{v.name}</h4>
-                                <p className="text-white/70 text-[12px] font-[800] uppercase tracking-widest mt-0.5">{v.registration}</p>
+                        </td>
+                        <td className="py-[18px] px-[30px]">
+                            <span className="text-[14px] font-[800] text-[#111] border-b-2 border-dashed border-gray-200 pb-0.5">
+                                {v.driverId}
+                            </span>
+                        </td>
+                        <td className="py-[18px] px-[30px] text-[15px] font-[800] text-[#111] lowercase">
+                            {v.name}
+                        </td>
+                        <td className="py-[18px] px-[30px] text-[14px] font-[700] text-gray-400">
+                            {v.model}
+                        </td>
+                        <td className="py-[18px] px-[30px] whitespace-nowrap">
+                            <span className="bg-red-50 text-[#D10000] px-4 py-1.5 rounded-full text-[13px] font-[800] border border-red-50 italic">
+                                {v.plateNo}
+                            </span>
+                        </td>
+                        <td className="py-[18px] px-[30px]">
+                            <div className="px-5 py-2 bg-gray-50 border border-gray-100 rounded-lg text-[13px] font-[800] text-gray-600 inline-block">
+                                {v.category}
                             </div>
-                        </div>
-                        <div className="p-6 space-y-6">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <p className="text-[10px] text-[#9CA3AF] font-[900] uppercase tracking-widest mb-1.5">Car Type</p>
-                                    <div className="flex items-center gap-2 text-[14px] font-[900] text-[#111] uppercase italic">
-                                        <i className="bi bi-car-front text-[#D10000]"></i>
-                                        {v.type}
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-[10px] text-[#9CA3AF] font-[900] uppercase tracking-widest mb-1.5">Color</p>
-                                    <div className="flex items-center gap-2 text-[14px] font-[900] text-[#111] uppercase italic">
-                                        <i className="bi bi-palette text-[#D10000]"></i>
-                                        {v.color}
-                                    </div>
-                                </div>
+                        </td>
+                        <td className="py-[18px] px-[30px]">
+                            <div className="flex items-center gap-2 text-[14px] font-[700] text-[#111]/80">
+                                <i className="bi bi-people-fill text-gray-400"></i>
+                                {v.seats}
                             </div>
-                            <div className="pt-5 border-t border-[#F3F4F6]">
-                                <p className="text-[10px] text-[#9CA3AF] font-[900] uppercase tracking-widest mb-3">Assigned Driver</p>
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-[#FFF1F2] border border-[#D10000]/10 flex items-center justify-center font-[900] text-[14px] text-[#D10000] italic">
-                                        {v.driver.charAt(0)}
-                                    </div>
-                                    <span className="text-[14px] font-[800] text-[#111]">{v.driver}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </Link>
-                ))}
-            </div>
+                        </td>
 
-            <Pagination totalItems={vehicles.length} />
+                    </tr>
+                ))}
+            </Table>
+
+            <div className="mt-8">
+                <Pagination totalItems={vehicles.length} />
+            </div>
         </AdminLayout>
     );
 }
+

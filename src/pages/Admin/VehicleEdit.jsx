@@ -1,9 +1,10 @@
-import React from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Link } from 'react-router-dom';
-import { Label, InputWrapper, Select, Button } from '@/components/UI';
+import { Link, useNavigate } from 'react-router-dom';
+import { Label, InputWrapper, Select, Button, useToast } from '@/components/UI';
 
 export default function VehicleEdit() {
+    const { showToast } = useToast();
+    const navigate = useNavigate();
     // Mock data for the vehicle being edited
     const vehicle = {
         name: 'Suzuki Alto',
@@ -86,10 +87,25 @@ export default function VehicleEdit() {
                     </div>
 
                     <div className="flex justify-end gap-3 mt-12 pt-8 border-t border-gray-100">
-                        <Button className="px-14 py-4 italic font-black uppercase tracking-widest shadow-xl shadow-red-100">Save Changes</Button>
-                        <Link to="/vehicles">
-                            <Button variant="outline" className="px-14 py-4 italic font-black uppercase tracking-widest text-gray-500 border-gray-200 hover:bg-gray-50">Discard</Button>
-                        </Link>
+                        <Button
+                            onClick={() => {
+                                showToast(`Vehicle ${vehicle.name} details have been updated`, "success");
+                                navigate('/vehicles');
+                            }}
+                            className="px-14 py-4 italic font-black uppercase tracking-widest shadow-xl shadow-red-100"
+                        >
+                            Save Changes
+                        </Button>
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                showToast("Changes discarded", "info");
+                                navigate('/vehicles');
+                            }}
+                            className="px-14 py-4 italic font-black uppercase tracking-widest text-gray-500 border-gray-200 hover:bg-gray-50"
+                        >
+                            Discard
+                        </Button>
                     </div>
                 </div>
             </div>

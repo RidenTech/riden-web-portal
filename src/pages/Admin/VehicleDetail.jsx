@@ -1,94 +1,314 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Link } from 'react-router-dom';
-import { Badge, Button } from '@/components/UI';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Badge, useToast } from '@/components/UI';
 
 export default function VehicleDetail() {
-    const vehicle = {
-        name: 'Suzuki Alto',
-        registration: 'BKG-220',
-        color: 'Metallic Black',
-        type: 'Standard',
-        driver: 'Theresa Webb',
-        status: 'Active',
-        image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=800',
-        registered_on: 'Oct 12, 2023',
-        total_rides: 456,
-        fuel_type: 'Petrol'
+    const { showToast } = useToast();
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [modalType, setModalType] = useState(null);
+    const [vehicleStatus, setVehicleStatus] = useState('active');
+
+    // This would typically come from an API or a shared global state
+    const vehiclesData = [
+        {
+            id: '1',
+            driverId: '#19976',
+            name: 'alto',
+            model: '2000',
+            plateNo: 'faa 3124',
+            category: 'Sedan',
+            seats: '4',
+            images: [
+                'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=800',
+                'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800'
+            ],
+            registered_on: 'Oct 12, 2023',
+            color: 'Metallic Silver',
+            total_rides: 456,
+            fuel_type: 'Petrol',
+            driver: { name: 'Theresa Webb', rides: 456, avatar: '11' }
+        },
+        {
+            id: '2',
+            driverId: '#19977',
+            name: 'civic',
+            model: '2022',
+            plateNo: 'lea 5678',
+            category: 'Premium',
+            seats: '4',
+            images: [
+                'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=800',
+                'https://images.unsplash.com/photo-1592198084033-aade902d1aae?q=80&w=800'
+            ],
+            registered_on: 'Jan 05, 2024',
+            color: 'Glossy Black',
+            total_rides: 128,
+            fuel_type: 'Hybrid',
+            driver: { name: 'Guy Hawkins', rides: 128, avatar: '12' }
+        },
+    ];
+
+    const currentVehicle = vehiclesData.find(v => v.id === id) || vehiclesData[0];
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    const handleDelete = () => {
+        showToast(`Vehicle ${currentVehicle.name} has been removed successfully`, "delete");
+        setModalType(null);
+        navigate('/vehicles');
+    };
+
+    const nextImage = () => {
+        setCurrentImageIndex((prev) => (prev + 1) % currentVehicle.images.length);
+    };
+
+    const prevImage = () => {
+        setCurrentImageIndex((prev) => (prev - 1 + currentVehicle.images.length) % currentVehicle.images.length);
     };
 
     return (
-        <AdminLayout title="Vehicle Details">
-            <div className="max-w-5xl mx-auto">
-                <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center gap-4">
+        <AdminLayout title="Vehicle Management">
+            {/* Back + Header */}
+            <div className="flex flex-col gap-3 mb-6">
+                <div className="flex justify-between items-center gap-3">
+                    <div className="flex items-center gap-3">
                         <Link to="/vehicles" className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors bg-white">
                             <i className="bi bi-chevron-left text-sm"></i>
                         </Link>
-                        <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase italic">{vehicle.name} ({vehicle.registration})</h2>
+                        <h2 className="text-xl font-black text-gray-900">Vehicle Detail</h2>
                     </div>
-                    <Badge variant="active">{vehicle.status}</Badge>
+                    <Badge variant={vehicleStatus === 'blocked' ? 'danger' : 'success'}>
+                        {vehicleStatus === 'blocked' ? 'Blocked' : 'Active'}
+                    </Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                    <span className="bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm font-black text-gray-900 shadow-sm">
+                        Vehicle ID {currentVehicle.driverId}
+                    </span>
+                    <span className="text-sm font-bold text-gray-500">Registered {currentVehicle.registered_on}</span>
+                </div>
+            </div>
+
+            {/* Main 2-col layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-12">
+
+                {/* LEFT — Image & Records */}
+                <div className="flex flex-col gap-4">
+                    {/* Vehicle Identity Image Gallery */}
+                    <div className="group relative rounded-[22px] overflow-hidden h-[420px] border border-gray-100 shadow-sm bg-gray-50">
+                        <img
+                            src={currentVehicle.images[currentImageIndex]}
+                            className="w-full h-full object-cover transition-transform duration-500"
+                            alt="Vehicle View"
+                        />
+
+                        {/* Navigation Arrows */}
+                        <div className="absolute inset-0 flex items-center justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                                onClick={prevImage}
+                                className="w-10 h-10 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center text-gray-900 hover:bg-[#D10000] hover:text-white transition-all transform hover:scale-110"
+                            >
+                                <i className="bi bi-chevron-left"></i>
+                            </button>
+                            <button
+                                onClick={nextImage}
+                                className="w-10 h-10 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center text-gray-900 hover:bg-[#D10000] hover:text-white transition-all transform hover:scale-110"
+                            >
+                                <i className="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        {/* View Labels */}
+                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
+                            {currentVehicle.images.map((_, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentImageIndex ? 'w-6 bg-[#D10000]' : 'w-1.5 bg-white/60'}`}
+                                ></div>
+                            ))}
+                        </div>
+
+                        <div className="absolute top-4 right-4 flex flex-col gap-2 scale-90 origin-top-right">
+                            <div className="bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg border border-gray-100 shadow-sm min-w-[100px]">
+                                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block leading-tight">License Plate</span>
+                                <span className="text-sm font-black text-[#D10000] uppercase italic tracking-tighter">{currentVehicle.plateNo}</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {/* Operational Status */}
+                    <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
+                        <div className="bg-[#D10000] px-5 py-3 flex items-center gap-2">
+                            <i className="bi bi-shield-check text-white text-sm"></i>
+                            <h5 className="text-white font-bold text-sm uppercase italic tracking-wider">Operational Status</h5>
+                        </div>
+                        <div className="p-5">
+                            <p className="text-sm text-gray-600 font-medium leading-relaxed italic">Vehicle is currently in service and performing at peak efficiency.</p>
+                        </div>
+                    </div>
+
+                    {/* Actions Area */}
+                    <div className="flex items-center gap-3 mt-4">
+                        <Link to="/vehicles/create" className="flex-1">
+                            <button className="w-full py-3.5 rounded-full bg-[#D10000] text-white font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#b00000] transition-colors shadow-sm shadow-red-100">
+                                <i className="bi bi-pencil-square"></i> Edit Details
+                            </button>
+                        </Link>
+
+                        <button onClick={() => setModalType('delete')} className="flex-1 py-3.5 rounded-full bg-white border border-gray-200 text-gray-400 font-bold text-sm flex items-center justify-center gap-2 hover:bg-gray-50 hover:text-red-600 transition-all shadow-sm">
+                            <i className="bi bi-trash-fill"></i> Delete
+                        </button>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    {/* Left: Media & Stats */}
-                    <div className="lg:col-span-12">
-                        <div className="bg-white rounded-[35px] border border-[#E5E7EB] overflow-hidden shadow-sm flex flex-col md:flex-row">
-                            <div className="md:w-1/2 h-80 md:h-auto relative">
-                                <img src={vehicle.image} className="w-full h-full object-cover" />
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/10"></div>
+                {/* RIGHT — Vehicle Records */}
+                <div className="flex flex-col gap-4">
+                    <div className="bg-white rounded-[22px] border border-gray-100 shadow-sm overflow-hidden">
+                        <div className="px-6 pt-5 pb-6">
+                            <div className="mb-4">
+                                <p className="text-[11px] text-gray-400 font-black uppercase tracking-widest mb-2">Vehicle Identity</p>
+                                <h3 className="text-xl font-black text-gray-900 lowercase">{currentVehicle.name}</h3>
                             </div>
-                            <div className="md:w-1/2 p-10 flex flex-col justify-between">
-                                <div>
-                                    <label className="block text-[10px] uppercase tracking-[0.2em] font-black text-[#D10000] mb-4">Core Specifications</label>
-                                    <div className="grid grid-cols-2 gap-y-10">
-                                        {[
-                                            { label: 'Manufacturer', value: 'Suzuki' },
-                                            { label: 'Year', value: '2023' },
-                                            { label: 'Type', value: vehicle.type },
-                                            { label: 'Fuel', value: vehicle.fuel_type },
-                                            { label: 'Color', value: vehicle.color },
-                                            { label: 'Plates', value: vehicle.registration },
-                                        ].map((item, i) => (
-                                            <div key={i}>
-                                                <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-1">{item.label}</p>
-                                                <p className="text-[15px] font-black text-gray-900 uppercase italic tracking-tighter">{item.value}</p>
-                                            </div>
-                                        ))}
+
+                            {/* Driver Assignment Section */}
+                            <div className="mb-4">
+                                <div className="bg-[#D10000] rounded-xl px-4 py-2 mb-3">
+                                    <span className="text-white font-bold text-xs uppercase tracking-wider">Assigned Driver</span>
+                                </div>
+                                <div className="flex items-center justify-between px-1">
+                                    <div className="flex items-center gap-3">
+                                        <img src={`https://i.pravatar.cc/100?img=${currentVehicle.driver.avatar}`} className="w-12 h-12 rounded-[14px] object-cover" alt="Driver" />
+                                        <div>
+                                            <p className="text-sm font-black text-gray-900">{currentVehicle.driver.name}</p>
+                                            <p className="text-xs text-gray-400 font-medium">{currentVehicle.driver.rides} Completed Rides</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <button className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-[#D10000] hover:bg-red-50 transition-colors">
+                                            <i className="bi bi-telephone-fill text-sm"></i>
+                                        </button>
+                                        <button className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-[#D10000] hover:bg-red-50 transition-colors">
+                                            <i className="bi bi-chat-fill text-sm"></i>
+                                        </button>
                                     </div>
                                 </div>
-                                <div className="pt-10 mt-10 border-t border-gray-50 flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 rounded-2xl bg-[#FFF1F2] flex items-center justify-center text-[#D10000] text-xl">
-                                            <i className="bi bi-person-badge-fill"></i>
+                            </div>
+
+                            {/* Identity Table */}
+                            <div className="mb-4">
+                                <div className="bg-[#D10000] rounded-xl px-4 py-2 mb-3">
+                                    <span className="text-white font-bold text-xs uppercase tracking-wider italic">Vehicle Specs</span>
+                                </div>
+                                <div className="space-y-4 px-1">
+                                    <div className="flex items-center justify-between border-b border-gray-50 pb-3 h-10">
+                                        <div className="flex items-center gap-2">
+                                            <i className="bi bi-calendar-event text-gray-400"></i>
+                                            <span className="text-sm font-bold text-gray-500">Manufacturing Year</span>
                                         </div>
-                                        <div>
-                                            <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest">Driver Assigned</p>
-                                            <p className="text-[14px] font-black text-gray-900">{vehicle.driver}</p>
+                                        <span className="text-sm font-black text-gray-900">{currentVehicle.model}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between border-b border-gray-50 pb-3 h-10">
+                                        <div className="flex items-center gap-2">
+                                            <i className="bi bi-palette text-gray-400"></i>
+                                            <span className="text-sm font-bold text-gray-500">Paint Color</span>
+                                        </div>
+                                        <span className="text-sm font-black text-gray-900">{currentVehicle.color}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Performance Section */}
+                            <div className="mb-4">
+                                <div className="bg-[#D10000] rounded-xl px-4 py-2 mb-3">
+                                    <span className="text-white font-bold text-xs uppercase tracking-wider italic">Fleet Configuration</span>
+                                </div>
+                                <div className="relative pl-6 mb-3">
+                                    <div className="absolute left-[3px] top-[14px] bottom-[14px] border-l-2 border-dashed border-gray-200"></div>
+                                    <div className="relative mb-5 min-h-[44px]">
+                                        <div className="absolute -left-[27px] top-[5px] w-[10px] h-[10px] bg-black rounded-full"></div>
+                                        <div className="flex flex-col">
+                                            <p className="text-sm font-black text-gray-900">{currentVehicle.category} Category</p>
+                                            <p className="text-[11px] text-gray-400 font-medium">Standard fleet classification.</p>
                                         </div>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest">Total Rides</p>
-                                        <p className="text-[20px] font-black text-[#D10000] italic">{vehicle.total_rides}</p>
+                                    <div className="relative min-h-[44px]">
+                                        <div className="absolute -left-[30px] top-[3px] text-[#D10000]">
+                                            <i className="bi bi-people-fill text-base"></i>
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <p className="text-sm font-black text-gray-900">{currentVehicle.seats} Seats Capacity</p>
+                                            <p className="text-[11px] text-gray-400 font-medium">Optimized for group mobility.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Metrics */}
+                                <div className="flex justify-around border-t border-gray-50 pt-6 mt-4">
+                                    <div className="text-center">
+                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1">Total Rides</p>
+                                        <p className="text-sm font-black text-gray-900">{currentVehicle.total_rides}</p>
+                                    </div>
+                                    <div className="w-px bg-gray-100 h-8 mt-1"></div>
+                                    <div className="text-center">
+                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1">Fuel Type</p>
+                                        <p className="text-sm font-black text-gray-900">{currentVehicle.fuel_type}</p>
+                                    </div>
+                                    <div className="w-px bg-gray-100 h-8 mt-1"></div>
+                                    <div className="text-center">
+                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1">Class</p>
+                                        <p className="text-sm font-black text-[#D10000]">{currentVehicle.category}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    {/* Bottom Actions */}
-                    <div className="lg:col-span-12 flex justify-end gap-3 mt-4">
-                        <Link to="/vehicles/edit">
-                            <Button className="px-12 py-3.5 italic font-black uppercase tracking-widest shadow-xl shadow-red-100">
-                                <i className="bi bi-pencil-square mr-2"></i> Edit Heritage
-                            </Button>
-                        </Link>
-                        <Button variant="outline" className="px-12 py-3.5 italic font-black uppercase tracking-widest text-red-600 border-red-100 hover:bg-red-50">
-                            Decommission
-                        </Button>
-                    </div>
                 </div>
             </div>
+
+            {/* Modals Overlay */}
+            {['block', 'unblock', 'delete'].includes(modalType) && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+                    <div className="bg-white rounded-[32px] p-8 w-[90%] max-w-sm flex flex-col items-center text-center shadow-2xl">
+                        <div className="mb-4">
+                            <i className={`text-[40px] text-[#EE1B24] ${modalType === 'delete' ? 'bi bi-trash-fill' : 'bi bi-slash-circle font-bold'}`}></i>
+                        </div>
+
+                        <h3 className="text-xl font-bold text-gray-900 mb-3">
+                            {modalType === 'block' ? 'Block Vehicle' : modalType === 'unblock' ? 'Unblock Vehicle' : 'Delete Vehicle'}
+                        </h3>
+
+                        <p className="text-xs font-semibold text-gray-600 mb-8 max-w-[250px] mx-auto leading-relaxed">
+                            {modalType === 'delete' ? (
+                                <>Are you sure to Delete the <span className="text-[#EE1B24]">{currentVehicle.name}</span> ({currentVehicle.plateNo}). This action can't be undone.</>
+                            ) : (
+                                <>Are you sure to {modalType} the <span className="text-[#EE1B24]">{currentVehicle.name}</span> Vehicle identity?</>
+                            )}
+                        </p>
+
+                        <div className="flex items-center gap-3 w-full">
+                            <button className="flex-1 py-3 bg-[#EE1B24] text-white rounded-[12px] font-bold text-sm hover:bg-[#d01019] transition-colors" onClick={() => {
+                                if (modalType === 'block') {
+                                    setVehicleStatus('blocked');
+                                    showToast(`Vehicle ${currentVehicle.name} has been blocked`, "error");
+                                }
+                                if (modalType === 'unblock') {
+                                    setVehicleStatus('active');
+                                    showToast(`Vehicle ${currentVehicle.name} has been unblocked`, "success");
+                                }
+                                if (modalType === 'delete') handleDelete();
+                                setModalType(null);
+                            }}>
+                                Confirm
+                            </button>
+                            <button className="flex-1 py-3 bg-white text-gray-900 border border-gray-900 rounded-[12px] font-bold text-sm hover:bg-gray-50 transition-colors" onClick={() => setModalType(null)}>
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </AdminLayout>
     );
 }
