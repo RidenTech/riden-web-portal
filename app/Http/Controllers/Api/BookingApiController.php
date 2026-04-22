@@ -60,11 +60,11 @@ class BookingApiController extends Controller
         }
 
         try {
-            // Senior standard: Robust Unique ID generation
-            $bookingId = 'RIDEN-' . strtoupper(Str::random(4)) . rand(100, 999);
+            // Senior standard: Robust Purely Numeric Unique ID generation
+            $bookingId = rand(100000, 999999);
             
             while (Booking::where('booking_id', $bookingId)->exists()) {
-                $bookingId = 'RIDEN-' . strtoupper(Str::random(4)) . rand(100, 999);
+                $bookingId = rand(100000, 999999);
             }
 
             $booking = Booking::create([
