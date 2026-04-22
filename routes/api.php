@@ -25,6 +25,14 @@ Route::prefix('passenger')->group(function () {
         Route::patch('/status/{id}', [PassengerAuthController::class, 'toggleStatus']);
         Route::delete('/delete/{id}', [PassengerAuthController::class, 'destroy']);
         Route::post('/logout', [PassengerAuthController::class, 'logout']);
+
+        // Booking Management APIs
+        Route::prefix('bookings')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Api\BookingApiController::class, 'index']);
+            Route::post('/create', [\App\Http\Controllers\Api\BookingApiController::class, 'store']);
+            Route::get('/{id}', [\App\Http\Controllers\Api\BookingApiController::class, 'show']);
+            Route::post('/{id}/cancel', [\App\Http\Controllers\Api\BookingApiController::class, 'cancel']);
+        });
     });
 
    Route::middleware(['auth:sanctum', 'admin.module:Passenger Management'])->group(function () {
