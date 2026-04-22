@@ -117,7 +117,13 @@ Route::prefix('admin')->group(function () {
             Route::get('/fare', function() { return response()->json(['status' => 'success', 'data' => []]); });
             Route::get('/commission', function() { return response()->json(['status' => 'success', 'data' => []]); });
             Route::get('/cms', function() { return response()->json(['status' => 'success', 'data' => []]); });
-            Route::get('/promo', function() { return response()->json(['status' => 'success', 'data' => []]); });
+            
+            // Promo Management
+            Route::prefix('promo')->group(function () {
+                Route::get('/', [App\Http\Controllers\Api\Admin\AdminPromoApiController::class, 'index']);
+                Route::get('/{id}', [App\Http\Controllers\Api\Admin\AdminPromoApiController::class, 'show']);
+                Route::post('/', [App\Http\Controllers\Api\Admin\AdminPromoApiController::class, 'store']);
+            });
         });
     });
 });
