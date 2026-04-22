@@ -62,7 +62,9 @@ Route::prefix('admin')->group(function () {
         // Passenger Management
         Route::prefix('passengers')->group(function () {
             Route::get('/', [App\Http\Controllers\Api\Admin\PassengerApiController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\Api\Admin\PassengerApiController::class, 'store']);
             Route::get('/{id}', [App\Http\Controllers\Api\Admin\PassengerApiController::class, 'show']);
+            Route::patch('/{id}', [App\Http\Controllers\Api\Admin\PassengerApiController::class, 'update']);
             Route::patch('/{id}/status', [App\Http\Controllers\Api\Admin\PassengerApiController::class, 'toggleStatus']);
             Route::delete('/{id}', [App\Http\Controllers\Api\Admin\PassengerApiController::class, 'destroy']);
         });
@@ -70,7 +72,9 @@ Route::prefix('admin')->group(function () {
         // Driver Management
         Route::prefix('drivers')->group(function () {
             Route::get('/', [App\Http\Controllers\Api\Admin\DriverApiController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\Api\Admin\DriverApiController::class, 'store']);
             Route::get('/{id}', [App\Http\Controllers\Api\Admin\DriverApiController::class, 'show']);
+            Route::patch('/{id}', [App\Http\Controllers\Api\Admin\DriverApiController::class, 'update']);
             Route::patch('/{id}/status', [App\Http\Controllers\Api\Admin\DriverApiController::class, 'toggleStatus']);
             Route::delete('/{id}', [App\Http\Controllers\Api\Admin\DriverApiController::class, 'destroy']);
         });
@@ -80,6 +84,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/', [App\Http\Controllers\Api\Admin\VehicleApiController::class, 'index']);
             Route::post('/', [App\Http\Controllers\Api\Admin\VehicleApiController::class, 'store']);
             Route::get('/{id}', [App\Http\Controllers\Api\Admin\VehicleApiController::class, 'show']);
+            Route::patch('/{id}', [App\Http\Controllers\Api\Admin\VehicleApiController::class, 'update']);
             Route::delete('/{id}', [App\Http\Controllers\Api\Admin\VehicleApiController::class, 'destroy']);
         });
 

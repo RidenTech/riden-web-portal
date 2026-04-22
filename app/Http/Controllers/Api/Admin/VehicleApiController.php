@@ -84,6 +84,45 @@ class VehicleApiController extends Controller
     }
 
     /**
+     * Update Vehicle
+     */
+    public function update(Request $request, $id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'vehicle_name' => 'sometimes|string|max:255',
+            'vehicle_type' => 'sometimes|string',
+            'plate_number' => 'sometimes|string|unique:vehicles,plate_number,' . $id,
+            'front_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'back_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 422);
+        }
+
+        $data = $request->all();
+
+        if ($request->hasFile('front_image')) {
+            if ($vehicle->front_image) Storage::disk('public')->delete($vehicle->front_image);
+            $data['front_image'] = $request->file('front_image')->store('vehicles', 'public');
+        }
+        if ($request->hasFile('back_image')) {
+            if ($vehicle->back_image) Storage::disk('public')->delete($vehicle->back_image);
+            $data['back_image'] = $request->file('back_image')->store('vehicles', 'public');
+        }
+
+        $vehicle->update($data);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Vehicle updated successfully',
+            'data' => $vehicle
+        ]);
+    }
+
+    /**
      * Delete Vehicle
      */
     public function destroy($id)
