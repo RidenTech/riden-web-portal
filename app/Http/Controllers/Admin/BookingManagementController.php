@@ -15,8 +15,7 @@ class BookingManagementController extends Controller
     {
         $activeTab = $request->get('tab', 'ongoing');
         
-        $query = Booking::with(['passenger', 'driver.vehicle'])
-            ->whereNotNull('driver_id');
+        $query = Booking::with(['passenger', 'driver.vehicle']);
 
         // Priority Logic for Ongoing vs Previous
         if ($activeTab === 'ongoing') {
