@@ -30,7 +30,7 @@
         <!-- 2. Booking ID & Date Row -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="booking-badge-elite">
-                Booking ID #{{ $booking->booking_id }}
+                Booking ID #{{ $booking->id }}
             </div>
             <div class="booking-date-elite text-muted fw-bold">
                 {{ $booking->created_at->format('l F d, Y') }}

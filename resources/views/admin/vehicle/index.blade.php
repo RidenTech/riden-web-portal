@@ -71,7 +71,7 @@
                             <td>
                                 <span class="driver-id-link tippy-driver" 
                                       data-tippy-content="<strong>{{ $vehicle->driver->name ?? 'N/A' }}</strong><br>{{ $vehicle->driver->email ?? 'No Email' }}">
-                                    {{ $vehicle->driver->unique_id ?? 'UNASSIGNED' }}
+                                    {{ $vehicle->driver->id ?? 'UNASSIGNED' }}
                                 </span>
                             </td>
                             <td class="fw-bold">{{ $vehicle->model }}</td>

@@ -54,7 +54,7 @@
                                 <span class="fw-semibold">{{ $p->first_name }} {{ $p->last_name }}</span>
                             </div>
                         </td>
-                        <td class="text-muted fw-semibold">{{ $p->unique_id }}</td>
+                        <td class="text-muted fw-semibold">{{ $p->id }}</td>
                         <td class="fw-semibold">{{ $p->phone }}</td>
                         <td class="fw-semibold">0</td>
                         <td class="text-center">

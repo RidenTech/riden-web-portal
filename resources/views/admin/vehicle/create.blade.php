@@ -63,7 +63,7 @@
                                 <option value="">Select a Driver</option>
                                 @foreach($drivers as $driver)
                                     <option value="{{ $driver->id }}" {{ old('driver_id') == $driver->id ? 'selected' : '' }}>
-                                        {{ $driver->name }} ({{ $driver->unique_id }})
+                                        {{ $driver->name }} ({{ $driver->id }})
                                     </option>
                                 @endforeach
                             </select>

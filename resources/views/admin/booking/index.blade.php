@@ -121,17 +121,17 @@
                         @forelse ($bookings as $booking)
                         <tr onclick="window.location='{{ route('admin.booking.detail', $booking->id) }}'" style="cursor: pointer;">
                             <td class="ps-4 booking-id">
-                                {{ $booking->booking_id }}
+                                {{ $booking->id }}
                             </td>
                             <td>
                                 <span class="tippy-trigger" 
-                                      data-tippy-content="<div class='tooltip-content-riden'><h6>Driver Info</h6><div class='tooltip-info-item'><i class='bi bi-fingerprint'></i> ID: {{ $booking->driver->unique_id ?? 'N/A' }}</div><div class='tooltip-info-item'><i class='bi bi-envelope'></i> {{ $booking->driver->email ?? 'N/A' }}</div><div class='tooltip-info-item'><i class='bi bi-telephone'></i> {{ $booking->driver->phone ?? 'N/A' }}</div></div>">
+                                      data-tippy-content="<div class='tooltip-content-riden'><h6>Driver Info</h6><div class='tooltip-info-item'><i class='bi bi-fingerprint'></i> ID: {{ $booking->driver->id ?? 'N/A' }}</div><div class='tooltip-info-item'><i class='bi bi-envelope'></i> {{ $booking->driver->email ?? 'N/A' }}</div><div class='tooltip-info-item'><i class='bi bi-telephone'></i> {{ $booking->driver->phone ?? 'N/A' }}</div></div>">
                                     {{ $booking->driver->first_name ?? 'Unassigned' }} {{ $booking->driver->last_name ?? '' }}
                                 </span>
                             </td>
                             <td>
                                 <span class="tippy-trigger"
-                                      data-tippy-content="<div class='tooltip-content-riden'><h6>Passenger Info</h6><div class='tooltip-info-item'><i class='bi bi-fingerprint'></i> ID: {{ $booking->passenger->unique_id ?? 'N/A' }}</div><div class='tooltip-info-item'><i class='bi bi-envelope'></i> {{ $booking->passenger->email ?? 'N/A' }}</div><div class='tooltip-info-item'><i class='bi bi-telephone'></i> {{ $booking->passenger->phone ?? 'N/A' }}</div></div>">
+                                      data-tippy-content="<div class='tooltip-content-riden'><h6>Passenger Info</h6><div class='tooltip-info-item'><i class='bi bi-fingerprint'></i> ID: {{ $booking->passenger->id ?? 'N/A' }}</div><div class='tooltip-info-item'><i class='bi bi-envelope'></i> {{ $booking->passenger->email ?? 'N/A' }}</div><div class='tooltip-info-item'><i class='bi bi-telephone'></i> {{ $booking->passenger->phone ?? 'N/A' }}</div></div>">
                                     {{ $booking->passenger->first_name ?? 'N/A' }} {{ $booking->passenger->last_name ?? '' }}
                                 </span>
                             </td>
