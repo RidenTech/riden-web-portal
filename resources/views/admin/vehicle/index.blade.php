@@ -72,7 +72,7 @@
                             </td>
                             <td>
                                 <span class="driver-id-link tippy-driver fw-semibold text-primary" style="cursor: pointer;"
-                                      data-tippy-content="<div class='text-start p-1'><strong>{{ $vehicle->driver->first_name ?? 'N/A' }} {{ $vehicle->driver->last_name ?? '' }}</strong><br><small><i class='bi bi-envelope me-1'></i>{{ $vehicle->driver->email ?? 'No Email' }}</small><br><small><i class='bi bi-telephone me-1'></i>{{ $vehicle->driver->phone ?? 'No Phone' }}</small></div>">
+                                      data-tippy-content="<div class='text-start p-1'><strong>{{ $vehicle->driver->first_name ?? 'N/A' }} {{ $vehicle->driver->last_name ?? '' }} (ID: {{ $vehicle->driver->id ?? 'N/A' }})</strong><br><small><i class='bi bi-envelope me-1'></i>{{ $vehicle->driver->email ?? 'No Email' }}</small><br><small><i class='bi bi-telephone me-1'></i>{{ $vehicle->driver->phone ?? 'No Phone' }}</small></div>">
                                     {{ $vehicle->driver->first_name ?? 'UNASSIGNED' }} {{ $vehicle->driver->last_name ?? '' }}
                                 </span>
                             </td>
