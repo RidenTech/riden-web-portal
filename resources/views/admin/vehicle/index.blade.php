@@ -45,6 +45,7 @@
                     <thead>
                         <tr>
                             <th class="ps-4">Car Image</th>
+                            <th>Vehicle ID</th>
                             <th>Driver ID</th>
                             <th>Car Name</th>
                             <th>Model No</th>
@@ -67,6 +68,9 @@
                                         @endif
                                     </div>
                                 </div>
+                            </td>
+                            <td>
+                                <span class="fw-bold" style="color: #FF2E2E; background: #FFEBEB; padding: 4px 10px; border-radius: 8px;">{{ $vehicle->id }}</span>
                             </td>
                             <td>
                                 <span class="driver-id-link tippy-driver" 
