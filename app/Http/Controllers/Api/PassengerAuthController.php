@@ -35,7 +35,6 @@ class PassengerAuthController extends Controller
         }
 
         $passenger = Passenger::create([
-            'unique_id' => '#' . rand(10000, 99999),
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,

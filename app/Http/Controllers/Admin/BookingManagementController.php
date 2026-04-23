@@ -84,7 +84,7 @@ class BookingManagementController extends Controller
         ]);
 
         // Generate a professional unique booking ID (e.g., #48291)
-        $bookingId = '#' . str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
+        $bookingId = str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
 
         Booking::create([
             'booking_id' => $bookingId,

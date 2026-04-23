@@ -35,7 +35,7 @@
             <thead>
                 <tr>
                     <th class="ps-4">Name</th>
-                    <th>Unique ID</th>
+                    <th>passenger ID</th>
                     <th>Phone Number</th>
                     <th>Bookings</th>
                     <th class="text-center">Status</th>

@@ -44,7 +44,6 @@ class DriverManagementController extends Controller
 
         // 1. Save Driver
         $driverData = $request->only(['first_name', 'last_name', 'email', 'phone', 'gender']);
-        $driverData['unique_id'] = '#' . rand(10000, 99999);
         $driverData['status'] = 'Active';
 
         if ($request->hasFile('avatar')) {
