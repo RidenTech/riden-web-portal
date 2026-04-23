@@ -41,7 +41,7 @@ Route::prefix('passenger')->group(function () {
 // Admin APIs (For React Web Portal)
 Route::prefix('admin')->group(function () {
     // Public routes
-    Route::post('/login', [App\Http\Controllers\Api\Admin\AdminAuthController::class, 'login']);
+    Route::get('/login', [App\Http\Controllers\Api\Admin\AdminAuthController::class, 'login']);
 
     // Protected routes
     Route::middleware(['auth:sanctum'])->group(function () {
