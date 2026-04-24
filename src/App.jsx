@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastProvider } from './components/UI';
+import ProtectedRoute from './routes/ProtectedRoute';
 import Login from './pages/Auth/Login';
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import Dashboard from './pages/Admin/Dashboard';
@@ -34,56 +35,109 @@ import AdminEdit from './pages/Admin/AdminEdit';
 import AdminDetail from './pages/Admin/AdminDetail';
 import ReviewManagement from './pages/Admin/ReviewManagement';
 import ManageNotifications from './pages/Admin/ManageNotifications';
+import Unauthorized from './pages/Unauthorized';
 
 function App() {
   return (
     <ToastProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          {/* Public Routes */}
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/forgot" element={<ForgotPassword />} />
 
-          {/* Admin Protected Routes */}
-          <Route path="/drivers" element={<DriverManagement />} />
-          <Route path="/drivers/create" element={<DriverCreate />} />
-          <Route path="/drivers/detail" element={<DriverDetail />} />
-          <Route path="/drivers/requests" element={<DriverRequest />} />
+          {/* Core Protected Routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="/profile" element={<AdminProfile />} />
+          </Route>
 
-          <Route path="/passenger" element={<PassengerManagement />} />
-          <Route path="/passenger/create" element={<PassengerCreate />} />
-          <Route path="/passenger/detail" element={<PassengerDetail />} />
-          <Route path="/passenger/requests" element={<PassengerRequest />} />
+          {/* Dashboard */}
+          <Route element={<ProtectedRoute module="Dashboard" />}>
+            <Route path="/" element={<Dashboard />} />
+          </Route>
 
-          <Route path="/fare-management" element={<FareManagement />} />
-          <Route path="/commission-management" element={<CommissionManagement />} />
-          <Route path="/promo-management" element={<PromoManagement />} />
-          <Route path="/payout-management" element={<PayoutManagement />} />
+          {/* Analytics */}
+          <Route element={<ProtectedRoute module="Analytics/Stats" />}>
+            <Route path="/analytics" element={<Analytics />} />
+          </Route>
 
-          <Route path="/bookings" element={<BookingManagement />} />
-          <Route path="/bookings/create" element={<BookingCreate />} />
-          <Route path="/bookings/detail" element={<BookingDetail />} />
+          {/* Admin Roles */}
+          <Route element={<ProtectedRoute module="Admin Roles" />}>
+            <Route path="/admin-roles" element={<AdminRoles />} />
+            <Route path="/admin-roles/create" element={<AdminCreate />} />
+            <Route path="/admin-roles/edit" element={<AdminEdit />} />
+            <Route path="/admin-roles/detail" element={<AdminDetail />} />
+          </Route>
 
-          <Route path="/vehicles" element={<VehicleManagement />} />
-          <Route path="/vehicles/create" element={<VehicleCreate />} />
-          <Route path="/vehicles/edit" element={<VehicleEdit />} />
-          <Route path="/vehicles/detail/:id" element={<VehicleDetail />} />
-          <Route path="/support" element={<SupportTicket />} />
-          <Route path="/support/report" element={<SupportTicket />} />
-          <Route path="/report-management" element={<ReportManagement />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/cms-management" element={<CMSManagement />} />
-          <Route path="/profile" element={<AdminProfile />} />
+          {/* Drivers */}
+          <Route element={<ProtectedRoute module="Driver Management" />}>
+            <Route path="/drivers" element={<DriverManagement />} />
+            <Route path="/drivers/create" element={<DriverCreate />} />
+            <Route path="/drivers/detail/:id" element={<DriverDetail />} />
+            <Route path="/drivers/requests" element={<DriverRequest />} />
+          </Route>
 
-          <Route path="/admin-roles" element={<AdminRoles />} />
-          <Route path="/admin-roles/create" element={<AdminCreate />} />
-          <Route path="/admin-roles/edit" element={<AdminEdit />} />
-          <Route path="/admin-roles/detail" element={<AdminDetail />} />
-          <Route path="/alerts" element={<ManageNotifications />} />
-          <Route path="/reviews" element={<ReviewManagement />} />
+          {/* Passengers */}
+          <Route element={<ProtectedRoute module="Passenger Management" />}>
+            <Route path="/passenger" element={<PassengerManagement />} />
+            <Route path="/passenger/create" element={<PassengerCreate />} />
+            <Route path="/passenger/detail" element={<PassengerDetail />} />
+            <Route path="/passenger/requests" element={<PassengerRequest />} />
+          </Route>
+
+          {/* Bookings */}
+          <Route element={<ProtectedRoute module="Booking Management" />}>
+            <Route path="/bookings" element={<BookingManagement />} />
+            <Route path="/bookings/create" element={<BookingCreate />} />
+            <Route path="/bookings/detail" element={<BookingDetail />} />
+          </Route>
+
+          {/* Vehicles */}
+          <Route element={<ProtectedRoute module="Vehicles Management" />}>
+            <Route path="/vehicles" element={<VehicleManagement />} />
+            <Route path="/vehicles/create" element={<VehicleCreate />} />
+            <Route path="/vehicles/edit" element={<VehicleEdit />} />
+            <Route path="/vehicles/detail/:id" element={<VehicleDetail />} />
+          </Route>
+
+          {/* Financials & Promos */}
+          <Route element={<ProtectedRoute module="Fare Management" />}>
+            <Route path="/fare-management" element={<FareManagement />} />
+          </Route>
+          <Route element={<ProtectedRoute module="Commission Management" />}>
+            <Route path="/commission-management" element={<CommissionManagement />} />
+          </Route>
+          <Route element={<ProtectedRoute module="Promo code Management" />}>
+            <Route path="/promo-management" element={<PromoManagement />} />
+          </Route>
+          <Route element={<ProtectedRoute module="Payment Management" />}>
+            <Route path="/payout-management" element={<PayoutManagement />} />
+          </Route>
+
+          {/* Support & Reports */}
+          <Route element={<ProtectedRoute module="Support Ticket" />}>
+            <Route path="/support" element={<SupportTicket />} />
+            <Route path="/support/report" element={<SupportTicket />} />
+          </Route>
+          <Route element={<ProtectedRoute module="Report Management" />}>
+            <Route path="/report-management" element={<ReportManagement />} />
+          </Route>
+
+          {/* Others */}
+          <Route element={<ProtectedRoute module="Notifications" />}>
+            <Route path="/alerts" element={<ManageNotifications />} />
+          </Route>
+          <Route element={<ProtectedRoute module="CMS management" />}>
+            <Route path="/cms-management" element={<CMSManagement />} />
+          </Route>
+          <Route element={<ProtectedRoute module="Reviews & Ratings" />}>
+            <Route path="/reviews" element={<ReviewManagement />} />
+          </Route>
+
         </Routes>
       </Router>
-    </ToastProvider>
+    </ToastProvider >
   );
 }
 

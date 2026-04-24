@@ -1,13 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
 import { Button, Badge } from '@/components/UI';
+import { getAdminProfile } from '../../api/auth'
 
 export default function AdminProfile() {
+    const [admin, setAdmin] = useState(null);
     const modules = [
         'Dashboard', 'Reviews & Ratings', 'Passenger Management',
         'Analytics/Stats', 'Promo Code Management', 'Advertising Management'
     ];
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const res = await getAdminProfile();
+                setAdmin(res.data);
+            }
+            catch (error) {
+                console.log("Error fetching profile", error);
 
+            }
+        }
+        fetchProfile();
+    }, [])
     return (
         <AdminLayout title="Profile">
             <div className="bg-white rounded-[30px] shadow-riden border border-[#E5E7EB] overflow-hidden">
@@ -21,12 +35,10 @@ export default function AdminProfile() {
                         <div className="absolute top-1 left-1 w-4 h-4 bg-[#10B981] border-2 border-white rounded-full"></div>
                     </div>
                     <div className="flex-1">
-                        <h2 className="text-2xl font-[800] text-gray-900">Esther Howard</h2>
-                        <span className="text-[14px] font-[800] text-[#D10000]">Administrator</span>
+                        <h2 className="text-2xl font-[800] text-gray-900">{admin?.name || 'Loading...'}</h2>
+                        <span className="text-[14px] font-[800] text-[#D10000]">{admin?.role || 'Admininistrator'}</span>
                     </div>
-                    <Button className="px-8 font-[800]">
-                        <i className="bi bi-box-arrow-right"></i> Logout
-                    </Button>
+
                 </div>
 
                 <div className="px-10 pb-10">
@@ -40,7 +52,7 @@ export default function AdminProfile() {
                                 </div>
                                 <div>
                                     <p className="text-[10px] font-[800] text-gray-400 uppercase tracking-wider mb-0">Email</p>
-                                    <p className="text-sm font-[800] text-gray-900">Jeromebell445@gmail.com</p>
+                                    <p className="text-sm font-[800] text-gray-900">{admin?.email || 'Loading...'}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4 p-5 bg-[#fdfdfd] border border-gray-100 rounded-[20px] shadow-sm">
@@ -49,7 +61,7 @@ export default function AdminProfile() {
                                 </div>
                                 <div>
                                     <p className="text-[10px] font-[800] text-gray-400 uppercase tracking-wider mb-0">Phone Number</p>
-                                    <p className="text-sm font-[800] text-gray-900">+1 234 567 789</p>
+                                    <p className="text-sm font-[800] text-gray-900">{admin?.phone || 'N/A'}</p>
                                 </div>
                             </div>
                         </div>
@@ -79,7 +91,7 @@ export default function AdminProfile() {
                                 <div>
                                     <p className="text-[10px] font-[800] text-gray-400 uppercase tracking-wider mb-0">Password</p>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-sm font-[800] text-gray-900">******839</span>
+                                        <span className="text-sm font-[800] text-gray-900"></span>
                                         <i className="bi bi-eye text-gray-400 cursor-pointer hover:text-gray-900 transition-colors"></i>
                                     </div>
                                 </div>

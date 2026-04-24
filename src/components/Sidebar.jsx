@@ -1,14 +1,24 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { logoutAdmin } from '../api/auth'
+import { useToast } from '@/components/UI';
 
 export default function Sidebar({ isCollapsed, setIsCollapsed }) {
     const location = useLocation();
     const navigate = useNavigate();
+    const { showToast } = useToast();
     const url = location.pathname;
+    const admin = JSON.parse(localStorage.getItem('admin') || '{}');
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        navigate('/auth/login');
+    const handleLogout = async () => {
+        try {
+            await logoutAdmin();
+            localStorage.removeItem('token');
+            localStorage.removeItem('admin');
+            navigate('/auth/login');
+        } catch (error) {
+            showToast(error.response?.data?.message || 'Logout failed', 'error');
+        }
     };
 
     const [expandedMenu, setExpandedMenu] = React.useState(null);
@@ -16,6 +26,44 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
     const toggleSubmenu = (e, label) => {
         e.preventDefault();
         setExpandedMenu(expandedMenu === label ? null : label);
+    };
+    const hasPermission = (permission) => {
+        // If no permission specified, allow it
+        if (!permission) return true;
+
+        const adminStr = localStorage.getItem('admin');
+        if (!adminStr || adminStr === '{}') return true; // Fallback during transition or if data missing
+
+        let adminObj = {};
+        try {
+            adminObj = JSON.parse(adminStr);
+        } catch (e) {
+            return true;
+        }
+
+        if (Object.keys(adminObj).length === 0) return true;
+
+        // Super admin check (lenient type checking)
+        if (adminObj.is_super == true || adminObj.is_super == 1 || adminObj.is_super == '1') {
+            return true;
+        }
+
+        // Check modules
+        let userModules = adminObj.modules;
+        if (!userModules) return false;
+
+        // Handle if modules is a string (some backends return JSON as string)
+        if (typeof userModules === 'string') {
+            try {
+                userModules = JSON.parse(userModules);
+            } catch (e) {
+                userModules = userModules.split(',').map(m => m.trim());
+            }
+        }
+
+        if (!Array.isArray(userModules)) return false;
+
+        return userModules.includes(permission);
     };
 
     const menuItems = [
@@ -89,87 +137,89 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
                 </div>
 
                 <nav className="flex-1 flex flex-col gap-2 overflow-y-auto overflow-x-hidden px-0 riden-scrollbar pt-4">
-                    {menuItems.map((item, index) => {
-                        const hasSub = !!item.subItems;
-                        const isExpanded = expandedMenu === item.label;
-                        const isActive = item.href && item.href !== '#' && !hasSub && (url === item.href || url.startsWith(item.href + '/'));
-                        const isSubActive = hasSub && item.subItems.some(sub => url === sub.href || url.startsWith(sub.href + '/'));
-                        const isHighlighted = isActive || isSubActive;
+                    {menuItems
+                        .filter(item => hasPermission(item.permission))
+                        .map((item, index) => {
+                            const hasSub = !!item.subItems;
+                            const isExpanded = expandedMenu === item.label;
+                            const isActive = item.href && item.href !== '#' && !hasSub && (url === item.href || url.startsWith(item.href + '/'));
+                            const isSubActive = hasSub && item.subItems.some(sub => url === sub.href || url.startsWith(sub.href + '/'));
+                            const isHighlighted = isActive || isSubActive;
 
-                        return (
-                            <div key={index} className="flex flex-col">
-                                {hasSub ? (
-                                    <button
-                                        onClick={(e) => toggleSubmenu(e, item.label)}
-                                        className={`flex items-center gap-2 py-1 px-3 rounded-r-full text-[12px] font-[700] transition-all duration-300 relative group overflow-hidden w-full ${isHighlighted
-                                            ? 'bg-white text-[#D10000]'
-                                            : 'text-white/90 hover:bg-white/10'
-                                            }`}
-                                        title={isCollapsed ? item.label : ''}
-                                    >
-                                        <i className={`${item.icon} text-lg w-[24px] text-center shrink-0`} aria-hidden="true"></i>
-                                        {!isCollapsed && (
-                                            <span className="flex-1 text-left whitespace-nowrap">
-                                                {item.label}
-                                            </span>
-                                        )}
-                                        {!isCollapsed && (
-                                            <i className={`bi bi-chevron-down text-[12px] transition-transform ${isExpanded ? 'rotate-180' : ''}`}></i>
-                                        )}
-                                    </button>
-                                ) : (
-                                    <Link
-                                        to={item.href}
-                                        className={`flex items-center gap-2 py-1 px-3 rounded-r-full text-[12px] font-[700] transition-all duration-300 relative group overflow-hidden ${isActive
-                                            ? 'bg-white text-[#D10000]'
-                                            : 'text-white/90 hover:bg-white/10'
-                                            }`}
-                                        title={isCollapsed ? item.label : ''}
-                                    >
-                                        <i className={`${item.icon} text-lg w-[24px] text-center shrink-0`} aria-hidden="true"></i>
-                                        {!isCollapsed && (
-                                            <span className="whitespace-nowrap">
-                                                {item.label}
-                                            </span>
-                                        )}
-                                    </Link>
-                                )}
+                            return (
+                                <div key={index} className="flex flex-col">
+                                    {hasSub ? (
+                                        <button
+                                            onClick={(e) => toggleSubmenu(e, item.label)}
+                                            className={`flex items-center gap-2 py-1 px-3 rounded-r-full text-[12px] font-[700] transition-all duration-300 relative group overflow-hidden w-full ${isHighlighted
+                                                ? 'bg-white text-[#D10000]'
+                                                : 'text-white/90 hover:bg-white/10'
+                                                }`}
+                                            title={isCollapsed ? item.label : ''}
+                                        >
+                                            <i className={`${item.icon} text-lg w-[24px] text-center shrink-0`} aria-hidden="true"></i>
+                                            {!isCollapsed && (
+                                                <span className="flex-1 text-left whitespace-nowrap">
+                                                    {item.label}
+                                                </span>
+                                            )}
+                                            {!isCollapsed && (
+                                                <i className={`bi bi-chevron-down text-[12px] transition-transform ${isExpanded ? 'rotate-180' : ''}`}></i>
+                                            )}
+                                        </button>
+                                    ) : (
+                                        <Link
+                                            to={item.href}
+                                            className={`flex items-center gap-2 py-1 px-3 rounded-r-full text-[12px] font-[700] transition-all duration-300 relative group overflow-hidden ${isActive
+                                                ? 'bg-white text-[#D10000]'
+                                                : 'text-white/90 hover:bg-white/10'
+                                                }`}
+                                            title={isCollapsed ? item.label : ''}
+                                        >
+                                            <i className={`${item.icon} text-lg w-[24px] text-center shrink-0`} aria-hidden="true"></i>
+                                            {!isCollapsed && (
+                                                <span className="whitespace-nowrap">
+                                                    {item.label}
+                                                </span>
+                                            )}
+                                        </Link>
+                                    )}
 
-                                {hasSub && isExpanded && !isCollapsed && (
-                                    <div className="flex flex-col gap-1 my-1 ml-10 relative">
-                                        {(() => {
-                                            const activeSubHref = item.subItems
-                                                .filter(s => url === s.href || url.startsWith(s.href + '/'))
-                                                .sort((a, b) => b.href.length - a.href.length)[0]?.href;
+                                    {hasSub && isExpanded && !isCollapsed && (
+                                        <div className="flex flex-col gap-1 my-1 ml-10 relative">
+                                            {(() => {
+                                                const activeSubHref = item.subItems
+                                                    .filter(s => url === s.href || url.startsWith(s.href + '/'))
+                                                    .sort((a, b) => b.href.length - a.href.length)[0]?.href;
 
-                                            return item.subItems.map((sub, idx) => {
-                                                const subActive = sub.href === activeSubHref;
-                                                return (
-                                                    <Link
-                                                        key={idx}
-                                                        to={sub.href}
-                                                        className={`py-2 px-3 rounded-r-full text-[12.5px] font-[600] transition-all relative ${subActive
-                                                            ? 'text-white font-[800] bg-white/20'
-                                                            : 'text-white/70 hover:text-white hover:bg-white/5'
-                                                            }`}
-                                                    >
-                                                        <span className={`absolute left-[-16px] top-1/2 -translate-y-1/2 w-2 h-2 rounded-full transition-all ${subActive ? 'bg-white scale-100' : 'bg-white/50 scale-50'}`}></span>
-                                                        {sub.label}
-                                                    </Link>
-                                                );
-                                            });
-                                        })()}
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })}
+                                                return item.subItems.map((sub, idx) => {
+                                                    const subActive = sub.href === activeSubHref;
+                                                    return (
+                                                        <Link
+                                                            key={idx}
+                                                            to={sub.href}
+                                                            className={`py-2 px-3 rounded-r-full text-[12.5px] font-[600] transition-all relative ${subActive
+                                                                ? 'text-white font-[800] bg-white/20'
+                                                                : 'text-white/70 hover:text-white hover:bg-white/5'
+                                                                }`}
+                                                        >
+                                                            <span className={`absolute left-[-16px] top-1/2 -translate-y-1/2 w-2 h-2 rounded-full transition-all ${subActive ? 'bg-white scale-100' : 'bg-white/50 scale-50'}`}></span>
+                                                            {sub.label}
+                                                        </Link>
+                                                    );
+                                                });
+                                            })()}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
                 </nav>
 
                 <div className="mt-auto p-2 border-t border-white/10">
                     <button
                         onClick={handleLogout}
-                        className={`w-full flex items-center gap-4  py-2 px-3 rounded-full bg-white text-[#D10000] font-[800] text-[14px] transition-all duration-300 ${isCollapsed ? 'justify-center' : 'hover:bg-white/10'}`}
+                        className={`w-full flex items-center gap-4  py-2 px-3 rounded-full bg-white text-[#D10000] font-[800] text-[14px] transition-all duration-300 ${isCollapsed ? 'justify-center' : 'hover:bg-red-500 hover:text-white'}`}
                         title="Logout"
                     >
                         <i className="bi bi-box-arrow-right text-lg w-[24px] text-center shrink-0" aria-hidden="true"></i>

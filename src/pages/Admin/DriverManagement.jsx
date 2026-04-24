@@ -1,26 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Table, Badge, Button, SearchBar, Tabs, DateRangePicker, DatePickerStyles, Pagination } from '@/components/UI';
+import { Table, Badge, Button, SearchBar, Tabs, DateRangePicker, DatePickerStyles, Pagination, useToast } from '@/components/UI';
 import { useNavigate } from 'react-router-dom';
 import { startOfWeek } from 'date-fns';
+import { getDrivers } from '../../api/driverApi';
+import { STORAGE_URL } from '@/api/api';
 
 export default function DriverManagement() {
     const navigate = useNavigate();
+    const { showToast } = useToast();
     const [activeTab, setActiveTab] = useState('active');
     const [startDate, setStartDate] = useState(startOfWeek(new Date()));
     const [endDate, setEndDate] = useState(new Date());
     const [exportOpen, setExportOpen] = useState(false);
 
-    const drivers = [
-        { id: 1, name: 'Robert Fox', uid: '#34567', phone: '+123456789', status: 'online', avatar: '11', type: 'active' },
-        { id: 2, name: 'Guy Hawkins', uid: '#34567', phone: '+987654321', status: 'offline', avatar: '12', type: 'active' },
-        { id: 3, name: 'Jenny Wilson', uid: '#45678', phone: '+112233445', status: 'suspended', avatar: '13', type: 'active' },
-        { id: 4, name: 'Robert Fox', uid: '#34567', phone: '+123456789', status: 'blocked', avatar: '14', type: 'active' },
-        { id: 5, name: 'Bessie Cooper', uid: '#56789', phone: '+112233445', status: 'pending', avatar: '15', type: 'requested' },
-        { id: 6, name: 'Arlene McCoy', uid: '#67890', phone: '+987654321', status: 'pending', avatar: '16', type: 'requested' },
-    ];
+    // API States
+    const [drivers, setDrivers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
 
-    const filteredDrivers = drivers.filter(d => d.type === activeTab);
+    const fetchDrivers = async () => {
+        try {
+            setLoading(true);
+            const params = {
+                page: currentPage,
+                search: searchTerm,
+                // Status mapping: if tab is 'active', show Active. If 'requested', show Pending.
+                status: activeTab === 'active' ? 'Active' : 'Pending'
+            };
+            const response = await getDrivers(params);
+
+            // Laravel paginated structure: response.data.data
+            let driversData = response.data?.data || response.data || [];
+
+            // Apply local filtering to ensure tab consistency 
+            if (activeTab === 'active') {
+                driversData = driversData.filter(d => d.status?.toLowerCase() === 'active');
+            } else {
+                driversData = driversData.filter(d => d.status?.toLowerCase() !== 'active');
+            }
+
+            setDrivers(driversData);
+
+            // Pagination info
+            setTotalPages(response.data?.last_page || 1);
+            setTotalItems(response.data?.total || driversData.length);
+        } catch (error) {
+            console.error("Error fetching drivers:", error);
+            showToast("Failed to load drivers", "error");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchDrivers();
+    }, [currentPage, searchTerm, activeTab]);
 
     return (
         <AdminLayout title="Driver Management">
@@ -30,6 +68,8 @@ export default function DriverManagement() {
                 <SearchBar
                     placeholder="Search by name, email, phone number"
                     className="w-full lg:w-[360px]"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
 
                 <div className="flex items-center gap-1 w-full lg:w-auto">
@@ -84,35 +124,49 @@ export default function DriverManagement() {
                 onTabChange={setActiveTab}
                 options={[
                     { id: 'active', label: 'Active Drivers' },
-                    { id: 'requested', label: 'Requested', count: 14 }
+                    { id: 'requested', label: 'Requested' }
                 ]}
             />
 
             {/* Table */}
             <Table headers={['Name', 'Unique ID', 'Phone Number', 'Status']}>
-                {filteredDrivers.map((d) => (
-                    <tr
-                        key={d.id}
-                        onClick={() => navigate('/drivers/detail')}
-                        className="cursor-pointer hover:bg-black/[0.02] transition-colors border-b border-[#F3F4F6]"
-                    >
-                        <td className="py-[18px] px-[30px]">
-                            <div className="flex items-center gap-3">
-                                <div className="w-[44px] h-[44px] rounded-full overflow-hidden border-2 border-white shadow-sm">
-                                    <img src={`https://i.pravatar.cc/100?img=${d.avatar}`} className="w-full h-full object-cover" alt="" />
+                {loading ? (
+                    <tr><td colSpan="4" className="text-center py-10"><div className="animate-spin inline-block w-6 h-6 border-2 border-red-600 rounded-full border-t-transparent"></div></td></tr>
+                ) : drivers.length === 0 ? (
+                    <tr><td colSpan="4" className="text-center py-10 text-gray-500 font-medium">No drivers found</td></tr>
+                ) : (
+                    drivers.map((d) => (
+                        <tr
+                            key={d.id}
+                            onClick={() => navigate(`/drivers/detail/${encodeURIComponent(d.unique_id)}`)}
+                            className="cursor-pointer hover:bg-black/[0.02] transition-colors border-b border-[#F3F4F6]"
+                        >
+                            <td className="py-[18px] px-[30px]">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-[44px] h-[44px] rounded-full overflow-hidden border-2 border-white shadow-sm bg-gray-100">
+                                        <img
+                                            src={d.avatar ? `${STORAGE_URL}/${d.avatar}` : `https://ui-avatars.com/api/?name=${d.first_name}+${d.last_name}&background=random`}
+                                            className="w-full h-full object-cover"
+                                            alt=""
+                                        />
+                                    </div>
+                                    <span className="font-[700] text-[#111]">{d.first_name} {d.last_name}</span>
                                 </div>
-                                <span className="font-[700] text-[#111]">{d.name}</span>
-                            </div>
-                        </td>
-                        <td className="py-[18px] px-[30px] text-[#6B7280] font-[700] italic tracking-tight">{d.uid}</td>
-                        <td className="py-[18px] px-[30px] text-[#111] font-[700]">{d.phone}</td>
-                        <td className="py-[18px] px-[30px]">
-                            <Badge variant={d.status}>{d.status}</Badge>
-                        </td>
-                    </tr>
-                ))}
+                            </td>
+                            <td className="py-[18px] px-[30px] text-[#6B7280] font-[700] italic tracking-tight">{d.unique_id}</td>
+                            <td className="py-[18px] px-[30px] text-[#111] font-[700]">{d.phone}</td>
+                            <td className="py-[18px] px-[30px]">
+                                <Badge variant={d.status?.toLowerCase() === 'active' ? 'active' : d.status?.toLowerCase()}>{d.status}</Badge>
+                            </td>
+                        </tr>
+                    ))
+                )}
             </Table>
-            <Pagination totalItems={filteredDrivers.length} />
+            <Pagination
+                totalItems={totalItems}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+            />
         </AdminLayout>
     );
 }

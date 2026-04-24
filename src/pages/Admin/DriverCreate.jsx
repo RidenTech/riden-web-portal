@@ -1,16 +1,39 @@
 import React, { useState } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
 import { Link, useNavigate } from 'react-router-dom';
-import { Label, InputWrapper, Input, Select, Button } from '@/components/UI';
+import { Label, InputWrapper, Input, Select, Button, useToast } from '@/components/UI';
+import { createDriver } from '../../api/driverApi';
 
 export default function DriverCreate() {
     const navigate = useNavigate();
+    const { showToast } = useToast();
     const [activeTab, setActiveTab] = useState('personal');
     const [completedSteps, setCompletedSteps] = useState({ personal: false, vehicle: false });
+    const [loading, setLoading] = useState(false);
 
     // Form States
-    const [personalInfo, setPersonalInfo] = useState({ firstName: '', lastName: '', email: '', phone: '', gender: '' });
-    const [vehicleInfo, setVehicleInfo] = useState({ model: '', year: '', color: '', licensePlate: '', type: '' });
+    const [personalInfo, setPersonalInfo] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        gender: '',
+        password: '',
+        password_confirmation: '',
+        avatar: null
+    });
+    const [vehicleInfo, setVehicleInfo] = useState({
+        model: '',
+        year: '',
+        color: '',
+        licensePlate: '',
+        type: ''
+    });
+    const [documents, setDocuments] = useState({
+        license: null,
+        id_front: null,
+        insurance: null
+    });
     const [errors, setErrors] = useState({});
 
     // Validation
@@ -22,6 +45,9 @@ export default function DriverCreate() {
         else if (!/\S+@\S+\.\S+/.test(personalInfo.email)) newErrors.email = 'Email is invalid';
         if (!personalInfo.phone) newErrors.phone = 'Phone number is required';
         if (!personalInfo.gender) newErrors.gender = 'Gender is required';
+        if (!personalInfo.password) newErrors.password = 'Password is required';
+        else if (personalInfo.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+        if (personalInfo.password !== personalInfo.password_confirmation) newErrors.password_confirmation = 'Passwords do not match';
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -58,8 +84,53 @@ export default function DriverCreate() {
         else if (activeTab === 'vehicle') setActiveTab('personal');
     };
 
-    const handleSubmit = () => {
-        navigate('/drivers');
+    const handleSubmit = async () => {
+        try {
+            setLoading(true);
+            const formData = new FormData();
+
+            // Personal
+            formData.append('first_name', personalInfo.firstName);
+            formData.append('last_name', personalInfo.lastName);
+            formData.append('email', personalInfo.email);
+            formData.append('phone', personalInfo.phone);
+            formData.append('gender', personalInfo.gender);
+            formData.append('password', personalInfo.password);
+            formData.append('password_confirmation', personalInfo.password_confirmation);
+            if (personalInfo.avatar) formData.append('avatar', personalInfo.avatar);
+
+            // Vehicle
+            formData.append('vehicle_model', vehicleInfo.model);
+            formData.append('vehicle_year', vehicleInfo.year);
+            formData.append('vehicle_color', vehicleInfo.color);
+            formData.append('license_plate', vehicleInfo.licensePlate);
+            formData.append('vehicle_type', vehicleInfo.type);
+
+            // Documents (if any)
+            if (documents.license) formData.append('doc_license', documents.license);
+            if (documents.id_front) formData.append('doc_id_front', documents.id_front);
+            if (documents.insurance) formData.append('doc_insurance', documents.insurance);
+
+            await createDriver(formData);
+            showToast("Driver created successfully", "success");
+            navigate('/drivers');
+        } catch (error) {
+            console.error("Error creating driver:", error);
+
+            // Comprehensive error handling for 422 validation errors
+            const errorData = error.response?.data;
+            let errorMessage = errorData?.message || "Failed to create driver";
+
+            if (errorData?.errors) {
+                // Get the first validation error message
+                const firstErrorKey = Object.keys(errorData.errors)[0];
+                errorMessage = errorData.errors[firstErrorKey][0];
+            }
+
+            showToast(errorMessage, "error");
+        } finally {
+            setLoading(false);
+        }
     };
 
     const steps = [
@@ -132,8 +203,13 @@ export default function DriverCreate() {
                                     <Label className="md:w-1/3 text-gray-700 font-semibold mb-0">Profile Image</Label>
                                     <div className="md:w-2/3">
                                         <InputWrapper icon="bi bi-image" style={{ borderStyle: 'dashed' }}>
-                                            <Input type="file" accept="image/*" />
+                                            <Input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => setPersonalInfo({ ...personalInfo, avatar: e.target.files[0] })}
+                                            />
                                         </InputWrapper>
+                                        {personalInfo.avatar && <span className="text-xs text-green-600 mt-1 block">Selected: {personalInfo.avatar.name}</span>}
                                     </div>
                                 </div>
 
@@ -189,6 +265,26 @@ export default function DriverCreate() {
                                             </Select>
                                         </InputWrapper>
                                         {errors.gender && <span className="text-xs text-red-500 mt-1 block">{errors.gender}</span>}
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-8">
+                                    <Label className="md:w-1/3 text-gray-700 font-semibold mb-0">Password</Label>
+                                    <div className="md:w-2/3">
+                                        <InputWrapper icon="bi bi-lock" className={errors.password ? 'border-red-500' : ''}>
+                                            <Input type="password" placeholder="******" value={personalInfo.password} onChange={(e) => setPersonalInfo({ ...personalInfo, password: e.target.value })} />
+                                        </InputWrapper>
+                                        {errors.password && <span className="text-xs text-red-500 mt-1 block">{errors.password}</span>}
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-8">
+                                    <Label className="md:w-1/3 text-gray-700 font-semibold mb-0">Confirm Password</Label>
+                                    <div className="md:w-2/3">
+                                        <InputWrapper icon="bi bi-lock-fill" className={errors.password_confirmation ? 'border-red-500' : ''}>
+                                            <Input type="password" placeholder="******" value={personalInfo.password_confirmation} onChange={(e) => setPersonalInfo({ ...personalInfo, password_confirmation: e.target.value })} />
+                                        </InputWrapper>
+                                        {errors.password_confirmation && <span className="text-xs text-red-500 mt-1 block">{errors.password_confirmation}</span>}
                                     </div>
                                 </div>
                             </div>
@@ -257,19 +353,26 @@ export default function DriverCreate() {
                         {activeTab === 'documents' && (
                             <div className="space-y-6">
                                 {[
-                                    { name: 'Driving License', placeholder: 'Upload driving license' },
-                                    { name: 'ID Card (Front)', placeholder: 'Upload ID card front' },
-                                    { name: 'Vehicle Insurance', placeholder: 'Upload insurance document' },
+                                    { name: 'Driving License', key: 'license', placeholder: 'Upload driving license' },
+                                    { name: 'ID Card (Front)', key: 'id_front', placeholder: 'Upload ID card front' },
+                                    { name: 'Vehicle Insurance', key: 'insurance', placeholder: 'Upload insurance document' },
                                 ].map((doc, i) => (
                                     <div key={i} className="flex flex-col md:flex-row md:items-center gap-2 md:gap-8 w-full">
                                         <Label className="md:w-1/3 text-gray-700 font-semibold mb-0">{doc.name}</Label>
                                         <div className="md:w-2/3">
                                             <div className="group px-4 py-3 bg-white border-2 border-dashed border-gray-200 rounded-xl hover:border-[#D10000] hover:bg-red-50/30 transition-all duration-300">
                                                 <div className="flex items-center justify-between">
-                                                    <span className="text-sm text-gray-500">{doc.placeholder}</span>
-                                                    <input type="file" className="hidden" id={`doc-${i}`} />
+                                                    <span className="text-sm text-gray-500">
+                                                        {documents[doc.key] ? documents[doc.key].name : doc.placeholder}
+                                                    </span>
+                                                    <input
+                                                        type="file"
+                                                        className="hidden"
+                                                        id={`doc-${i}`}
+                                                        onChange={(e) => setDocuments({ ...documents, [doc.key]: e.target.files[0] })}
+                                                    />
                                                     <label htmlFor={`doc-${i}`} className="px-4 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-bold cursor-pointer hover:bg-gray-200 transition-colors">
-                                                        Browse
+                                                        {documents[doc.key] ? 'Change' : 'Browse'}
                                                     </label>
                                                 </div>
                                             </div>
@@ -301,15 +404,16 @@ export default function DriverCreate() {
                         ) : (
                             <button
                                 onClick={handleSubmit}
-                                className="bg-[#D10000] hover:bg-[#b00000] text-white text-sm font-semibold px-8 py-2.5 rounded-lg transition-colors flex items-center gap-1"
+                                disabled={loading}
+                                className="bg-[#D10000] hover:bg-[#b00000] disabled:opacity-50 text-white text-sm font-semibold px-8 py-2.5 rounded-lg transition-colors flex items-center gap-1"
                             >
-                                Submit <i className="bi bi-check2 ml-1"></i>
+                                {loading ? 'Submitting...' : 'Submit'} <i className="bi bi-check2 ml-1"></i>
                             </button>
                         )}
                     </div>
 
                 </div>
             </div>
-        </AdminLayout>
+        </AdminLayout >
     );
 }

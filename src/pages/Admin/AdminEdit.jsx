@@ -52,7 +52,8 @@ export default function AdminEdit() {
                                 <Input type="email" defaultValue={admin.email} />
                             </InputWrapper>
                         </div>
-                        <div className="md:col-span-1">
+
+                        <div>
                             <Label>Phone Number</Label>
                             <InputWrapper className="flex items-center gap-4">
                                 <div className="flex items-center gap-2 py-1">
@@ -62,9 +63,25 @@ export default function AdminEdit() {
                                 <div className="flex-grow">
                                     <Input placeholder="000 000 0000" />
                                 </div>
-                            </InputWrapper>
+                            </InputWrapper></div>
+                        <div className="px-4 mt-4">
+                            <label className="flex items-center gap-3 cursor-pointer group p-3 bg-gray-50 rounded-lg">
+                                <div className="relative flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        name="is_super"
 
+                                        className="peer w-5 h-5 border-2 border-gray-300 rounded-md checked:bg-[#D10000] checked:border-[#D10000] appearance-none transition-all cursor-pointer"
+                                    />
+                                    <i className="bi bi-check absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-xs opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"></i>
+                                </div>
+                                <div>
+                                    <span className="text-[14px] font-semibold text-gray-700">Super Admin</span>
+                                    <p className="text-xs text-gray-500 mt-0.5">Has access to all modules and permissions</p>
+                                </div>
+                            </label>
                         </div>
+
                     </div>
 
                     <div className="bg-[#d10000] mt-4  rounded-full  p-4 text-[14px] font-bold text-white uppercase tracking-widest mb-4 flex items-center gap-2">

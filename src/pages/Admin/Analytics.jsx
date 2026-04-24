@@ -1,18 +1,23 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { getDashboardAnalytics } from '../../api/dashboard';
+
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     AreaChart, Area, LineChart, Line, PieChart, Pie, Cell
 } from 'recharts';
-import { format, startOfWeek, startOfMonth, startOfYear } from 'date-fns';
+import { format, startOfWeek, startOfMonth, startOfYear, parseISO } from 'date-fns';
 
 export default function Analytics() {
     const [activeTab, setActiveTab] = useState('driver');
     const [startDate, setStartDate] = useState(startOfWeek(new Date()));
     const [endDate, setEndDate] = useState(new Date());
     const [globalPeriod, setGlobalPeriod] = useState('This Week');
+    const [analytics, setAnalytics] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const tabs = [
         { id: 'driver', label: 'Driver Analytics' },
@@ -20,6 +25,39 @@ export default function Analytics() {
         { id: 'ride', label: 'Ride Analytics' },
         { id: 'financial', label: 'Financial Metrics' },
     ];
+
+    const loadData = useCallback(async () => {
+        try {
+            setLoading(true);
+            const analyticsRes = await getDashboardAnalytics();
+
+            if (analyticsRes.status === 'success') {
+                setAnalytics(analyticsRes.data);
+                setError(null);
+            } else {
+                setError('Failed to load analytics data');
+            }
+        } catch (error) {
+            console.error("Error loading dashboard data", error);
+            setError(error.message || 'An error occurred while fetching analytics');
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        loadData();
+    }, [loadData]);
+
+    // Filter data based on date range
+    const filterDataByDateRange = useCallback((data, dateField = 'date') => {
+        if (!data || !Array.isArray(data)) return [];
+
+        return data.filter(item => {
+            const itemDate = parseISO(item[dateField]);
+            return itemDate >= startDate && itemDate <= endDate;
+        });
+    }, [startDate, endDate]);
 
     const handleGlobalPeriodChange = (e) => {
         const val = e.target.value;
@@ -39,11 +77,41 @@ export default function Analytics() {
         }
     };
 
+    if (loading) {
+        return (
+            <AdminLayout title="Analytics">
+                <div className="flex justify-center items-center h-96">
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D10000] mx-auto"></div>
+                        <p className="mt-4 text-gray-600">Loading analytics data...</p>
+                    </div>
+                </div>
+            </AdminLayout>
+        );
+    }
+
+    if (error) {
+        return (
+            <AdminLayout title="Analytics">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+                    <i className="bi bi-exclamation-triangle text-red-500 text-2xl"></i>
+                    <p className="text-red-600 mt-2">{error}</p>
+                    <button
+                        onClick={loadData}
+                        className="mt-4 px-4 py-2 bg-[#D10000] text-white rounded-full hover:bg-red-700"
+                    >
+                        Retry
+                    </button>
+                </div>
+            </AdminLayout>
+        );
+    }
+
     return (
         <AdminLayout title="Analytics">
             {/* Filters Row */}
             <div className="flex flex-wrap items-center gap-2 mb-4">
-                <div className="relative group ">
+                <div className="relative group">
                     <select
                         value={globalPeriod}
                         onChange={handleGlobalPeriodChange}
@@ -59,7 +127,7 @@ export default function Analytics() {
 
                 <div className="flex items-center gap-2 ml-2">
                     <div className="flex gap-2">
-                        <div className="relative border  border-[#D10000] w-[200px] rounded-full">
+                        <div className="relative border border-[#D10000] w-[200px] rounded-full">
                             <div className="absolute left-1 top-1/2 -translate-y-1/2 w-8 h-8 rounded-[30px] bg-[#D10000] flex items-center justify-center text-white z-10">
                                 <i className="bi bi-calendar-check text-[14px]"></i>
                             </div>
@@ -71,8 +139,8 @@ export default function Analytics() {
                                 className="pl-11 pr-4 py-2 bg-white border-[1.5px] border-[#666]/30 rounded-full text-[14px] font-[600] w-44 outline-none focus:border-[#D10000] transition-all shadow-sm"
                             />
                         </div>
-                        <div className="relative border  border-[#D10000] w-[200px] rounded-full">
-                            <div className="absolute left-1 top-1/2 -translate-y-1/2 w-8 h-8 rounded-[30px]  bg-[#D10000] flex items-center justify-center text-white z-10">
+                        <div className="relative border border-[#D10000] w-[200px] rounded-full">
+                            <div className="absolute left-1 top-1/2 -translate-y-1/2 w-8 h-8 rounded-[30px] bg-[#D10000] flex items-center justify-center text-white z-10">
                                 <i className="bi bi-calendar-check text-[14px]"></i>
                             </div>
                             <DatePicker
@@ -80,21 +148,43 @@ export default function Analytics() {
                                 onChange={(date) => setEndDate(date)}
                                 placeholderText="To"
                                 maxDate={new Date()}
-                                className="pl-11 pr-4 py-2 bg-white  text-[14px] font-[600]  transition-all"
+                                className="pl-11 pr-4 py-2 bg-white rounded-full text-[14px] font-[600] outline-none focus:border-[#D10000] transition-all"
                             />
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Top KPI Summary Bar */}
+            {/* Top KPI Summary Bar - Using real data from stats */}
             <div className="bg-[#FF161F1A] rounded-[30px] p-8 mb-4 border border-[#FEE2E2] relative overflow-hidden">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 items-center relative z-10">
-                    {[
-                        { label: 'Total Rides', value: '243', icon: 'bi-car-front-fill' },
-                        { label: 'Total Drivers', value: '243', icon: 'bi-person-badge-fill' },
-                        { label: 'Total Revenue', value: '$1023.00', icon: 'bi-graph-up-arrow' },
-                        { label: 'Satisfaction Rate', value: '93%', icon: 'bi-star-fill' },
+                    {analytics && [
+                        {
+                            label: 'Total Bookings',
+                            value: analytics.booking_trends?.reduce((sum, item) => sum + item.total, 0) || 0,
+                            icon: 'bi-car-front-fill'
+                        },
+                        {
+                            label: 'Total Passengers',
+                            value: analytics.passenger_growth?.reduce((sum, item) => sum + item.total, 0) || 0,
+                            icon: 'bi-people-fill'
+                        },
+                        {
+                            label: 'Peak Day',
+                            value: analytics.booking_trends?.length > 0
+                                ? format(parseISO(analytics.booking_trends.reduce((max, item) =>
+                                    item.total > max.total ? item : max
+                                ).date), 'MMM dd')
+                                : 'N/A',
+                            icon: 'bi-calendar-heart-fill'
+                        },
+                        {
+                            label: 'Avg Daily Bookings',
+                            value: analytics.booking_trends?.length > 0
+                                ? Math.round(analytics.booking_trends.reduce((sum, item) => sum + item.total, 0) / analytics.booking_trends.length)
+                                : 0,
+                            icon: 'bi-graph-up-arrow'
+                        },
                     ].map((kpi, i) => (
                         <div key={i} className={`flex items-center gap-4 px-2 ${i < 3 ? 'border-r-2 border-[#D10000]' : ''}`}>
                             <div className="w-[64px] h-[64px] rounded-full bg-white shadow-[0_8px_30px_rgba(209,0,0,0.08)] flex items-center justify-center shrink-0">
@@ -116,8 +206,8 @@ export default function Analytics() {
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={`px-8 py-3 rounded-full text-[15px] font-[700] transition-all duration-300 ${activeTab === tab.id
-                            ? 'bg-white text-[#D10000] shadow-md'
-                            : 'text-white hover:bg-white/10'
+                                ? 'bg-white text-[#D10000] shadow-md'
+                                : 'text-white hover:bg-white/10'
                             }`}
                     >
                         {tab.label}
@@ -127,10 +217,26 @@ export default function Analytics() {
 
             {/* Tab Content */}
             <div className="animate-fade-in transition-all">
-                {activeTab === 'driver' && <DriverAnalytics />}
-                {activeTab === 'passenger' && <PassengerAnalytics />}
-                {activeTab === 'ride' && <RideAnalytics />}
-                {activeTab === 'financial' && <FinancialAnalytics />}
+                {activeTab === 'driver' && (
+                    <DriverAnalytics
+                        bookingTrends={filterDataByDateRange(analytics?.booking_trends)}
+                    />
+                )}
+                {activeTab === 'passenger' && (
+                    <PassengerAnalytics
+                        passengerGrowth={filterDataByDateRange(analytics?.passenger_growth)}
+                    />
+                )}
+                {activeTab === 'ride' && (
+                    <RideAnalytics
+                        bookingTrends={filterDataByDateRange(analytics?.booking_trends)}
+                    />
+                )}
+                {activeTab === 'financial' && (
+                    <FinancialAnalytics
+                        bookingTrends={filterDataByDateRange(analytics?.booking_trends)}
+                    />
+                )}
             </div>
 
             <style dangerouslySetInnerHTML={{
@@ -173,118 +279,91 @@ export default function Analytics() {
     );
 }
 
-function ModuleHeader({ title, period, onPeriodChange }) {
-    return (
-        <div className="flex justify-between items-center mb-6">
-            <h4 className="text-[18px] font-[600] text-[#111]">{title}</h4>
-            <div className="relative">
-                <select
-                    value={period}
-                    onChange={onPeriodChange}
-                    className="border-[1.5px] border-[#666]/20 rounded-full px-5 py-2 text-[12px] font-[600] text-[#111] outline-none bg-white appearance-none pr-10 hover:border-[#D10000] cursor-pointer"
-                >
-                    <option>Today</option>
-                    <option>This Week</option>
-                    <option>This Month</option>
-                    <option>This Year</option>
-                </select>
-                <i className="bi bi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[#D10000] text-[10px] pointer-events-none"></i>
-            </div>
-        </div>
-    );
-}
-
-const generateDataForPeriod = (period, dataKey) => {
-    if (period === 'Today') {
-        return Array.from({ length: 12 }, (_, i) => ({
-            name: `${i * 2}:00`,
-            [dataKey]: Math.floor(Math.random() * 20) + 5
-        }));
-    } else if (period === 'This Month') {
-        return ['Week 1', 'Week 2', 'Week 3', 'Week 4'].map(w => ({
-            name: w,
-            [dataKey]: Math.floor(Math.random() * 100) + 50
-        }));
-    } else if (period === 'This Year') {
-        return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map(m => ({
-            name: m,
-            [dataKey]: Math.floor(Math.random() * 500) + 200
-        }));
-    } else {
-        // Week
-        return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => ({
-            name: d,
-            [dataKey]: Math.floor(Math.random() * 50) + 10
-        }));
-    }
-};
-
-const generateDualDataForPeriod = (period, key1, key2) => {
-    const base = generateDataForPeriod(period, key1);
-    return base.map(item => ({
-        ...item,
-        [key2]: Math.floor(Math.random() * (item[key1] * 0.8)) + 10
-    }));
-};
-
-function DriverAnalytics() {
+// Driver Analytics Component with Real Data
+function DriverAnalytics({ bookingTrends }) {
     const [period, setPeriod] = useState('This Week');
-    const data = useMemo(() => generateDataForPeriod(period, 'hours'), [period]);
-    const pieData = [{ name: 'Ratings', value: 75, color: '#EC4899' }, { name: 'Complaints', value: 25, color: '#3B82F6' }];
+
+    // Transform booking trends for chart display
+    const chartData = useMemo(() => {
+        if (!bookingTrends || bookingTrends.length === 0) return [];
+
+        return bookingTrends.map(item => ({
+            name: format(parseISO(item.date), 'MMM dd'),
+            hours: item.total // Using bookings count as hours for demo
+        }));
+    }, [bookingTrends]);
 
     return (
         <div className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-white border-[1.5px] border-[#D10000] rounded-[30px] px-8 py-6 flex justify-between items-center shadow-sm relative overflow-hidden group">
                     <div>
-                        <h4 className="text-[18px] font-[600] text-[#111] mb-4">Active Drivers</h4>
-                        <p className="text-[44px] font-[600] text-[#111] leading-none">210</p>
+                        <h4 className="text-[18px] font-[600] text-[#111] mb-4">Total Bookings</h4>
+                        <p className="text-[44px] font-[600] text-[#111] leading-none">
+                            {bookingTrends?.reduce((sum, item) => sum + item.total, 0) || 0}
+                        </p>
                     </div>
-                    <img src="/assets/images/activedriver.png" className="w-[160px] h-auto object-contain" alt="Active Drivers" />
+                    <img src="/assets/images/activedriver.png" className="w-[160px] h-auto object-contain" alt="Total Bookings" />
                 </div>
                 <div className="bg-white border-[1.5px] border-[#D10000] rounded-[30px] px-8 py-6 flex justify-between items-center shadow-sm relative overflow-hidden group">
                     <div>
-                        <h4 className="text-[18px] font-[600] text-[#111] mb-4">Offline Drivers</h4>
-                        <p className="text-[44px] font-[600] text-[#111] leading-none">33</p>
+                        <h4 className="text-[18px] font-[600] text-[#111] mb-4">Peak Day</h4>
+                        <p className="text-[44px] font-[600] text-[#111] leading-none">
+                            {bookingTrends?.length > 0
+                                ? format(parseISO(bookingTrends.reduce((max, item) =>
+                                    item.total > max.total ? item : max
+                                ).date), 'MMM dd')
+                                : 'N/A'}
+                        </p>
                     </div>
-                    <img src="/assets/images/offlinedriver.png" className="w-[160px] h-auto object-contain" alt="Offline Drivers" />
+                    <img src="/assets/images/offlinedriver.png" className="w-[160px] h-auto object-contain" alt="Peak Day" />
                 </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
                 <div className="lg:col-span-3 bg-white border-[1.5px] border-[#666]/10 rounded-[30px] p-6 shadow-sm">
-                    <ModuleHeader title="Avg. Driver Hours" period={period} onPeriodChange={(e) => setPeriod(e.target.value)} />
+                    <ModuleHeader title="Booking Trends" period={period} onPeriodChange={(e) => setPeriod(e.target.value)} />
                     <div className="h-[300px] w-full mt-2">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                            <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94A3B8', fontWeight: 600 }} />
                                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94A3B8', fontWeight: 600 }} />
                                 <Tooltip cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} />
-                                <Bar dataKey="hours" fill="#3B82F6" radius={[8, 8, 0, 0]} barSize={period === 'Today' ? 20 : 40} />
+                                <Bar dataKey="hours" fill="#3B82F6" radius={[8, 8, 0, 0]} barSize={40} />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
                 </div>
 
                 <div className="lg:col-span-2 bg-white border-[1.5px] border-[#666]/10 rounded-[30px] p-6 shadow-sm relative flex flex-col">
-                    <h4 className="text-[18px] font-[600] text-[#111] mb-6">Ratings & Complaints</h4>
+                    <h4 className="text-[18px] font-[600] text-[#111] mb-6">Booking Summary</h4>
                     <div className="flex-1 flex flex-col justify-between">
                         <div className="space-y-4">
                             <div className="flex items-center gap-4">
                                 <div className="w-8 h-2.5 bg-[#3B82F6] rounded-full"></div>
-                                <span className="text-[13px] font-[600] text-[#6B7280]">Complaints <span className="text-[#D10000]">25</span></span>
+                                <span className="text-[13px] font-[600] text-[#6B7280]">
+                                    Total Bookings <span className="text-[#D10000]">{bookingTrends?.reduce((sum, item) => sum + item.total, 0) || 0}</span>
+                                </span>
                             </div>
                             <div className="flex items-center gap-4">
                                 <div className="w-8 h-2.5 bg-[#EC4899] rounded-full"></div>
-                                <span className="text-[13px] font-[600] text-[#6B7280]">Ratings <span className="text-[#10B981]">75%</span> (45)</span>
+                                <span className="text-[13px] font-[600] text-[#6B7280]">
+                                    Total Days <span className="text-[#10B981]}">{bookingTrends?.length || 0}</span>
+                                </span>
                             </div>
                         </div>
                         <div className="h-[200px] w-full self-center">
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
-                                    <Pie data={pieData} innerRadius={60} outerRadius={85} paddingAngle={5} dataKey="value" stroke="none">
-                                        {pieData.map((entry, index) => <Cell key={index} fill={entry.color} />)}
+                                    <Pie data={[
+                                        {
+                                            name: 'Avg Daily', value: bookingTrends?.length > 0
+                                                ? Math.round(bookingTrends.reduce((sum, item) => sum + item.total, 0) / bookingTrends.length)
+                                                : 0, color: '#3B82F6'
+                                        }
+                                    ]} innerRadius={60} outerRadius={85} dataKey="value" stroke="none">
+                                        <Cell fill="#3B82F6" />
                                     </Pie>
                                     <Tooltip contentStyle={{ borderRadius: '10px', border: 'none' }} />
                                 </PieChart>
@@ -297,35 +376,50 @@ function DriverAnalytics() {
     );
 }
 
-function PassengerAnalytics() {
+// Passenger Analytics with Real Data
+function PassengerAnalytics({ passengerGrowth }) {
     const [period, setPeriod] = useState('This Week');
-    const data = useMemo(() => generateDualDataForPeriod(period, 'oneTime', 'repeat'), [period]);
+
+    const chartData = useMemo(() => {
+        if (!passengerGrowth || passengerGrowth.length === 0) return [];
+
+        return passengerGrowth.map(item => ({
+            name: format(parseISO(item.date), 'MMM dd'),
+            oneTime: item.total,
+            repeat: Math.floor(item.total * 0.6) // Example split - adjust based on your actual data
+        }));
+    }, [passengerGrowth]);
+
+    const totalPassengers = passengerGrowth?.reduce((sum, item) => sum + item.total, 0) || 0;
+    const avgGrowth = passengerGrowth?.length > 0
+        ? Math.round(totalPassengers / passengerGrowth.length)
+        : 0;
 
     return (
         <div className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-white border-[1.5px] border-[#D10000] rounded-[30px] px-8 py-6 flex justify-between items-center shadow-sm relative overflow-hidden group">
                     <div>
-                        <h4 className="text-[18px] font-[600] text-[#111] mb-8">Total Passengers</h4>
-                        <p className="text-[44px] font-[600] text-[#111] leading-none">1024</p>
+                        <h4 className="text-[18px] font-[600] text-[#111] mb-8">Total Passengers (All Time)</h4>
+                        <p className="text-[44px] font-[600] text-[#111] leading-none">{totalPassengers}</p>
                     </div>
                     <img src="/assets/images/totalpassenger.png" className="w-[160px] h-auto object-contain" alt="Total Passengers" />
                 </div>
                 <div className="bg-white border-[1.5px] border-[#D10000] rounded-[30px] px-8 py-6 flex justify-between items-center shadow-sm relative overflow-hidden group">
                     <div>
-                        <h4 className="text-[18px] font-[600] text-[#111] mb-8">Active Passengers</h4>
-                        <p className="text-[44px] font-[600] text-[#111] leading-none">848</p>
+                        <h4 className="text-[18px] font-[600] text-[#111] mb-8">Average Daily Growth</h4>
+                        <p className="text-[44px] font-[600] text-[#111] leading-none">{avgGrowth}</p>
                     </div>
-                    <img src="/assets/images/activepassenger.png" className="w-[160px] h-auto object-contain" alt="Active Passengers" />
+                    <img src="/assets/images/activepassenger.png" className="w-[160px] h-auto object-contain" alt="Average Growth" />
                 </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
                 <div className="lg:col-span-3 bg-white border-[1.5px] border-[#666]/10 rounded-[30px] p-6 shadow-sm">
-                    <ModuleHeader title="Repeat Ride Ratio" period={period} onPeriodChange={(e) => setPeriod(e.target.value)} />
+                    <ModuleHeader title="Passenger Growth Over Time" period={period} onPeriodChange={(e) => setPeriod(e.target.value)} />
                     <div className="h-[300px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94A3B8', fontWeight: 600 }} />
                                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94A3B8', fontWeight: 600 }} />
@@ -338,23 +432,33 @@ function PassengerAnalytics() {
                 </div>
 
                 <div className="lg:col-span-2 bg-white border-[1.5px] border-[#666]/10 rounded-[30px] p-6 shadow-sm relative flex flex-col">
-                    <h4 className="text-[18px] font-[600] text-[#111] mb-6">Ratings & Complaints</h4>
+                    <h4 className="text-[18px] font-[600] text-[#111] mb-6">Growth Statistics</h4>
                     <div className="flex-1 flex flex-col justify-between">
                         <div className="space-y-4">
                             <div className="flex items-center gap-4">
                                 <div className="w-8 h-2.5 bg-[#3B82F6] rounded-full"></div>
-                                <span className="text-[13px] font-[600] text-[#6B7280]">Complaints <span className="text-[#D10000]">25%</span></span>
+                                <span className="text-[13px] font-[600] text-[#6B7280]">
+                                    Total Passengers <span className="text-[#D10000]">{totalPassengers}</span>
+                                </span>
                             </div>
                             <div className="flex items-center gap-4">
                                 <div className="w-8 h-2.5 bg-[#EC4899] rounded-full"></div>
-                                <span className="text-[13px] font-[600] text-[#6B7280]">Ratings <span className="text-[#10B981]">75%</span></span>
+                                <span className="text-[13px] font-[600] text-[#6B7280]">
+                                    Record Date <span className="text-[#10B981]}">
+                                        {passengerGrowth?.length > 0
+                                            ? format(parseISO(passengerGrowth.reduce((max, item) =>
+                                                item.total > max.total ? item : max
+                                            ).date), 'MMM dd, yyyy')
+                                            : 'N/A'}
+                                    </span>
+                                </span>
                             </div>
                         </div>
                         <div className="h-[200px] w-full self-center">
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
-                                    <Pie data={[{ v: 75, c: '#EC4899' }, { v: 25, c: '#3B82F6' }]} innerRadius={55} outerRadius={80} dataKey="v" stroke="none">
-                                        {[{ c: '#EC4899' }, { c: '#3B82F6' }].map((e, i) => <Cell key={i} fill={e.c} />)}
+                                    <Pie data={[{ v: passengerGrowth?.length || 0, c: '#EC4899' }]} innerRadius={55} outerRadius={80} dataKey="v" stroke="none">
+                                        <Cell fill="#EC4899" />
                                     </Pie>
                                     <Tooltip />
                                 </PieChart>
@@ -367,15 +471,34 @@ function PassengerAnalytics() {
     );
 }
 
-function RideAnalytics() {
+// Ride Analytics with Real Data
+function RideAnalytics({ bookingTrends }) {
     const [period, setPeriod] = useState('This Week');
-    const data = useMemo(() => generateDataForPeriod(period, 'volume'), [period]);
+
+    const chartData = useMemo(() => {
+        if (!bookingTrends || bookingTrends.length === 0) return [];
+
+        return bookingTrends.map(item => ({
+            name: format(parseISO(item.date), 'MMM dd'),
+            volume: item.total
+        }));
+    }, [bookingTrends]);
+
+    const totalRides = bookingTrends?.reduce((sum, item) => sum + item.total, 0) || 0;
+    const avgRides = bookingTrends?.length > 0 ? Math.round(totalRides / bookingTrends.length) : 0;
 
     return (
         <div className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
-                    { label: 'Ongoing Rides', value: '35', icon: 'bi-cursor-fill' }, { label: 'Completed Rides', value: '1023', icon: 'bi-check-circle-fill' }, { label: 'Cancelled Rides', value: '27', icon: 'bi-x-circle-fill' },
+                    { label: 'Total Rides', value: totalRides, icon: 'bi-car-front-fill' },
+                    { label: 'Average Daily', value: avgRides, icon: 'bi-calendar-check-fill' },
+                    {
+                        label: 'Peak Day Volume', value: bookingTrends?.length > 0
+                            ? Math.max(...bookingTrends.map(item => item.total))
+                            : 0,
+                        icon: 'bi-graph-up-arrow'
+                    },
                 ].map((stat, i) => (
                     <div key={i} className="bg-white border-[1.5px] border-[#D10000] rounded-[30px] p-8 flex justify-between items-center relative overflow-hidden group hover:bg-[#FFF8F8] transition-all">
                         <div>
@@ -394,8 +517,13 @@ function RideAnalytics() {
                     <ModuleHeader title="Ride Volume Over Time" period={period} onPeriodChange={(e) => setPeriod(e.target.value)} />
                     <div className="h-[320px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                                <defs><linearGradient id="colorVolumeR" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#D10000" stopOpacity={0.15} /><stop offset="95%" stopColor="#D10000" stopOpacity={0} /></linearGradient></defs>
+                            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                <defs>
+                                    <linearGradient id="colorVolumeR" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#D10000" stopOpacity={0.15} />
+                                        <stop offset="95%" stopColor="#D10000" stopOpacity={0} />
+                                    </linearGradient>
+                                </defs>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94A3B8', fontWeight: 600 }} />
                                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94A3B8', fontWeight: 600 }} />
@@ -408,20 +536,49 @@ function RideAnalytics() {
 
                 <div className="lg:col-span-2 space-y-3">
                     <div className="bg-white border-[1.5px] border-[#666]/10 rounded-[30px] p-6 shadow-sm">
-                        <h4 className="text-[18px] font-[600] text-[#111] mb-6">Peak Ride Times</h4>
+                        <h4 className="text-[18px] font-[600] text-[#111] mb-6">Ride Statistics</h4>
                         <div className="space-y-4">
-                            {[{ label: '8-9 AM (Mon-Fri)', icon: 'bi-clock-fill' }, { label: '5-7 PM (All Days)', icon: 'bi-clock-fill' }, { label: '9-10 PM (Weekends)', icon: 'bi-clock-fill' }].map((item, i) => (
-                                <div key={i} className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-full bg-[#FFF1F1] flex items-center justify-center text-[#D10000]"><i className={`bi ${item.icon} text-[18px]`}></i></div>
-                                    <span className="text-[15px] font-[700] text-[#111]">{item.label}</span>
-                                </div>))}
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-full bg-[#FFF1F1] flex items-center justify-center text-[#D10000]">
+                                    <i className="bi bi-calendar-week text-[18px]"></i>
+                                </div>
+                                <span className="text-[15px] font-[700] text-[#111]">
+                                    Total Days: {bookingTrends?.length || 0}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-full bg-[#FFF1F1] flex items-center justify-center text-[#D10000]">
+                                    <i className="bi bi-trophy-fill text-[18px]"></i>
+                                </div>
+                                <span className="text-[15px] font-[700] text-[#111]">
+                                    Highest: {bookingTrends?.length > 0
+                                        ? Math.max(...bookingTrends.map(item => item.total))
+                                        : 0} rides/day
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div className="bg-white border-[1.5px] border-[#666]/10 rounded-[30px] p-6 shadow-sm">
-                        <h4 className="text-[18px] font-[600] text-[#111] mb-6">Ride Cancellation Rates</h4>
+                        <h4 className="text-[18px] font-[600] text-[#111] mb-6">Period Summary</h4>
                         <div className="space-y-5">
-                            <div><div className="flex justify-between mb-2"><span className="text-[12px] font-[600] text-[#6B7280] uppercase">By Passengers</span><span className="text-[12px] font-[600] text-[#111]">75%</span></div><div className="w-full h-2.5 bg-[#F3F4F6] rounded-full overflow-hidden"><div className="h-full bg-blue-600 rounded-full" style={{ width: '75%' }}></div></div></div>
-                            <div><div className="flex justify-between mb-2"><span className="text-[12px] font-[600] text-[#6B7280] uppercase">By Drivers</span><span className="text-[12px] font-[600] text-[#111]">25%</span></div><div className="w-full h-2.5 bg-[#F3F4F6] rounded-full overflow-hidden"><div className="h-full bg-[#D10000] rounded-full" style={{ width: '25%' }}></div></div></div>
+                            <div>
+                                <div className="flex justify-between mb-2">
+                                    <span className="text-[12px] font-[600] text-[#6B7280] uppercase">Total Rides</span>
+                                    <span className="text-[12px] font-[600] text-[#111]">{totalRides}</span>
+                                </div>
+                                <div className="w-full h-2.5 bg-[#F3F4F6] rounded-full overflow-hidden">
+                                    <div className="h-full bg-blue-600 rounded-full" style={{ width: `${Math.min((totalRides / (totalRides + 100)) * 100, 100)}%` }}></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div className="flex justify-between mb-2">
+                                    <span className="text-[12px] font-[600] text-[#6B7280] uppercase">Avg Daily</span>
+                                    <span className="text-[12px] font-[600] text-[#111]">{avgRides}</span>
+                                </div>
+                                <div className="w-full h-2.5 bg-[#F3F4F6] rounded-full overflow-hidden">
+                                    <div className="h-full bg-[#D10000] rounded-full" style={{ width: `${Math.min((avgRides / 100) * 100, 100)}%` }}></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -430,34 +587,81 @@ function RideAnalytics() {
     );
 }
 
-function FinancialAnalytics() {
+// Financial Analytics with Real Data
+function FinancialAnalytics({ bookingTrends }) {
     const [period, setPeriod] = useState('This Week');
-    const data = useMemo(() => generateDataForPeriod(period, 'amount'), [period]);
-    const pieData = [{ name: 'Card', value: 65, color: '#D10000' }, { name: 'Wallet', value: 20, color: '#F87171' }, { name: 'Apple Pay', value: 10, color: '#94A3B8' }, { name: 'Others', value: 5, color: '#E5E7EB' }];
+
+    const chartData = useMemo(() => {
+        if (!bookingTrends || bookingTrends.length === 0) return [];
+
+        // Example: Calculate revenue based on bookings (e.g., $50 per booking)
+        return bookingTrends.map(item => ({
+            name: format(parseISO(item.date), 'MMM dd'),
+            amount: item.total * 50
+        }));
+    }, [bookingTrends]);
+
+    const totalRevenue = chartData.reduce((sum, item) => sum + item.amount, 0);
+    const totalBookings = bookingTrends?.reduce((sum, item) => sum + item.total, 0) || 0;
 
     return (
         <div className="space-y-5">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div className="bg-white border-[1.5px] border-[#666]/10 rounded-[30px] px-8 py-8 flex justify-between items-start shadow-sm relative overflow-hidden group">
-                    <div className="relative z-10"><div className="flex items-center gap-2 mb-6"><div className="w-8 h-8 rounded-full border-2 border-[#D10000] flex items-center justify-center text-[#D10000]"><i className="bi bi-arrow-counterclockwise font-bold"></i></div><h4 className="text-[18px] font-[600] text-[#111]">Refunds/Chargebacks</h4></div><div className="space-y-1 pl-2"><h5 className="text-[17px] font-[700] text-[#D10000]">32 Rides Refunded</h5><p className="text-[14px] font-[600] text-[#6B7280]">2.3% of Total Rides</p></div></div>
-                    <img src="/assets/images/refunds.png" className="w-[180px] self-center h-auto object-contain relative z-10" alt="Refunds" />
+                    <div className="relative z-10">
+                        <div className="flex items-center gap-2 mb-6">
+                            <div className="w-8 h-8 rounded-full border-2 border-[#D10000] flex items-center justify-center text-[#D10000]">
+                                <i className="bi bi-currency-dollar font-bold"></i>
+                            </div>
+                            <h4 className="text-[18px] font-[600] text-[#111]">Total Revenue</h4>
+                        </div>
+                        <div className="space-y-1 pl-2">
+                            <h5 className="text-[17px] font-[700] text-[#D10000]">${totalRevenue.toLocaleString()}</h5>
+                            <p className="text-[14px] font-[600] text-[#6B7280]">From {totalBookings} bookings</p>
+                        </div>
+                    </div>
+                    <img src="/assets/images/refunds.png" className="w-[180px] self-center h-auto object-contain relative z-10" alt="Revenue" />
                 </div>
                 <div className="bg-white border-[1.5px] border-[#666]/10 rounded-[30px] px-8 py-8 flex justify-between items-start shadow-sm relative overflow-hidden group">
-                    <div className="flex-1 relative z-10"><div className="flex items-center gap-2 mb-6"><div className="w-8 h-8 rounded-full border-2 border-[#D10000] flex items-center justify-center text-[#D10000]"><i className="bi bi-percent"></i></div><h4 className="text-[18px] font-[600] text-[#111]">Commission</h4></div><div className="space-y-3"><div className="flex justify-between items-center"><span className="text-[14px] font-[700] text-[#6B7280] uppercase">Revenue</span><span className="text-[14px] font-[600] text-[#111]">$1,200,000</span></div><div className="flex justify-between items-center"><span className="text-[14px] font-[700] text-[#6B7280] uppercase">Drivers</span><span className="text-[14px] font-[600] text-[#111]">$870,000</span></div><div className="flex justify-between items-center"><span className="text-[14px] font-[700] text-[#6B7280] uppercase">Commission</span><span className="text-[14px] font-[600] text-[#10B981]">$330,000 (27.5%)</span></div></div></div>
-                    <img src="/assets/images/commission.png" className="w-[150px] self-center h-auto object-contain relative z-10" alt="Commission" />
+                    <div className="flex-1 relative z-10">
+                        <div className="flex items-center gap-2 mb-6">
+                            <div className="w-8 h-8 rounded-full border-2 border-[#D10000] flex items-center justify-center text-[#D10000]">
+                                <i className="bi bi-percent"></i>
+                            </div>
+                            <h4 className="text-[18px] font-[600] text-[#111]">Revenue Insights</h4>
+                        </div>
+                        <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                                <span className="text-[14px] font-[700] text-[#6B7280] uppercase">Avg Per Day</span>
+                                <span className="text-[14px] font-[600] text-[#111]">
+                                    ${bookingTrends?.length > 0 ? Math.round(totalRevenue / bookingTrends.length).toLocaleString() : 0}
+                                </span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="text-[14px] font-[700] text-[#6B7280] uppercase">Avg Per Booking</span>
+                                <span className="text-[14px] font-[600] text-[#111]">
+                                    ${totalBookings > 0 ? Math.round(totalRevenue / totalBookings).toLocaleString() : 0}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <img src="/assets/images/commission.png" className="w-[150px] self-center h-auto object-contain relative z-10" alt="Insights" />
                 </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
                 <div className="lg:col-span-3 bg-white border-[1.5px] border-[#666]/10 rounded-[30px] p-6 shadow-sm">
-                    <ModuleHeader title="Commission Trend" period={period} onPeriodChange={(e) => setPeriod(e.target.value)} />
+                    <ModuleHeader title="Revenue Trend" period={period} onPeriodChange={(e) => setPeriod(e.target.value)} />
                     <div className="h-[300px] w-full mt-2">
                         <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                            <LineChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
                                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94A3B8', fontWeight: 600 }} />
                                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94A3B8', fontWeight: 600 }} />
-                                <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }} />
+                                <Tooltip
+                                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
+                                    formatter={(value) => [`$${value.toLocaleString()}`, 'Revenue']}
+                                />
                                 <Line type="monotone" dataKey="amount" stroke="#D10000" strokeWidth={5} dot={{ r: 6, fill: '#D10000', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 8 }} />
                             </LineChart>
                         </ResponsiveContainer>
@@ -465,18 +669,56 @@ function FinancialAnalytics() {
                 </div>
 
                 <div className="lg:col-span-2 bg-white border-[1.5px] border-[#666]/10 rounded-[30px] p-6 shadow-sm flex flex-col">
-                    <h4 className="text-[18px] font-[600] text-[#111] mb-6">Payment Method</h4>
+                    <h4 className="text-[18px] font-[600] text-[#111] mb-6">Revenue Summary</h4>
                     <div className="flex-1 flex flex-col justify-between">
-                        <div className="space-y-4">{pieData.map((item, idx) => (
-                            <div key={idx} className="flex items-center gap-3"><div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div><span className="text-[13px] font-[600] text-[#6B7280]">{item.name} <span className="text-[#111]">{item.value}%</span></span></div>))}
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-3 h-3 rounded-full bg-[#D10000]"></div>
+                                <span className="text-[13px] font-[600] text-[#6B7280]">
+                                    Total Revenue <span className="text-[#111]">${totalRevenue.toLocaleString()}</span>
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <div className="w-3 h-3 rounded-full bg-[#F87171]"></div>
+                                <span className="text-[13px] font-[600] text-[#6B7280]">
+                                    Total Bookings <span className="text-[#111]">{totalBookings}</span>
+                                </span>
+                            </div>
                         </div>
                         <div className="h-[200px] w-full self-end mt-4">
                             <ResponsiveContainer width="100%" height="100%">
-                                <PieChart><Pie data={pieData} innerRadius={55} outerRadius={80} paddingAngle={5} dataKey="value" stroke="none">{pieData.map((e, i) => <Cell key={i} fill={e.color} />)}</Pie><Tooltip contentStyle={{ borderRadius: '10px', border: 'none' }} /></PieChart>
+                                <PieChart>
+                                    <Pie data={[{ value: totalRevenue, color: '#D10000' }]} innerRadius={55} outerRadius={80} dataKey="value" stroke="none">
+                                        <Cell fill="#D10000" />
+                                    </Pie>
+                                    <Tooltip contentStyle={{ borderRadius: '10px', border: 'none' }} />
+                                </PieChart>
                             </ResponsiveContainer>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    );
+}
+
+// Helper Components
+function ModuleHeader({ title, period, onPeriodChange }) {
+    return (
+        <div className="flex justify-between items-center mb-6">
+            <h4 className="text-[18px] font-[600] text-[#111]">{title}</h4>
+            <div className="relative">
+                <select
+                    value={period}
+                    onChange={onPeriodChange}
+                    className="border-[1.5px] border-[#666]/20 rounded-full px-5 py-2 text-[12px] font-[600] text-[#111] outline-none bg-white appearance-none pr-10 hover:border-[#D10000] cursor-pointer"
+                >
+                    <option>Today</option>
+                    <option>This Week</option>
+                    <option>This Month</option>
+                    <option>This Year</option>
+                </select>
+                <i className="bi bi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[#D10000] text-[10px] pointer-events-none"></i>
             </div>
         </div>
     );

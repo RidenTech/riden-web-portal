@@ -1,41 +1,83 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Link } from 'react-router-dom';
-import { InputWrapper, Input } from '@/components/UI';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { InputWrapper, Input, useToast } from '@/components/UI';
+import { getDriverById, updateDriver, toggleDriverStatus, deleteDriver } from '../../api/driverApi';
+import { STORAGE_URL } from '@/api/api';
 
 export default function DriverDetail() {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const { showToast } = useToast();
     const [activeTab, setActiveTab] = useState('personal');
     const [openDocIndex, setOpenDocIndex] = useState(null);
     const [modalType, setModalType] = useState(null);
     const [showAllRides, setShowAllRides] = useState(false);
     const [driverStatus, setDriverStatus] = useState('active'); // 'active', 'blocked', 'suspended'
     const [isEditing, setIsEditing] = useState(false);
-    const [showToast, setShowToast] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-    const [driver, setDriver] = useState({
-        name: 'Floyd Miles',
-        email: 'jeromebell445@gmail.com',
-        phone: '+12345627239',
-        country_code: 'canada',
-        since: 'Since March 23, 2023',
-        rating: 5,
-        reviews_count: 0,
-        stats: {
-            total_rides: 0,
-            completed_rides: 0,
-            revenue: '$0.00'
-        },
-        vehicle: { model: 'Suzuki Alto', year: '2019', color: 'Metallic Black', licensePlate: 'BKG-220', type: 'Standard Sedan' },
-        payments: {
-            p1: '********234', p2: '********234', p3: '********234',
-            o1: '********234', o2: '********234'
+    const [driver, setDriver] = useState(null);
+
+    const fetchDriverDetail = useCallback(async () => {
+        try {
+            setLoading(true);
+            const response = await getDriverById(id);
+            const data = response.data || response;
+            setDriver({
+                ...data,
+                name: `${data.first_name || ''} ${data.last_name || ''}`.trim(),
+                since: data.created_at ? `Since ${new Date(data.created_at).toLocaleDateString()}` : 'N/A',
+                rating: 5, // Mocked as not in sample JSON
+                reviews_count: 0,
+                stats: {
+                    total_rides: data.total_rides || 0,
+                    completed_rides: data.completed_rides || 0,
+                    revenue: data.revenue || '$0.00'
+                },
+                vehicle: data.vehicle || { model: 'N/A', year: 'N/A', color: 'N/A', license_plate: 'N/A', vehicle_type: 'N/A' },
+                gender: data.gender || 'N/A',
+                phone: data.phone || 'N/A',
+                email: data.email || 'N/A',
+                documents: data.documents || [],
+                payments: data.payments || {
+                    p1: 'N/A', p2: 'N/A', p3: 'N/A',
+                    o1: 'N/A', o2: 'N/A'
+                }
+            });
+            setDriverStatus(data.status?.toLowerCase() || 'active');
+        } catch (error) {
+            console.error("Error fetching driver:", error);
+            showToast("Failed to load driver details", "error");
+        } finally {
+            setLoading(false);
         }
-    });
+    }, [id]);
 
-    const handleEditToggle = () => {
+    useEffect(() => {
+        fetchDriverDetail();
+    }, [fetchDriverDetail]);
+
+    const handleEditToggle = async () => {
         if (isEditing) {
-            setShowToast(true);
-            setTimeout(() => setShowToast(false), 3000);
+            try {
+                // Split name back into first and last
+                const nameParts = driver.name.split(' ');
+                const updateData = {
+                    first_name: nameParts[0],
+                    last_name: nameParts.slice(1).join(' '),
+                    email: driver.email,
+                    phone: driver.phone,
+                    gender: driver.gender,
+                    password: driver.password,
+                    password_confirmation: driver.password_confirmation,
+                };
+                await updateDriver(driver.id, updateData);
+                showToast("Driver updated successfully", "success");
+            } catch (error) {
+                showToast("Update failed", "error");
+                return;
+            }
         }
         setIsEditing(!isEditing);
     };
@@ -47,6 +89,27 @@ export default function DriverDetail() {
         { id: 'rides', label: 'All Rides', icon: 'bi bi-truck-front-fill' },
         { id: 'payments', label: 'Payment Methods', icon: 'bi bi-wallet-fill' }
     ];
+
+    if (loading) {
+        return (
+            <AdminLayout title="Driver Details">
+                <div className="flex items-center justify-center min-h-[400px]">
+                    <div className="animate-spin inline-block w-8 h-8 border-4 border-red-600 rounded-full border-t-transparent"></div>
+                </div>
+            </AdminLayout>
+        );
+    }
+
+    if (!driver) {
+        return (
+            <AdminLayout title="Driver Details">
+                <div className="text-center py-20">
+                    <h3 className="text-xl font-bold text-gray-800">Driver not found</h3>
+                    <Link to="/drivers" className="text-red-600 hover:underline mt-4 inline-block font-semibold">Back to Drivers</Link>
+                </div>
+            </AdminLayout>
+        );
+    }
 
     return (
         <AdminLayout title="Driver Details">
@@ -60,7 +123,7 @@ export default function DriverDetail() {
                         </Link>
                         <div className="relative">
                             <div className="w-14 h-14 rounded-full overflow-hidden shrink-0 bg-gray-200">
-                                <img src={`https://ui-avatars.com/api/?name=${driver.name}&background=random`} className="w-full h-full object-cover" alt="" />
+                                <img src={driver.avatar ? `${STORAGE_URL}/${driver.avatar}` : `https://ui-avatars.com/api/?name=${driver.name}&background=random`} className="w-full h-full object-cover" alt="" />
                             </div>
                             <div className="absolute top-0 -left-1 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full"></div>
                         </div>
@@ -249,7 +312,6 @@ export default function DriverDetail() {
                                         <div className="flex items-center justify-between py-6 border-b border-gray-100">
                                             <span className="text-sm font-semibold text-gray-500 w-1/3">Phone Number</span>
                                             <div className="w-2/3 flex items-center gap-2">
-                                                {!isEditing && <i className="bi bi-flag-fill text-[#D10000] text-lg"></i>}
                                                 {isEditing ? (
                                                     <div className="w-full">
                                                         <InputWrapper icon="bi bi-telephone" className="h-10 mb-0">
@@ -264,6 +326,56 @@ export default function DriverDetail() {
                                                 )}
                                             </div>
                                         </div>
+
+                                        <div className="flex items-center justify-between py-6 border-b border-gray-100">
+                                            <span className="text-sm font-semibold text-gray-500 w-1/3">Gender</span>
+                                            {isEditing ? (
+                                                <div className="w-2/3">
+                                                    <select
+                                                        className="w-full h-10 border border-gray-200 rounded-xl px-4 text-sm outline-none focus:border-[#D10000]"
+                                                        value={driver.gender}
+                                                        onChange={e => setDriver({ ...driver, gender: e.target.value })}
+                                                    >
+                                                        <option value="Male">Male</option>
+                                                        <option value="Female">Female</option>
+                                                        <option value="Other">Other</option>
+                                                    </select>
+                                                </div>
+                                            ) : (
+                                                <span className="text-sm font-bold text-gray-900 w-2/3">{driver.gender}</span>
+                                            )}
+                                        </div>
+
+                                        {isEditing && (
+                                            <>
+                                                <div className="flex items-center justify-between py-6 border-b border-gray-100">
+                                                    <span className="text-sm font-semibold text-gray-500 w-1/3">New Password</span>
+                                                    <div className="w-2/3">
+                                                        <InputWrapper icon="bi bi-lock" className="h-10 mb-0">
+                                                            <Input
+                                                                type="password"
+                                                                placeholder="Leave blank to keep current"
+                                                                value={driver.password || ''}
+                                                                onChange={e => setDriver({ ...driver, password: e.target.value })}
+                                                            />
+                                                        </InputWrapper>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center justify-between py-6 border-b border-gray-100">
+                                                    <span className="text-sm font-semibold text-gray-500 w-1/3">Confirm Password</span>
+                                                    <div className="w-2/3">
+                                                        <InputWrapper icon="bi bi-lock-fill" className="h-10 mb-0">
+                                                            <Input
+                                                                type="password"
+                                                                placeholder="Confirm new password"
+                                                                value={driver.password_confirmation || ''}
+                                                                onChange={e => setDriver({ ...driver, password_confirmation: e.target.value })}
+                                                            />
+                                                        </InputWrapper>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                 )}
 
@@ -332,7 +444,7 @@ export default function DriverDetail() {
                                             <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=1000" className="w-full h-full object-cover" alt="Vehicle" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                                             <div className="absolute bottom-6 left-6 text-white">
-                                                <h3 className="text-2xl font-bold">Black Suzuki Alto, (BKG-220)</h3>
+                                                <h3 className="text-2xl font-bold">{driver.vehicle.color} {driver.vehicle.model}, ({driver.vehicle.license_plate})</h3>
                                             </div>
                                         </div>
                                         <div className="flex flex-col border border-white">
@@ -381,38 +493,44 @@ export default function DriverDetail() {
                                 {activeTab === 'rides' && (
                                     <div className="flex flex-col">
                                         <div className="overflow-x-auto ">
-                                            <table className="w-full text-left border-collapse">
-                                                <thead>
-                                                    <tr className="bg-[#FFEAEA] text-xs font-bold text-gray-900 border-none">
-                                                        <th className="py-4 px-6 rounded-l-xl">Date</th>
-                                                        <th className="py-4 px-6">Booking ID</th>
-                                                        <th className="py-4 px-6">Customer</th>
-                                                        <th className="py-4 px-6 rounded-r-xl">Pickup</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="text-sm">
-                                                    {(showAllRides ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] : [1, 2, 3, 4, 5]).map((item, idx) => (
-                                                        <tr key={idx} className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
-                                                            <td className="py-4 px-6 text-gray-800 font-medium whitespace-nowrap">22 March 2025</td>
-                                                            <td className="py-4 px-6 text-gray-800 font-bold whitespace-nowrap">#34565</td>
-                                                            <td className="py-4 px-6 text-gray-600 font-medium whitespace-nowrap">Jesse Showalter</td>
-                                                            <td className="py-4 px-6 text-gray-600 font-medium">
-                                                                123 Main Street,<br />
-                                                                Suite 405, Toronto
-                                                            </td>
+                                            {!driver.rides || driver.rides.length === 0 ? (
+                                                <div className="text-center py-20 bg-gray-50 rounded-2xl">
+                                                    <i className="bi bi-car-front text-4xl text-gray-300 mb-3 block"></i>
+                                                    <p className="text-gray-500 font-medium">No rides found for this driver</p>
+                                                </div>
+                                            ) : (
+                                                <table className="w-full text-left border-collapse">
+                                                    <thead>
+                                                        <tr className="bg-[#FFEAEA] text-xs font-bold text-gray-900 border-none">
+                                                            <th className="py-4 px-6 rounded-l-xl">Date</th>
+                                                            <th className="py-4 px-6">Booking ID</th>
+                                                            <th className="py-4 px-6">Customer</th>
+                                                            <th className="py-4 px-6 rounded-r-xl">Pickup</th>
                                                         </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody className="text-sm">
+                                                        {(showAllRides ? driver.rides : driver.rides.slice(0, 5)).map((ride, idx) => (
+                                                            <tr key={idx} className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
+                                                                <td className="py-4 px-6 text-gray-800 font-medium whitespace-nowrap">{new Date(ride.created_at).toLocaleDateString()}</td>
+                                                                <td className="py-4 px-6 text-gray-800 font-bold whitespace-nowrap">{ride.unique_id}</td>
+                                                                <td className="py-4 px-6 text-gray-600 font-medium whitespace-nowrap">{ride.passenger_name}</td>
+                                                                <td className="py-4 px-6 text-gray-600 font-medium">{ride.pickup_address}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            )}
                                         </div>
-                                        <div className="mt-6 mb-2 px-6">
-                                            <button
-                                                onClick={() => setShowAllRides(!showAllRides)}
-                                                className="text-[#D10000] text-xs font-bold hover:underline transition-all"
-                                            >
-                                                {showAllRides ? 'Show Less' : 'View All'}
-                                            </button>
-                                        </div>
+                                        {driver.rides && driver.rides.length > 5 && (
+                                            <div className="mt-6 mb-2 px-6">
+                                                <button
+                                                    onClick={() => setShowAllRides(!showAllRides)}
+                                                    className="text-[#D10000] text-xs font-bold hover:underline transition-all"
+                                                >
+                                                    {showAllRides ? 'Show Less' : 'View All'}
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
 
@@ -501,10 +619,21 @@ export default function DriverDetail() {
                             </p>
 
                             <div className="flex items-center gap-3 w-full">
-                                <button className="flex-1 py-3 bg-[#EE1B24] text-white rounded-[12px] font-bold text-sm hover:bg-[#d01019] transition-colors" onClick={() => {
-                                    if (modalType === 'block') setDriverStatus('blocked');
-                                    if (modalType === 'unblock') setDriverStatus('active');
-                                    // if delete, handle accordingly later
+                                <button className="flex-1 py-3 bg-[#EE1B24] text-white rounded-[12px] font-bold text-sm hover:bg-[#d01019] transition-colors" onClick={async () => {
+                                    try {
+                                        if (modalType === 'block' || modalType === 'unblock') {
+                                            await toggleDriverStatus(driver.id);
+                                            setDriverStatus(modalType === 'block' ? 'blocked' : 'active');
+                                            showToast(`Driver ${modalType === 'block' ? 'blocked' : 'unblocked'} successfully`, "success");
+                                        }
+                                        if (modalType === 'delete') {
+                                            await deleteDriver(driver.id);
+                                            showToast("Driver deleted successfully", "success");
+                                            navigate('/drivers');
+                                        }
+                                    } catch (error) {
+                                        showToast("Action failed", "error");
+                                    }
                                     setModalType(null);
                                 }}>
                                     Confirm
@@ -587,14 +716,6 @@ export default function DriverDetail() {
                         </div>
                     </div>
                 )}
-
-                {/* Toast Notification */}
-                <div
-                    className={`fixed bottom-8 right-8 bg-green-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 z-50 transform transition-all duration-300 ${showToast ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0 pointer-events-none'}`}
-                >
-                    <i className="bi bi-check-circle-fill text-xl"></i>
-                    <span className="font-bold text-sm">Successfully updated details!</span>
-                </div>
 
             </div>
         </AdminLayout>

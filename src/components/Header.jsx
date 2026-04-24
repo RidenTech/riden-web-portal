@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Header({ title, isCollapsed }) {
     return (
@@ -16,7 +17,9 @@ export default function Header({ title, isCollapsed }) {
                         <i className="bi bi-bell"></i>
                     </button>
 
-                    <img src="https://i.pravatar.cc/80?img=5" className="w-[36px] h-[36px] rounded-full object-cover border-2 border-white shadow-sm " alt="Avatar" />
+                    <Link to="/profile">
+                        <img src="https://i.pravatar.cc/80?img=5" className="w-[36px] h-[36px] rounded-full object-cover border-2 border-white shadow-sm " alt="Avatar" />
+                    </Link>
                 </div>
             </div>
         </div>

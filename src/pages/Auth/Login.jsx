@@ -1,8 +1,27 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { loginAdmin } from '../../api/auth';
+import { useToast } from '@/components/UI';
 
 export default function Login() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const { showToast } = useToast();
+    const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await loginAdmin(email, password);
+
+            showToast('Login Successful', 'success');
+            navigate('/');
+        }
+        catch (error) {
+            showToast(error.response?.data?.message || 'Login failed', 'error');
+        }
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center bg-no-repeat relative font-sans"
@@ -22,6 +41,8 @@ export default function Login() {
                             className="w-full bg-red-400/10 border border-white/15 rounded-xl px-4 py-3 text-white placeholder-white/30 outline-none focus:ring-4 focus:ring-red-600/20 focus:border-[#D10000] focus:bg-white/10 transition-all"
                             placeholder="name@riden.com"
                             required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
 
@@ -33,6 +54,8 @@ export default function Login() {
                                 className="w-full bg-red-400/10 border border-white/15 rounded-xl px-4 py-3 text-white placeholder-white/30 outline-none focus:ring-4 focus:ring-red-600/20 focus:border-[#D10000] focus:bg-white/10 transition-all"
                                 placeholder="••••••••"
                                 required
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                             <button
                                 type="button"
@@ -54,7 +77,7 @@ export default function Login() {
                         </Link>
                     </div>
 
-                    <button className="w-full bg-[#D10000] hover:bg-[#D10000]/90 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-red-600/20 hover:-translate-y-0.5 transition-all text-base">
+                    <button onClick={handleLogin} className="w-full bg-[#D10000] hover:bg-[#D10000]/90 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-red-600/20 hover:-translate-y-0.5 transition-all text-base">
                         Login
                     </button>
                 </form>

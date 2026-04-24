@@ -1,28 +1,83 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
 import { MiniChart } from '@/components/UI';
+import { getDashboardStats, getDashboardAnalytics } from '../../api/dashboard';
 
 export default function Dashboard() {
+    const [stats, setStats] = useState(null);
+    const [analytics, setAnalytics] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const loadData = async () => {
+        try {
+            const statsRes = await getDashboardStats();
+            const analyticsRes = await getDashboardAnalytics();
+
+            setStats(statsRes);
+            setAnalytics(analyticsRes);
+        } catch (error) {
+            console.log("Error loading dashboard data", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadData();
+    }, []);
+
+    // Get chart data from analytics
+    const getActiveDriversChartData = () => {
+        if (analytics?.data?.passenger_growth) {
+            return analytics.data.passenger_growth.slice(-7).map(item => item.total);
+        }
+        return [30, 50, 40, 75, 100, 60, 25]; // fallback data
+    };
+
+    const getOngoingRidesChartData = () => {
+        if (analytics?.data?.booking_trends) {
+            return analytics.data.booking_trends.slice(-7).map(item => item.total);
+        }
+        return [30, 50, 100, 75, 60, 45, 20]; // fallback data
+    };
+
+    if (loading) {
+        return (
+            <AdminLayout title="Dashboard">
+                <div className="flex justify-center items-center h-96">
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D10000] mx-auto"></div>
+                        <p className="mt-4 text-gray-600">Loading dashboard...</p>
+                    </div>
+                </div>
+            </AdminLayout>
+        );
+    }
+
     return (
         <AdminLayout title="Dashboard">
             {/* Top KPI Cards Row */}
             <div className="flex flex-wrap lg:flex-nowrap gap-4 mb-4">
-                {/* Active Drivers */}
+                {/* Active Drivers - Now using real data */}
                 <div className="bg-white border-[1.5px] border-[#D10000] rounded-[30px] px-8 py-8 flex-1 min-w-[320px] flex justify-between items-center shadow-sm">
                     <div>
                         <h4 className="text-[18px] font-[500] text-[#111] mb-2">Active Drivers</h4>
-                        <p className="text-[44px] font-[700] text-[#111] leading-none">43</p>
+                        <p className="text-[44px] font-[700] text-[#111] leading-none">
+                            {stats?.data?.total_drivers || 0}
+                        </p>
                     </div>
-                    <MiniChart variant="green" data={[30, 50, 40, 75, 100, 60, 25]} />
+                    <MiniChart variant="green" data={getActiveDriversChartData()} />
                 </div>
 
-                {/* Ongoing Rides */}
+                {/* Ongoing Rides - Now using real data */}
                 <div className="bg-white border-[1.5px] border-[#D10000] rounded-[30px] px-8 py-8 flex-1 min-w-[320px] flex justify-between items-center shadow-sm">
                     <div>
                         <h4 className="text-[18px] font-[500] text-[#111] mb-2">Ongoing Rides</h4>
-                        <p className="text-[44px] font-[700] text-[#111] leading-none">24</p>
+                        <p className="text-[44px] font-[700] text-[#111] leading-none">
+                            {stats?.data?.ongoing_bookings || 0}
+                        </p>
                     </div>
-                    <MiniChart variant="yellow" data={[30, 50, 100, 75, 60, 45, 20]} />
+                    <MiniChart variant="yellow" data={getOngoingRidesChartData()} />
                 </div>
             </div>
 
@@ -36,9 +91,7 @@ export default function Dashboard() {
                     title="Live Map"
                 ></iframe>
 
-
-
-                {/* Ongoing Ride Card Overlay (Precise layout matching screenshot) */}
+                {/* Ongoing Ride Card Overlay - Some data updated from backend */}
                 <div className="absolute top-[10%] right-[12%] bg-white rounded-[40px] p-6 w-[380px] shadow-[0_15px_50px_rgba(0,0,0,0.1)] z-10">
                     <h4 className="text-[17px] font-[800] text-[#D10000] mb-6">Ongoing Ride</h4>
 
@@ -48,7 +101,9 @@ export default function Dashboard() {
                             <img src="https://i.pravatar.cc/150?img=11" alt="Driver" className="w-[54px] h-[54px] rounded-[14px] object-cover" />
                             <div>
                                 <h5 className="text-[15px] font-[800] text-[#111]">Sergio Morsis</h5>
-                                <p className="text-[11px] text-[#6B7280) font-[500]">43 Rides (31 reviews)</p>
+                                <p className="text-[11px] text-[#6B7280] font-[500]">
+                                    {stats?.data?.completed_bookings || 0} Rides
+                                </p>
                             </div>
                         </div>
                         <button className="w-[48px] h-[48px] rounded-full border border-[#E5E7EB] flex items-center justify-center text-[#D10000] hover:bg-[#D10000] hover:text-white transition-all shadow-sm">
@@ -87,7 +142,9 @@ export default function Dashboard() {
                         </div>
                         <div className="text-center">
                             <p className="text-[10px] font-[800] text-[#94A3B8] uppercase tracking-wider mb-2">Fare</p>
-                            <p className="text-[13px] font-[800] text-[#111]">$25.00</p>
+                            <p className="text-[13px] font-[800] text-[#111]">
+                                ${stats?.data?.revenue > 0 ? (stats.data.revenue / (stats.data.completed_bookings || 1)).toFixed(2) : '25.00'}
+                            </p>
                         </div>
                     </div>
 
