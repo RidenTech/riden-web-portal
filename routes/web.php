@@ -66,9 +66,11 @@ Route::prefix('admin')->group(function () {
             Route::get('/booking-management/detail/{id}', [BookingManagementController::class, 'show'])->name('admin.booking.detail');
         });
 
-        Route::middleware(['admin.module:Reviews & Ratings'])->get('/reviews-ratings', function () {
-            return view('admin.reviews.index');
-        })->name('admin.reviews.ratings');
+        Route::middleware(['admin.module:Reviews & Ratings'])->group(function () {
+            Route::get('/reviews-ratings', [App\Http\Controllers\Admin\ReviewManagementController::class, 'index'])->name('admin.reviews.ratings');
+            Route::post('/reviews-ratings/store', [App\Http\Controllers\Admin\ReviewManagementController::class, 'store'])->name('admin.reviews.store');
+            Route::delete('/reviews-ratings/{id}', [App\Http\Controllers\Admin\ReviewManagementController::class, 'destroy'])->name('admin.reviews.destroy');
+        });
 
         Route::middleware(['admin.module:Payment Management'])->get('/drivers-payouts', function () {
             return view('admin.payouts.index');
