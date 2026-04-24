@@ -24,18 +24,36 @@ export default function DriverDetail() {
             setLoading(true);
             const response = await getDriverById(id);
             const data = response.data || response;
+
+            if (!data) {
+                setDriver(null);
+                return;
+            }
+
             setDriver({
                 ...data,
-                name: `${data.first_name || ''} ${data.last_name || ''}`.trim(),
-                since: data.created_at ? `Since ${new Date(data.created_at).toLocaleDateString()}` : 'N/A',
-                rating: 5, // Mocked as not in sample JSON
-                reviews_count: 0,
+                id: data.id || id, // Fallback to unique_id from URL if id missing
+                unique_id: data.unique_id || id,
+                name: data.name || `${data.first_name || ''} ${data.last_name || ''}`.trim() || 'N/A',
+                since: data.created_at ? `Since ${new Date(data.created_at).toLocaleDateString()}` : (data.since || 'N/A'),
+                rating: data.rating || 5,
+                reviews_count: data.reviews_count || 0,
                 stats: {
-                    total_rides: data.total_rides || 0,
-                    completed_rides: data.completed_rides || 0,
-                    revenue: data.revenue || '$0.00'
+                    total_rides: data.total_rides || data.stats?.total_rides || 0,
+                    completed_rides: data.completed_rides || data.stats?.completed_rides || 0,
+                    revenue: data.revenue || data.stats?.revenue || '$0.00'
                 },
-                vehicle: data.vehicle || { model: 'N/A', year: 'N/A', color: 'N/A', license_plate: 'N/A', vehicle_type: 'N/A' },
+                vehicle: data.vehicle ? {
+                    ...data.vehicle,
+                    license_plate: data.vehicle.license_plate || data.vehicle.licensePlate || 'N/A',
+                    type: data.vehicle.type || data.vehicle.vehicle_type || 'N/A'
+                } : {
+                    model: data.vehicle_model || 'N/A',
+                    year: data.vehicle_year || 'N/A',
+                    color: data.vehicle_color || 'N/A',
+                    license_plate: data.license_plate || data.licensePlate || 'N/A',
+                    type: data.vehicle_type || data.type || 'N/A'
+                },
                 gender: data.gender || 'N/A',
                 phone: data.phone || 'N/A',
                 email: data.email || 'N/A',
@@ -469,8 +487,8 @@ export default function DriverDetail() {
                                             <div className="flex items-center justify-between py-6 border-b border-gray-100">
                                                 <span className="text-sm font-semibold text-gray-500 w-1/3">License Plate</span>
                                                 {isEditing ? (
-                                                    <div className="w-2/3"><InputWrapper icon="bi bi-card-text" className="h-10 mb-0"><Input value={driver.vehicle.licensePlate} onChange={e => setDriver({ ...driver, vehicle: { ...driver.vehicle, licensePlate: e.target.value } })} /></InputWrapper></div>
-                                                ) : <span className="text-sm font-bold text-[#D10000] tracking-wider w-2/3">{driver.vehicle.licensePlate}</span>}
+                                                    <div className="w-2/3"><InputWrapper icon="bi bi-card-text" className="h-10 mb-0"><Input value={driver.vehicle.license_plate} onChange={e => setDriver({ ...driver, vehicle: { ...driver.vehicle, license_plate: e.target.value } })} /></InputWrapper></div>
+                                                ) : <span className="text-sm font-bold text-[#D10000] tracking-wider w-2/3">{driver.vehicle.license_plate}</span>}
                                             </div>
                                             <div className="flex items-center justify-between py-6 border-b border-gray-100">
                                                 <span className="text-sm font-semibold text-gray-500 w-1/3">Vehicle Type</span>
@@ -654,7 +672,7 @@ export default function DriverDetail() {
                             </div>
 
                             <div className="p-6">
-                                <p className="text-[13px] font-medium text-gray-800 mb-6 font-semibold">Driver : {driver.name} (ID: #2045)</p>
+                                <p className="text-[13px] font-medium text-gray-800 mb-6 font-semibold">Driver : {driver.name} (ID: {driver.unique_id})</p>
 
                                 <div className="mb-5">
                                     <p className="text-[15px] font-bold text-gray-900 mb-3">Duration Type</p>

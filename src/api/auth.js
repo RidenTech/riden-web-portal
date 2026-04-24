@@ -44,9 +44,4 @@ export const logoutAdmin = async () => {
     } catch (error) {
         console.log("logout failed", error);
     }
-
-    localStorage.removeItem("token");
-    localStorage.removeItem("admin");
-
-    window.location.href = "/auth/login";
 };

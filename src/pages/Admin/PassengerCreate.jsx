@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
 import { Link, useNavigate } from 'react-router-dom';
-import { Label, InputWrapper, Input, Select, Button } from '@/components/UI';
+import { Label, InputWrapper, Input, Select, Button, useToast } from '@/components/UI';
+import { createPassenger } from '@/api/passengerApi';
 
 export default function PassengerCreate() {
     const navigate = useNavigate();
@@ -11,6 +12,16 @@ export default function PassengerCreate() {
     // Form States
     const [personalInfo, setPersonalInfo] = useState({ firstName: '', lastName: '', email: '', phone: '', gender: '' });
     const [securityInfo, setSecurityInfo] = useState({ password: '', confirmPassword: '' });
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const { showToast } = useToast();
+
+    const handleImageChange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            setSelectedImage(e.target.files[0]);
+        }
+    };
+
     const [errors, setErrors] = useState({});
 
     // Validation
@@ -49,9 +60,33 @@ export default function PassengerCreate() {
         if (activeTab === 'security') setActiveTab('personal');
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (validateSecurity()) {
-            navigate('/passenger');
+            try {
+                setLoading(true);
+                const formData = new FormData();
+                formData.append('first_name', personalInfo.firstName);
+                formData.append('last_name', personalInfo.lastName);
+                formData.append('email', personalInfo.email);
+                formData.append('phone', personalInfo.phone);
+                formData.append('gender', personalInfo.gender);
+                formData.append('password', securityInfo.password);
+                formData.append('password_confirmation', securityInfo.confirmPassword);
+
+                if (selectedImage) {
+                    formData.append('avatar', selectedImage);
+                }
+
+                await createPassenger(formData);
+                showToast('Passenger created successfully!', 'success');
+                navigate('/passenger');
+            } catch (error) {
+                console.error("Error creating passenger:", error);
+                const message = error.response?.data?.message || "Failed to create passenger";
+                showToast(message, 'error');
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
@@ -127,7 +162,7 @@ export default function PassengerCreate() {
                                     <Label className="md:w-1/3 text-gray-700 font-semibold mb-0">Profile Image</Label>
                                     <div className="md:w-2/3">
                                         <InputWrapper icon="bi bi-image" style={{ borderStyle: 'dashed' }}>
-                                            <Input type="file" accept="image/*" />
+                                            <Input type="file" accept="image/*" onChange={handleImageChange} />
                                         </InputWrapper>
                                     </div>
                                 </div>
@@ -247,9 +282,10 @@ export default function PassengerCreate() {
                         ) : (
                             <button
                                 onClick={handleSubmit}
-                                className="bg-[#D10000] hover:bg-[#b00000] text-white text-sm font-semibold px-8 py-2.5 rounded-lg transition-colors flex items-center gap-1"
+                                disabled={loading}
+                                className="bg-[#D10000] hover:bg-[#b00000] text-white text-sm font-semibold px-8 py-2.5 rounded-lg transition-colors flex items-center gap-1 disabled:opacity-50"
                             >
-                                Submit Registration <i className="bi bi-check2 ml-1"></i>
+                                {loading ? 'Registering...' : 'Submit Registration'} <i className="bi bi-check2 ml-1"></i>
                             </button>
                         )}
                     </div>

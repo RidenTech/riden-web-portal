@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastProvider } from './components/UI';
 import ProtectedRoute from './routes/ProtectedRoute';
+import PublicRoute from './routes/PublicRoute';
 import Login from './pages/Auth/Login';
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import Dashboard from './pages/Admin/Dashboard';
@@ -36,6 +37,7 @@ import AdminDetail from './pages/Admin/AdminDetail';
 import ReviewManagement from './pages/Admin/ReviewManagement';
 import ManageNotifications from './pages/Admin/ManageNotifications';
 import Unauthorized from './pages/Unauthorized';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -43,8 +45,10 @@ function App() {
       <Router>
         <Routes>
           {/* Public Routes */}
-          <Route path="/auth/login" element={<Login />} />
-          <Route path="/auth/forgot" element={<ForgotPassword />} />
+          <Route element={<PublicRoute />}>
+            <Route path="/auth/login" element={<Login />} />
+            <Route path="/auth/forgot" element={<ForgotPassword />} />
+          </Route>
 
           {/* Core Protected Routes */}
           <Route element={<ProtectedRoute />}>
@@ -66,8 +70,8 @@ function App() {
           <Route element={<ProtectedRoute module="Admin Roles" />}>
             <Route path="/admin-roles" element={<AdminRoles />} />
             <Route path="/admin-roles/create" element={<AdminCreate />} />
-            <Route path="/admin-roles/edit" element={<AdminEdit />} />
-            <Route path="/admin-roles/detail" element={<AdminDetail />} />
+            <Route path="/admin-roles/edit/:id" element={<AdminEdit />} />
+            <Route path="/admin-roles/detail/:id" element={<AdminDetail />} />
           </Route>
 
           {/* Drivers */}
@@ -82,7 +86,7 @@ function App() {
           <Route element={<ProtectedRoute module="Passenger Management" />}>
             <Route path="/passenger" element={<PassengerManagement />} />
             <Route path="/passenger/create" element={<PassengerCreate />} />
-            <Route path="/passenger/detail" element={<PassengerDetail />} />
+            <Route path="/passenger/detail/:id" element={<PassengerDetail />} />
             <Route path="/passenger/requests" element={<PassengerRequest />} />
           </Route>
 
@@ -90,7 +94,7 @@ function App() {
           <Route element={<ProtectedRoute module="Booking Management" />}>
             <Route path="/bookings" element={<BookingManagement />} />
             <Route path="/bookings/create" element={<BookingCreate />} />
-            <Route path="/bookings/detail" element={<BookingDetail />} />
+            <Route path="/bookings/detail/:id" element={<BookingDetail />} />
           </Route>
 
           {/* Vehicles */}
@@ -135,6 +139,8 @@ function App() {
             <Route path="/reviews" element={<ReviewManagement />} />
           </Route>
 
+          {/* Catch All - 404 */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </ToastProvider >

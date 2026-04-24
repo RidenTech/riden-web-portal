@@ -1,110 +1,139 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Button, Badge } from '@/components/UI';
-import { getAdminProfile } from '../../api/auth'
+import { Label, InputWrapper, Input } from '@/components/UI';
+import { getAdminProfile } from '../../api/auth';
 
 export default function AdminProfile() {
     const [admin, setAdmin] = useState(null);
-    const modules = [
-        'Dashboard', 'Reviews & Ratings', 'Passenger Management',
-        'Analytics/Stats', 'Promo Code Management', 'Advertising Management'
+    const [loading, setLoading] = useState(true);
+
+    const allModules = [
+        'Dashboard', 'Analytics/Stats', 'Admin Roles', 'Driver Management',
+        'Vehicles Management', 'Booking Management', 'Reviews & Ratings',
+        'Promo code Management', 'Fare Management', 'Commission Management',
+        'Payment Management', 'Report Management', 'Passenger Management',
+        'Advertising Management', 'Support Ticket', 'Notifications',
+        'CMS management', 'Settings'
     ];
+
     useEffect(() => {
         const fetchProfile = async () => {
             try {
+                setLoading(true);
                 const res = await getAdminProfile();
                 setAdmin(res.data);
             }
             catch (error) {
                 console.log("Error fetching profile", error);
-
+            } finally {
+                setLoading(false);
             }
         }
         fetchProfile();
-    }, [])
-    return (
-        <AdminLayout title="Profile">
-            <div className="bg-white rounded-[30px] shadow-riden border border-[#E5E7EB] overflow-hidden">
-                {/* Header Section */}
-                <div className="p-10 pb-0 flex items-center gap-6 mb-12">
-                    <button className="w-10 h-10 flex items-center justify-center rounded-xl border border-gray-100 text-[#111] hover:bg-gray-50 transition-colors">
-                        <i className="bi bi-chevron-left"></i>
-                    </button>
-                    <div className="relative">
-                        <img src="https://i.pravatar.cc/100?img=5" className="w-[80px] h-[80px] rounded-full border-4 border-white shadow-xl" alt="Admin" />
-                        <div className="absolute top-1 left-1 w-4 h-4 bg-[#10B981] border-2 border-white rounded-full"></div>
-                    </div>
-                    <div className="flex-1">
-                        <h2 className="text-2xl font-[800] text-gray-900">{admin?.name || 'Loading...'}</h2>
-                        <span className="text-[14px] font-[800] text-[#D10000]">{admin?.role || 'Admininistrator'}</span>
-                    </div>
+    }, []);
 
+    if (loading) {
+        return (
+            <AdminLayout title="Profile">
+                <div className="flex justify-center items-center h-[400px]">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D10000]"></div>
                 </div>
+            </AdminLayout>
+        );
+    }
 
-                <div className="px-10 pb-10">
-                    {/* Personal Details */}
-                    <div className="mb-12">
-                        <h3 className="text-[11px] font-[800] text-gray-400 uppercase tracking-widest mb-6 border-b border-[#f1f1f1] pb-4">Personal Details</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="flex items-center gap-4 p-5 bg-[#fdfdfd] border border-gray-100 rounded-[20px] shadow-sm">
-                                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#D10000] text-xl shadow-sm border border-gray-50">
-                                    <i className="bi bi-envelope"></i>
-                                </div>
-                                <div>
-                                    <p className="text-[10px] font-[800] text-gray-400 uppercase tracking-wider mb-0">Email</p>
-                                    <p className="text-sm font-[800] text-gray-900">{admin?.email || 'Loading...'}</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-4 p-5 bg-[#fdfdfd] border border-gray-100 rounded-[20px] shadow-sm">
-                                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#D10000] text-xl shadow-sm border border-gray-50">
-                                    <i className="bi bi-telephone"></i>
-                                </div>
-                                <div>
-                                    <p className="text-[10px] font-[800] text-gray-400 uppercase tracking-wider mb-0">Phone Number</p>
-                                    <p className="text-sm font-[800] text-gray-900">{admin?.phone || 'N/A'}</p>
-                                </div>
+    return (
+        <AdminLayout title="My Profile">
+            <div className="mx-auto">
+                <div className="bg-white rounded-[30px] shadow-sm border border-[#E5E7EB] p-6">
+
+                    {/* Profile Header section with Avatar */}
+                    <div className="flex items-center gap-6 px-4 mb-10 pb-8 border-b border-gray-50">
+                        <div className="relative">
+                            <img
+                                src={admin?.avatar || "https://ui-avatars.com/api/?name=" + (admin?.name || 'Admin') + "&background=random"}
+                                className="w-24 h-24 rounded-full border-4 border-white shadow-xl bg-gray-100"
+                                alt="Admin"
+                            />
+                            <div className="absolute bottom-1 right-1 w-5 h-5 bg-[#10B981] border-2 border-white rounded-full"></div>
+                        </div>
+                        <div>
+                            <h2 className="text-3xl font-black text-gray-900 tracking-tighter uppercase italic">{admin?.name || 'Admin User'}</h2>
+                            <span className="text-[14px] font-bold text-[#D10000] uppercase tracking-widest">{admin?.role || 'Administrator'}</span>
+                        </div>
+                    </div>
+
+                    {/* Admin Details Section */}
+                    <div className="bg-[#d10000] rounded-full p-4 text-[14px] font-bold text-white uppercase tracking-widest mb-6 flex items-center gap-2">
+                        My Personal Details
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 mb-12">
+                        <div>
+                            <Label className="text-gray-500 font-bold uppercase tracking-tight">Full Name</Label>
+                            <InputWrapper icon="bi bi-person" className="bg-gray-50 border-transparent">
+                                <div className="py-2.5 px-1 text-sm font-bold text-gray-900">{admin?.name || 'N/A'}</div>
+                            </InputWrapper>
+                        </div>
+
+                        <div>
+                            <Label className="text-gray-500 font-bold uppercase tracking-tight">Email Address</Label>
+                            <InputWrapper icon="bi bi-envelope" className="bg-gray-50 border-transparent">
+                                <div className="py-2.5 px-1 text-sm font-bold text-gray-900">{admin?.email || 'N/A'}</div>
+                            </InputWrapper>
+                        </div>
+
+                        <div>
+                            <Label className="text-gray-500 font-bold uppercase tracking-tight">Phone Number</Label>
+                            <InputWrapper icon="bi bi-telephone" className="bg-gray-50 border-transparent">
+                                <div className="py-2.5 px-1 text-sm font-bold text-gray-900">{admin?.phone || 'N/A'}</div>
+                            </InputWrapper>
+                        </div>
+
+                        <div>
+                            <Label className="text-gray-500 font-bold uppercase tracking-tight">Account Status</Label>
+                            <div className="mt-1">
+                                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 text-green-700 text-xs font-black uppercase tracking-widest border border-green-100">
+                                    <i className="bi bi-patch-check-fill"></i>
+                                    Verified Account
+                                </span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Access Modules */}
-                    <div className="mb-12">
-                        <h3 className="text-[11px] font-[800] text-gray-400 uppercase tracking-widest mb-6 border-b border-[#f1f1f1] pb-4">Access Modules</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {modules.map((m, i) => (
-                                <div key={i} className="flex items-center gap-3 p-4 bg-white border border-gray-100 rounded-[15px] hover:bg-gray-50 transition-colors shadow-sm">
-                                    <i className="bi bi-check-circle-fill text-[#10B981]"></i>
-                                    <span className="text-[14px] font-[800] text-gray-700">{m}</span>
-                                </div>
-                            ))}
-                        </div>
+                    {/* Access Module Section */}
+                    <div className="bg-[#d10000] rounded-full p-4 text-[14px] font-bold text-white uppercase tracking-widest mb-6 flex items-center gap-2">
+                        My Authorized Modules
                     </div>
 
-                    {/* Password Section */}
-                    <div className="mb-12">
-                        <h3 className="text-[11px] font-[800] text-gray-400 uppercase tracking-widest mb-6 border-b border-[#f1f1f1] pb-4">Password</h3>
-                        <div className="p-5 bg-[#fdfdfd] border border-gray-100 rounded-[20px] flex justify-between items-center shadow-sm">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#D10000] text-xl shadow-sm border border-gray-50">
-                                    <i className="bi bi-lock"></i>
-                                </div>
-                                <div>
-                                    <p className="text-[10px] font-[800] text-gray-400 uppercase tracking-wider mb-0">Password</p>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-sm font-[800] text-gray-900"></span>
-                                        <i className="bi bi-eye text-gray-400 cursor-pointer hover:text-gray-900 transition-colors"></i>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-y-5 gap-x-4 px-4 mb-4">
+                        {allModules.map((module, i) => {
+                            // Check if current admin has this module - Default to some modules if not loaded
+                            const assignedModules = admin?.modules || [];
+                            const isAssigned = admin?.is_super || assignedModules.includes(module);
+
+                            return (
+                                <div key={i} className="flex items-center gap-3 group">
+                                    <div className={`w-5 h-5 border-2 rounded-md flex items-center justify-center transition-all ${isAssigned ? 'bg-[#D10000] border-[#D10000]' : 'bg-gray-50 border-gray-200'}`}>
+                                        {isAssigned && <i className="bi bi-check text-white text-xs"></i>}
                                     </div>
+                                    <span className={`text-[13px] font-bold uppercase tracking-tight transition-colors ${isAssigned ? 'text-gray-900' : 'text-gray-300'}`}>
+                                        {module}
+                                    </span>
                                 </div>
-                            </div>
-                            <p className="text-[11px] text-gray-400 font-medium">Last Updated on 24 Dec, 2024</p>
-                        </div>
+                            );
+                        })}
                     </div>
 
-                    <div className="flex justify-end">
-                        <Button className="px-12 py-3">
-                            Update Password
-                        </Button>
-                    </div>
+                    {admin?.is_super && (
+                        <div className="mt-8 px-4 py-4 bg-red-50 rounded-2xl border border-red-100">
+                            <p className="text-xs font-bold text-[#D10000] uppercase tracking-widest flex items-center gap-2">
+                                <i className="bi bi-shield-lock-fill text-lg"></i>
+                                Super Admin Privilege Active
+                            </p>
+                            <p className="text-[11px] text-gray-500 mt-1">You have full administrative access to all system modules and configuration settings.</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </AdminLayout>

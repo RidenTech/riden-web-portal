@@ -150,7 +150,7 @@ export default function BookingManagement() {
                 {bookings.map((booking) => (
                     <tr
                         key={booking.id}
-                        onClick={() => navigate('/bookings/detail', { state: { bookingStatus: booking.status } })}
+                        onClick={() => navigate(`/bookings/detail/${encodeURIComponent(booking.id.replace('#', ''))}`, { state: { bookingStatus: booking.status } })}
                         className="cursor-pointer hover:bg-black/[0.02] transition-colors border-b border-[#F3F4F6]"
                     >
                         <td className="py-[18px] px-[20px]">

@@ -15,7 +15,10 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
             await logoutAdmin();
             localStorage.removeItem('token');
             localStorage.removeItem('admin');
-            navigate('/auth/login');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                navigate('/auth/login');
+            }, 300);
         } catch (error) {
             showToast(error.response?.data?.message || 'Logout failed', 'error');
         }

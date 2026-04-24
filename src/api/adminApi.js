@@ -12,6 +12,19 @@ export const createAdmin = async (data) => {
 
 
 
+export const getAdminById = async (id) => {
+    const res = await api.get(`/admin/roles/${id}`);
+    return res.data;
+};
+
+export const updateAdmin = async (id, data) => {
+    const res = await api.post(`/admin/roles/${id}`, {
+        ...data,
+        _method: 'PUT'
+    });
+    return res.data;
+};
+
 export const deleteAdmin = async (id) => {
     const res = await api.post(`/admin/roles/${id}`, {
         _method: "DELETE"

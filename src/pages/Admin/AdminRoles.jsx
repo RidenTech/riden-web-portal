@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
 import { Table, Button, SearchBar, DeleteModal, Pagination, DatePickerStyles, useToast } from '@/components/UI';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { startOfWeek } from 'date-fns';
 import { getAdmins, deleteAdmin } from '../../api/adminApi';
 
@@ -9,6 +9,7 @@ export default function AdminRoles() {
     const [adminRoles, setAdminRoles] = useState([]);
     const [filteredAdmins, setFilteredAdmins] = useState([]);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
     const { showToast } = useToast();
     const [startDate, setStartDate] = useState(startOfWeek(new Date()));
     const [endDate, setEndDate] = useState(new Date());
@@ -207,7 +208,11 @@ export default function AdminRoles() {
                             </tr>
                         ) : (
                             filteredAdmins.map((admin) => (
-                                <tr key={admin.id} className="group hover:bg-black/[0.03] transition-colors border-b border-[#F3F4F6]">
+                                <tr
+                                    key={admin.id}
+                                    onClick={() => navigate(`/admin-roles/detail/${admin.id}`)}
+                                    className="group hover:bg-black/[0.03] transition-colors border-b border-[#F3F4F6] cursor-pointer"
+                                >
 
                                     <td className="py-[18px] px-[30px] text-[15px] font-[600] text-[#111] tracking-tight">
                                         <div className="flex items-center gap-2">
@@ -217,11 +222,7 @@ export default function AdminRoles() {
                                             >
                                                 {admin.name}
                                             </Link>
-                                            {admin.is_super && (
-                                                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">
-                                                    Super
-                                                </span>
-                                            )}
+
                                             {currentAdmin.id === admin.id && (
                                                 <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
                                                     You
@@ -242,6 +243,7 @@ export default function AdminRoles() {
                                         <div className="flex gap-3">
                                             <Link
                                                 to={`/admin-roles/edit/${admin.id}`}
+                                                onClick={(e) => e.stopPropagation()}
                                                 className="w-10 h-10 text-green-500 flex items-center justify-start hover:text-green-600 transition-all"
                                                 title="Edit Admin"
                                             >
@@ -249,7 +251,10 @@ export default function AdminRoles() {
                                             </Link>
 
                                             <button
-                                                onClick={() => handleDeleteClick(admin)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDeleteClick(admin);
+                                                }}
                                                 disabled={currentAdmin.id === admin.id || isDeleting}
                                                 className={`w-10 h-10 flex items-center justify-start transition-all ${currentAdmin.id === admin.id || isDeleting
                                                     ? 'text-gray-300 cursor-not-allowed'

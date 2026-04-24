@@ -12,13 +12,13 @@ export const getDrivers = async (params = {}) => {
  * Fetch a single driver's details by ID
  */
 export const getDriverById = async (id) => {
-    // Some unique IDs come with #, some don't. We search specifically for the ID via the index route
-    // if the dedicated show route isn't configured for unique strings.
+    // Reverting to search approach as the direct show route was failing with numeric IDs
+    // and the backend search on the index route effectively finds the driver by unique_id.
     const res = await api.get('/admin/drivers', {
         params: { search: id }
     });
 
-    // Extract deep nested data: res.data.data.data (based on your Postman example)
+    // Extract deep nested data: res.data.data.data (standard Laravel paginated structure)
     const list = res.data?.data?.data || res.data?.data || [];
     return { data: list[0] || null };
 };

@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Link } from 'react-router-dom';
-import { InputWrapper, Input } from '@/components/UI';
+import { Link, useParams } from 'react-router-dom';
+import { InputWrapper, Input, useToast } from '@/components/UI';
+import { getPassengerById } from '@/api/passengerApi';
+import { STORAGE_URL } from '@/api/api';
 
 export default function PassengerDetail() {
     const [activeTab, setActiveTab] = useState('personal');
@@ -11,24 +13,50 @@ export default function PassengerDetail() {
     const [isEditing, setIsEditing] = useState(false);
     const [showToast, setShowToast] = useState(false);
 
-    const [passenger, setPassenger] = useState({
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        phone: '+1 234 567 890',
-        gender: 'Male',
-        unique_id: 'RID-PASS-10023',
-        since: 'Since March 10, 2024',
-        rating: 4.5,
-        payments: {
-            p1: '********234', p2: '********234', p3: '********234',
-            o1: '********234', o2: '********234'
-        },
-        stats: {
-            total_rides: 0,
-            completed_rides: 0,
-            cancelled_rides: 0
+    const { id } = useParams();
+    const { showToast: uiShowToast } = useToast();
+    const [loading, setLoading] = useState(true);
+    const [passenger, setPassenger] = useState(null);
+
+    const fetchPassengerDetail = useCallback(async () => {
+        try {
+            setLoading(true);
+            const response = await getPassengerById(id);
+            const data = response.data || response;
+
+            if (!data) {
+                setPassenger(null);
+                return;
+            }
+
+            setPassenger({
+                ...data,
+                name: data.name || `${data.first_name || ''} ${data.last_name || ''}`.trim() || 'N/A',
+                since: data.created_at ? `Since ${new Date(data.created_at).toLocaleDateString()}` : (data.since || 'N/A'),
+                rating: data.rating || 5.0,
+                unique_id: data.unique_id || id,
+                stats: {
+                    total_rides: data.total_rides || data.stats?.total_rides || 0,
+                    completed_rides: data.completed_rides || data.stats?.completed_rides || 0,
+                    cancelled_rides: data.cancelled_rides || data.stats?.cancelled_rides || 0
+                },
+                payments: data.payments || {
+                    p1: 'N/A', p2: 'N/A', p3: 'N/A',
+                    o1: 'N/A', o2: 'N/A'
+                }
+            });
+            setPassengerStatus(data.status?.toLowerCase() || 'active');
+        } catch (error) {
+            console.error("Error fetching passenger:", error);
+            uiShowToast("Failed to load passenger details", "error");
+        } finally {
+            setLoading(false);
         }
-    });
+    }, [id]);
+
+    useEffect(() => {
+        fetchPassengerDetail();
+    }, [fetchPassengerDetail]);
 
     const handleEditToggle = () => {
         if (isEditing) {
@@ -44,6 +72,33 @@ export default function PassengerDetail() {
         { id: 'payments', label: 'Payment Methods', icon: 'bi bi-wallet-fill' }
     ];
 
+    if (loading) {
+        return (
+            <AdminLayout title="Passenger Profile">
+                <div className="flex justify-center items-center h-[600px]">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D10000]"></div>
+                </div>
+            </AdminLayout>
+        );
+    }
+
+    if (!passenger) {
+        return (
+            <AdminLayout title="Passenger Profile">
+                <div className="flex flex-col items-center justify-center h-[600px] text-center px-4">
+                    <div className="w-24 h-24 bg-red-50 rounded-full flex items-center justify-center mb-6">
+                        <i className="bi bi-person-x-fill text-4xl text-[#D10000]"></i>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800 mb-2">Passenger not found</h3>
+                    <p className="text-gray-500 mb-8 max-w-sm">We couldn't find the passenger you're looking for. They may have been deleted or the ID is incorrect.</p>
+                    <Link to="/passenger" className="bg-[#D10000] text-white px-8 py-3 rounded-full font-bold hover:bg-[#b00000] transition-colors">
+                        Back to Passengers
+                    </Link>
+                </div>
+            </AdminLayout>
+        );
+    }
+
     return (
         <AdminLayout title="Passenger Profile">
             <div className="max-w-6xl mx-auto mb-4">
@@ -56,9 +111,13 @@ export default function PassengerDetail() {
                         </Link>
                         <div className="relative">
                             <div className="w-14 h-14 rounded-full overflow-hidden shrink-0 bg-gray-200">
-                                <img src={`https://ui-avatars.com/api/?name=${passenger.name}&background=random`} className="w-full h-full object-cover" alt="" />
+                                <img
+                                    src={passenger.avatar ? `${STORAGE_URL}/${passenger.avatar}` : `https://ui-avatars.com/api/?name=${passenger.name}&background=random`}
+                                    className="w-full h-full object-cover"
+                                    alt=""
+                                />
                             </div>
-                            <div className="absolute top-0 -left-1 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full"></div>
+                            <div className={`absolute top-0 -left-1 w-3.5 h-3.5 border-2 border-white rounded-full ${passengerStatus === 'active' ? 'bg-green-500' : 'bg-gray-400'}`}></div>
                         </div>
                         <div>
                             <h2 className="text-xl font-bold text-black">{passenger.name}</h2>
@@ -190,7 +249,7 @@ export default function PassengerDetail() {
                                             <span className="text-sm font-semibold text-gray-500 w-1/3">Profile Image</span>
                                             <div className="w-2/3 flex items-center gap-4">
                                                 <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-gray-200">
-                                                    <img src={`https://ui-avatars.com/api/?name=${passenger.name}&background=random`} className="w-full h-full object-cover" alt="" />
+                                                    <img src={passenger.avatar ? `${STORAGE_URL}/${passenger.avatar}` : `https://ui-avatars.com/api/?name=${passenger.name}&background=random`} className="w-full h-full object-cover" alt="" />
                                                 </div>
                                                 <label className="px-4 py-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 text-xs font-bold rounded-lg cursor-pointer transition-colors shadow-sm">
                                                     Change Image
