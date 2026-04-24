@@ -9,7 +9,7 @@ use App\Http\Controllers\Admin\VehicleManagementController;
 
 // Root Redirect to Admin Login or Dashboard
 Route::get('/', function () {
-    return redirect()->route('admin.login');
+    return response()->json(['status' => 'success', 'message' => 'Please authenticate via API']);
 });
 
 // Authentication Routes
@@ -22,7 +22,7 @@ Route::prefix('admin')->group(function () {
 
     // Password Reset Routes
     Route::get('/forgot', function () {
-        return view('admin.auth.forgot');
+        return response()->json(['status' => 'success', 'message' => 'Forgot password endpoint']);
     })->name('admin.forgot');
 
     Route::get('/reset', [AuthController::class, 'showUpdatePassword'])->name('admin.password.reset');
@@ -32,20 +32,20 @@ Route::prefix('admin')->group(function () {
     Route::middleware(['auth:admin', 'admin.active'])->group(function () {
         Route::middleware(['admin.module:Dashboard'])->group(function () {
             Route::get('/', function () {
-                return view('admin.dashboard.index');
+                return response()->json(['status' => 'success', 'message' => 'Admin Dashboard']);
             })->name('admin.dashboard');
 
             Route::get('/dashboard', function () {
-                return view('admin.dashboard.index');
+                return response()->json(['status' => 'success', 'message' => 'Admin Dashboard']);
             })->name('admin.dashboard.alias');
         });
 
         Route::get('/profile', function () {
-            return view('admin.profile');
+            return response()->json(['status' => 'success', 'message' => 'Admin Profile Data']);
         })->name('admin.profile');
 
         Route::middleware(['admin.module:Analytics/Stats'])->get('/analytics', function () {
-            return view('admin.analytics.index');
+            return response()->json(['status' => 'success', 'message' => 'Analytics Data']);
         })->name('admin.analytics.index');
 
         Route::middleware(['admin.module:Passenger Management'])->group(function () {
@@ -73,42 +73,42 @@ Route::prefix('admin')->group(function () {
         });
 
         Route::middleware(['admin.module:Payment Management'])->get('/drivers-payouts', function () {
-            return view('admin.payouts.index');
+            return response()->json(['status' => 'success', 'message' => 'Driver Payouts Data']);
         })->name('admin.payouts.drivers');
 
         Route::middleware(['admin.module:Commission Management'])->get('/commission-management', function () {
-            return view('admin.commission.index');
+            return response()->json(['status' => 'success', 'message' => 'Commission Data']);
         })->name('admin.commission.index');
 
         Route::middleware(['admin.module:Fare Management'])->get('/fare-management', function () {
-            return view('admin.fare.index');
+            return response()->json(['status' => 'success', 'message' => 'Fare Data']);
         })->name('admin.fare.management');
 
         // Support Tickets
         Route::middleware(['admin.module:Support Ticket'])->group(function () {
             Route::group(['prefix' => 'support-tickets', 'as' => 'admin.support.'], function () {
                 Route::get('/', function () {
-                    return view('admin.support.complaints.index');
+                    return response()->json(['status' => 'success', 'message' => 'Support Tickets List']);
                 })->name('complaints.index');
 
                 Route::get('/{id}', function ($id) {
-                    return view('admin.support.complaints.detail', ['id' => $id]);
+                    return response()->json(['status' => 'success', 'message' => 'Support Ticket Details', 'data' => ['id' => $id]]);
                 })->name('complaints.detail');
             });
         });
 
         Route::middleware(['admin.module:Notifications'])->group(function () {
             Route::get('/alerts', function () {
-                return view('admin.alerts.index');
+                return response()->json(['status' => 'success', 'message' => 'Alerts Data']);
             })->name('admin.alerts.index');
 
             Route::get('/alerts/send', function () {
-                return view('admin.alerts.send');
+                return response()->json(['status' => 'success', 'message' => 'Send Alert Endpoint']);
             })->name('admin.alerts.send');
         });
 
         Route::middleware(['admin.module:CMS management'])->get('/cms-management', function () {
-            return view('admin.cms.index');
+            return response()->json(['status' => 'success', 'message' => 'CMS Data']);
         })->name('admin.cms.index');
 
         Route::middleware(['admin.module:Admin Roles'])->group(function () {
@@ -134,7 +134,7 @@ Route::prefix('admin')->group(function () {
                 
                 // Keep these for now if they are used elsewhere, but point to logic later
                 Route::get('/requests', function () {
-                    return view('admin.drivers.requests');
+                    return response()->json(['status' => 'success', 'message' => 'Driver Requests']);
                 })->name('requests');
                 Route::get('/active/view/{id}', [DriverManagementController::class, 'show'])->name('active.view');
             });
@@ -142,11 +142,11 @@ Route::prefix('admin')->group(function () {
 
         Route::middleware(['admin.module:Promo code Management'])->group(function () {
             Route::get('/promo-management', function () {
-                return view('admin.promo.index');
+                return response()->json(['status' => 'success', 'message' => 'Promo Codes List']);
             })->name('admin.promo.index');
 
             Route::get('/promo-management/detail', function () {
-                return view('admin.promo.detail');
+                return response()->json(['status' => 'success', 'message' => 'Promo Code Details']);
             })->name('admin.promo.detail');
         });
         // Vehicle Management

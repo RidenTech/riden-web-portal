@@ -39,10 +39,26 @@ class ReviewManagementController extends Controller
                 ];
             }
 
-            return view('admin.reviews.index', compact('tab', 'drivers', 'reviews', 'totalReviews', 'averageRating', 'ratingProgress'));
+            return response()->json([
+                'status' => 'success',
+                'tab' => $tab,
+                'data' => [
+                    'drivers' => $drivers,
+                    'reviews' => $reviews,
+                    'stats' => [
+                        'totalReviews' => $totalReviews,
+                        'averageRating' => $averageRating,
+                        'ratingProgress' => $ratingProgress
+                    ]
+                ]
+            ]);
         }
 
-        return view('admin.reviews.index', compact('tab'));
+        return response()->json([
+            'status' => 'success',
+            'tab' => $tab,
+            'data' => []
+        ]);
     }
 
     public function store(Request $request)
@@ -54,14 +70,18 @@ class ReviewManagementController extends Controller
             'review_text' => 'required|string'
         ]);
 
-        DriverReview::create([
+        $review = DriverReview::create([
             'driver_id' => $request->driver_id,
             'reviewer_name' => $request->reviewer_name,
             'rating' => $request->rating,
             'review_text' => $request->review_text,
         ]);
 
-        return redirect()->back()->with('success', 'Review added successfully!');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Review added successfully!',
+            'data' => $review
+        ]);
     }
 
     public function destroy($id)
@@ -69,6 +89,9 @@ class ReviewManagementController extends Controller
         $review = DriverReview::findOrFail($id);
         $review->delete();
 
-        return redirect()->back()->with('success', 'Review deleted successfully!');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Review deleted successfully!'
+        ]);
     }
 }
