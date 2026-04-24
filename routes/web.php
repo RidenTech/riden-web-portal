@@ -1,163 +1,163 @@
 <?php
 
-use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\AdminRoleController;
-use App\Http\Controllers\Admin\PassengerManagementController;
-use App\Http\Controllers\Admin\DriverManagementController;
-use App\Http\Controllers\Admin\BookingManagementController;
-use App\Http\Controllers\Admin\VehicleManagementController;
+// use App\Http\Controllers\Admin\AuthController;
+// use App\Http\Controllers\Admin\AdminRoleController;
+// use App\Http\Controllers\Admin\PassengerManagementController;
+// use App\Http\Controllers\Admin\DriverManagementController;
+// use App\Http\Controllers\Admin\BookingManagementController;
+// use App\Http\Controllers\Admin\VehicleManagementController;
 
-// Root Redirect to Admin Login or Dashboard
-Route::get('/', function () {
-    return response()->json(['status' => 'success', 'message' => 'Please authenticate via API']);
-});
+// // Root Redirect to Admin Login or Dashboard
+// Route::get('/', function () {
+//     return response()->json(['status' => 'success', 'message' => 'Please authenticate via API']);
+// });
 
-// Authentication Routes
-Route::prefix('admin')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('admin.login');
-    Route::post('/login', [AuthController::class, 'login'])->name('admin.login.post');
-    Route::get('/register', [AuthController::class, 'showRegister'])->name('admin.register');
-    Route::post('/register', [AuthController::class, 'register'])->name('admin.register.post');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
+// // Authentication Routes
+// Route::prefix('admin')->group(function () {
+//     Route::get('/login', [AuthController::class, 'showLogin'])->name('admin.login');
+//     Route::post('/login', [AuthController::class, 'login'])->name('admin.login.post');
+//     Route::get('/register', [AuthController::class, 'showRegister'])->name('admin.register');
+//     Route::post('/register', [AuthController::class, 'register'])->name('admin.register.post');
+//     Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
-    // Password Reset Routes
-    Route::get('/forgot', function () {
-        return response()->json(['status' => 'success', 'message' => 'Forgot password endpoint']);
-    })->name('admin.forgot');
+//     // Password Reset Routes
+//     Route::get('/forgot', function () {
+//         return response()->json(['status' => 'success', 'message' => 'Forgot password endpoint']);
+//     })->name('admin.forgot');
 
-    Route::get('/reset', [AuthController::class, 'showUpdatePassword'])->name('admin.password.reset');
-    Route::post('/reset', [AuthController::class, 'updatePassword'])->name('admin.password.update');
+//     Route::get('/reset', [AuthController::class, 'showUpdatePassword'])->name('admin.password.reset');
+//     Route::post('/reset', [AuthController::class, 'updatePassword'])->name('admin.password.update');
 
-    // Protected Admin Routes
-    Route::middleware(['auth:admin', 'admin.active'])->group(function () {
-        Route::middleware(['admin.module:Dashboard'])->group(function () {
-            Route::get('/', function () {
-                return response()->json(['status' => 'success', 'message' => 'Admin Dashboard']);
-            })->name('admin.dashboard');
+//     // Protected Admin Routes
+//     Route::middleware(['auth:admin', 'admin.active'])->group(function () {
+//         Route::middleware(['admin.module:Dashboard'])->group(function () {
+//             Route::get('/', function () {
+//                 return response()->json(['status' => 'success', 'message' => 'Admin Dashboard']);
+//             })->name('admin.dashboard');
 
-            Route::get('/dashboard', function () {
-                return response()->json(['status' => 'success', 'message' => 'Admin Dashboard']);
-            })->name('admin.dashboard.alias');
-        });
+//             Route::get('/dashboard', function () {
+//                 return response()->json(['status' => 'success', 'message' => 'Admin Dashboard']);
+//             })->name('admin.dashboard.alias');
+//         });
 
-        Route::get('/profile', function () {
-            return response()->json(['status' => 'success', 'message' => 'Admin Profile Data']);
-        })->name('admin.profile');
+//         Route::get('/profile', function () {
+//             return response()->json(['status' => 'success', 'message' => 'Admin Profile Data']);
+//         })->name('admin.profile');
 
-        Route::middleware(['admin.module:Analytics/Stats'])->get('/analytics', function () {
-            return response()->json(['status' => 'success', 'message' => 'Analytics Data']);
-        })->name('admin.analytics.index');
+//         Route::middleware(['admin.module:Analytics/Stats'])->get('/analytics', function () {
+//             return response()->json(['status' => 'success', 'message' => 'Analytics Data']);
+//         })->name('admin.analytics.index');
 
-        Route::middleware(['admin.module:Passenger Management'])->group(function () {
-            Route::get('/passenger-management', [PassengerManagementController::class, 'index'])->name('admin.passenger.management');
-            Route::get('/passenger-management/create', [PassengerManagementController::class, 'create'])->name('admin.passenger.create');
-            Route::post('/passenger-management/store', [PassengerManagementController::class, 'store'])->name('admin.passenger.store');
-            Route::get('/passenger-management/detail/{id}', [PassengerManagementController::class, 'show'])->name('admin.passenger.detail');
-            Route::get('/passenger-management/edit/{id}', [PassengerManagementController::class, 'edit'])->name('admin.passenger.edit');
-            Route::put('/passenger-management/update/{id}', [PassengerManagementController::class, 'update'])->name('admin.passenger.update');
-            Route::delete('/passenger-management/delete/{id}', [PassengerManagementController::class, 'destroy'])->name('admin.passenger.delete');
-            Route::patch('/passenger-management/status/{id}', [PassengerManagementController::class, 'toggleStatus'])->name('admin.passenger.toggleStatus');
-        });
+//         Route::middleware(['admin.module:Passenger Management'])->group(function () {
+//             Route::get('/passenger-management', [PassengerManagementController::class, 'index'])->name('admin.passenger.management');
+//             Route::get('/passenger-management/create', [PassengerManagementController::class, 'create'])->name('admin.passenger.create');
+//             Route::post('/passenger-management/store', [PassengerManagementController::class, 'store'])->name('admin.passenger.store');
+//             Route::get('/passenger-management/detail/{id}', [PassengerManagementController::class, 'show'])->name('admin.passenger.detail');
+//             Route::get('/passenger-management/edit/{id}', [PassengerManagementController::class, 'edit'])->name('admin.passenger.edit');
+//             Route::put('/passenger-management/update/{id}', [PassengerManagementController::class, 'update'])->name('admin.passenger.update');
+//             Route::delete('/passenger-management/delete/{id}', [PassengerManagementController::class, 'destroy'])->name('admin.passenger.delete');
+//             Route::patch('/passenger-management/status/{id}', [PassengerManagementController::class, 'toggleStatus'])->name('admin.passenger.toggleStatus');
+//         });
 
-        Route::middleware(['admin.module:Booking Management'])->group(function () {
-            Route::get('/booking-management', [BookingManagementController::class, 'index'])->name('admin.booking.management');
-            Route::get('/booking-management/create', [BookingManagementController::class, 'create'])->name('admin.booking.create');
-            Route::post('/booking-management/store', [BookingManagementController::class, 'store'])->name('admin.booking.store');
-            Route::get('/booking-management/detail/{id}', [BookingManagementController::class, 'show'])->name('admin.booking.detail');
-        });
+//         Route::middleware(['admin.module:Booking Management'])->group(function () {
+//             Route::get('/booking-management', [BookingManagementController::class, 'index'])->name('admin.booking.management');
+//             Route::get('/booking-management/create', [BookingManagementController::class, 'create'])->name('admin.booking.create');
+//             Route::post('/booking-management/store', [BookingManagementController::class, 'store'])->name('admin.booking.store');
+//             Route::get('/booking-management/detail/{id}', [BookingManagementController::class, 'show'])->name('admin.booking.detail');
+//         });
 
-        Route::middleware(['admin.module:Reviews & Ratings'])->group(function () {
-            Route::get('/reviews-ratings', [App\Http\Controllers\Admin\ReviewManagementController::class, 'index'])->name('admin.reviews.ratings');
-            Route::post('/reviews-ratings/store', [App\Http\Controllers\Admin\ReviewManagementController::class, 'store'])->name('admin.reviews.store');
-            Route::delete('/reviews-ratings/{id}', [App\Http\Controllers\Admin\ReviewManagementController::class, 'destroy'])->name('admin.reviews.destroy');
-        });
+//         Route::middleware(['admin.module:Reviews & Ratings'])->group(function () {
+//             Route::get('/reviews-ratings', [App\Http\Controllers\Admin\ReviewManagementController::class, 'index'])->name('admin.reviews.ratings');
+//             Route::post('/reviews-ratings/store', [App\Http\Controllers\Admin\ReviewManagementController::class, 'store'])->name('admin.reviews.store');
+//             Route::delete('/reviews-ratings/{id}', [App\Http\Controllers\Admin\ReviewManagementController::class, 'destroy'])->name('admin.reviews.destroy');
+//         });
 
-        Route::middleware(['admin.module:Payment Management'])->get('/drivers-payouts', function () {
-            return response()->json(['status' => 'success', 'message' => 'Driver Payouts Data']);
-        })->name('admin.payouts.drivers');
+//         Route::middleware(['admin.module:Payment Management'])->get('/drivers-payouts', function () {
+//             return response()->json(['status' => 'success', 'message' => 'Driver Payouts Data']);
+//         })->name('admin.payouts.drivers');
 
-        Route::middleware(['admin.module:Commission Management'])->get('/commission-management', function () {
-            return response()->json(['status' => 'success', 'message' => 'Commission Data']);
-        })->name('admin.commission.index');
+//         Route::middleware(['admin.module:Commission Management'])->get('/commission-management', function () {
+//             return response()->json(['status' => 'success', 'message' => 'Commission Data']);
+//         })->name('admin.commission.index');
 
-        Route::middleware(['admin.module:Fare Management'])->get('/fare-management', function () {
-            return response()->json(['status' => 'success', 'message' => 'Fare Data']);
-        })->name('admin.fare.management');
+//         Route::middleware(['admin.module:Fare Management'])->get('/fare-management', function () {
+//             return response()->json(['status' => 'success', 'message' => 'Fare Data']);
+//         })->name('admin.fare.management');
 
-        // Support Tickets
-        Route::middleware(['admin.module:Support Ticket'])->group(function () {
-            Route::group(['prefix' => 'support-tickets', 'as' => 'admin.support.'], function () {
-                Route::get('/', function () {
-                    return response()->json(['status' => 'success', 'message' => 'Support Tickets List']);
-                })->name('complaints.index');
+//         // Support Tickets
+//         Route::middleware(['admin.module:Support Ticket'])->group(function () {
+//             Route::group(['prefix' => 'support-tickets', 'as' => 'admin.support.'], function () {
+//                 Route::get('/', function () {
+//                     return response()->json(['status' => 'success', 'message' => 'Support Tickets List']);
+//                 })->name('complaints.index');
 
-                Route::get('/{id}', function ($id) {
-                    return response()->json(['status' => 'success', 'message' => 'Support Ticket Details', 'data' => ['id' => $id]]);
-                })->name('complaints.detail');
-            });
-        });
+//                 Route::get('/{id}', function ($id) {
+//                     return response()->json(['status' => 'success', 'message' => 'Support Ticket Details', 'data' => ['id' => $id]]);
+//                 })->name('complaints.detail');
+//             });
+//         });
 
-        Route::middleware(['admin.module:Notifications'])->group(function () {
-            Route::get('/alerts', function () {
-                return response()->json(['status' => 'success', 'message' => 'Alerts Data']);
-            })->name('admin.alerts.index');
+//         Route::middleware(['admin.module:Notifications'])->group(function () {
+//             Route::get('/alerts', function () {
+//                 return response()->json(['status' => 'success', 'message' => 'Alerts Data']);
+//             })->name('admin.alerts.index');
 
-            Route::get('/alerts/send', function () {
-                return response()->json(['status' => 'success', 'message' => 'Send Alert Endpoint']);
-            })->name('admin.alerts.send');
-        });
+//             Route::get('/alerts/send', function () {
+//                 return response()->json(['status' => 'success', 'message' => 'Send Alert Endpoint']);
+//             })->name('admin.alerts.send');
+//         });
 
-        Route::middleware(['admin.module:CMS management'])->get('/cms-management', function () {
-            return response()->json(['status' => 'success', 'message' => 'CMS Data']);
-        })->name('admin.cms.index');
+//         Route::middleware(['admin.module:CMS management'])->get('/cms-management', function () {
+//             return response()->json(['status' => 'success', 'message' => 'CMS Data']);
+//         })->name('admin.cms.index');
 
-        Route::middleware(['admin.module:Admin Roles'])->group(function () {
-            Route::get('/roles', [AdminRoleController::class, 'index'])->name('admin.roles.index');
-            Route::get('/roles/create', [AdminRoleController::class, 'create'])->name('admin.roles.create');
-            Route::post('/roles/store', [AdminRoleController::class, 'store'])->name('admin.roles.store');
-            Route::get('/roles/edit/{id}', [AdminRoleController::class, 'edit'])->name('admin.roles.edit');
-            Route::post('/roles/update/{id}', [AdminRoleController::class, 'update'])->name('admin.roles.update');
-            Route::delete('/roles/delete/{id}', [AdminRoleController::class, 'destroy'])->name('admin.roles.destroy');
-            Route::get('/roles/delete/{id}', [AdminRoleController::class, 'destroy'])->name('admin.roles.destroy.get');
-        });
+//         Route::middleware(['admin.module:Admin Roles'])->group(function () {
+//             Route::get('/roles', [AdminRoleController::class, 'index'])->name('admin.roles.index');
+//             Route::get('/roles/create', [AdminRoleController::class, 'create'])->name('admin.roles.create');
+//             Route::post('/roles/store', [AdminRoleController::class, 'store'])->name('admin.roles.store');
+//             Route::get('/roles/edit/{id}', [AdminRoleController::class, 'edit'])->name('admin.roles.edit');
+//             Route::post('/roles/update/{id}', [AdminRoleController::class, 'update'])->name('admin.roles.update');
+//             Route::delete('/roles/delete/{id}', [AdminRoleController::class, 'destroy'])->name('admin.roles.destroy');
+//             Route::get('/roles/delete/{id}', [AdminRoleController::class, 'destroy'])->name('admin.roles.destroy.get');
+//         });
 
-        Route::middleware(['admin.module:Driver Management'])->group(function () {
-            Route::group(['prefix' => 'driver-management', 'as' => 'admin.drivers.'], function () {
-                Route::get('/directory', [DriverManagementController::class, 'index'])->name('directory');
-                Route::get('/create', [DriverManagementController::class, 'create'])->name('create');
-                Route::post('/store', [DriverManagementController::class, 'store'])->name('store');
-                Route::get('/view/{id}', [DriverManagementController::class, 'show'])->name('view');
-                Route::get('/edit/{id}', [DriverManagementController::class, 'edit'])->name('edit');
-                Route::put('/update/{id}', [DriverManagementController::class, 'update'])->name('update');
-                Route::patch('/status/{id}', [DriverManagementController::class, 'toggleStatus'])->name('toggleStatus');
-                Route::delete('/delete/{id}', [DriverManagementController::class, 'destroy'])->name('delete');
+//         Route::middleware(['admin.module:Driver Management'])->group(function () {
+//             Route::group(['prefix' => 'driver-management', 'as' => 'admin.drivers.'], function () {
+//                 Route::get('/directory', [DriverManagementController::class, 'index'])->name('directory');
+//                 Route::get('/create', [DriverManagementController::class, 'create'])->name('create');
+//                 Route::post('/store', [DriverManagementController::class, 'store'])->name('store');
+//                 Route::get('/view/{id}', [DriverManagementController::class, 'show'])->name('view');
+//                 Route::get('/edit/{id}', [DriverManagementController::class, 'edit'])->name('edit');
+//                 Route::put('/update/{id}', [DriverManagementController::class, 'update'])->name('update');
+//                 Route::patch('/status/{id}', [DriverManagementController::class, 'toggleStatus'])->name('toggleStatus');
+//                 Route::delete('/delete/{id}', [DriverManagementController::class, 'destroy'])->name('delete');
                 
-                // Keep these for now if they are used elsewhere, but point to logic later
-                Route::get('/requests', function () {
-                    return response()->json(['status' => 'success', 'message' => 'Driver Requests']);
-                })->name('requests');
-                Route::get('/active/view/{id}', [DriverManagementController::class, 'show'])->name('active.view');
-            });
-        });
+//                 // Keep these for now if they are used elsewhere, but point to logic later
+//                 Route::get('/requests', function () {
+//                     return response()->json(['status' => 'success', 'message' => 'Driver Requests']);
+//                 })->name('requests');
+//                 Route::get('/active/view/{id}', [DriverManagementController::class, 'show'])->name('active.view');
+//             });
+//         });
 
-        Route::middleware(['admin.module:Promo code Management'])->group(function () {
-            Route::get('/promo-management', function () {
-                return response()->json(['status' => 'success', 'message' => 'Promo Codes List']);
-            })->name('admin.promo.index');
+//         Route::middleware(['admin.module:Promo code Management'])->group(function () {
+//             Route::get('/promo-management', function () {
+//                 return response()->json(['status' => 'success', 'message' => 'Promo Codes List']);
+//             })->name('admin.promo.index');
 
-            Route::get('/promo-management/detail', function () {
-                return response()->json(['status' => 'success', 'message' => 'Promo Code Details']);
-            })->name('admin.promo.detail');
-        });
-        // Vehicle Management
-        Route::get('/vehicle-management', [VehicleManagementController::class, 'index'])->name('admin.vehicle.management');
-        Route::get('/vehicle-management/create', [VehicleManagementController::class, 'create'])->name('admin.vehicle.create');
-        Route::post('/vehicle-management/store', [VehicleManagementController::class, 'store'])->name('admin.vehicle.store');
-        Route::get('/vehicle-management/edit/{id}', [VehicleManagementController::class, 'edit'])->name('admin.vehicle.edit');
-        Route::post('/vehicle-management/update/{id}', [VehicleManagementController::class, 'update'])->name('admin.vehicle.update');
-        Route::get('/vehicle-management/delete/{id}', [VehicleManagementController::class, 'destroy'])->name('admin.vehicle.delete');
-    });
-});
+//             Route::get('/promo-management/detail', function () {
+//                 return response()->json(['status' => 'success', 'message' => 'Promo Code Details']);
+//             })->name('admin.promo.detail');
+//         });
+//         // Vehicle Management
+//         Route::get('/vehicle-management', [VehicleManagementController::class, 'index'])->name('admin.vehicle.management');
+//         Route::get('/vehicle-management/create', [VehicleManagementController::class, 'create'])->name('admin.vehicle.create');
+//         Route::post('/vehicle-management/store', [VehicleManagementController::class, 'store'])->name('admin.vehicle.store');
+//         Route::get('/vehicle-management/edit/{id}', [VehicleManagementController::class, 'edit'])->name('admin.vehicle.edit');
+//         Route::post('/vehicle-management/update/{id}', [VehicleManagementController::class, 'update'])->name('admin.vehicle.update');
+//         Route::get('/vehicle-management/delete/{id}', [VehicleManagementController::class, 'destroy'])->name('admin.vehicle.delete');
+//     });
+// });
 
 
 
