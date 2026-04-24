@@ -42,11 +42,13 @@ Route::prefix('passenger')->group(function () {
 Route::prefix('admin')->group(function () {
     // Public routes
     Route::post('/login', [App\Http\Controllers\Api\Admin\AdminAuthController::class, 'login']);
+    Route::post('/register', [App\Http\Controllers\Admin\AuthController::class, 'register']);
 
     // Protected routes
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/me', [App\Http\Controllers\Api\Admin\AdminAuthController::class, 'me']);
         Route::post('/logout', [App\Http\Controllers\Api\Admin\AdminAuthController::class, 'logout']);
+        Route::post('/password/reset', [App\Http\Controllers\Admin\AuthController::class, 'updatePassword']);
 
         // Dashboard & Analytics
         Route::get('/stats', [App\Http\Controllers\Api\Admin\AdminDashboardApiController::class, 'getStats']);
@@ -104,7 +106,11 @@ Route::prefix('admin')->group(function () {
         });
 
         // Reviews & Ratings
-        Route::get('/reviews', function() { return response()->json(['status' => 'success', 'data' => []]); });
+        Route::prefix('reviews')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\ReviewManagementController::class, 'index']);
+            Route::post('/', [App\Http\Controllers\Admin\ReviewManagementController::class, 'store']);
+            Route::delete('/{id}', [App\Http\Controllers\Admin\ReviewManagementController::class, 'destroy']);
+        });
 
         // Notifications & Alerts
         Route::prefix('alerts')->group(function () {

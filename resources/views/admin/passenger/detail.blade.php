@@ -146,7 +146,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="label-view">Unique ID</label>
-                                    <p class="value-view red-text">{{ $passenger->unique_id }}</p>
+                                    <p class="value-view red-text">{{ $passenger->id }}</p>
                                 </div>
                             </div>
                         </div>

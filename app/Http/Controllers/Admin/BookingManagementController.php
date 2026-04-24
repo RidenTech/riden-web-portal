@@ -49,7 +49,13 @@ class BookingManagementController extends Controller
 
         $bookings = $query->latest()->paginate(10)->withQueryString();
 
-        return view('admin.booking.index', compact('bookings', 'activeTab'));
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'activeTab' => $activeTab,
+                'bookings' => $bookings
+            ]
+        ]);
     }
 
     public function show($id)
@@ -62,7 +68,10 @@ class BookingManagementController extends Controller
             'vehicle'
         ])->findOrFail($id);
         
-        return view('admin.booking.detail', compact('booking'));
+        return response()->json([
+            'status' => 'success',
+            'data' => $booking
+        ]);
     }
 
     public function create()
@@ -70,7 +79,13 @@ class BookingManagementController extends Controller
         $passengers = Passenger::orderBy('first_name')->get();
         $drivers = Driver::orderBy('first_name')->get();
 
-        return view('admin.booking.create', compact('passengers', 'drivers'));
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'passengers' => $passengers,
+                'drivers' => $drivers
+            ]
+        ]);
     }
 
     public function store(Request $request)
@@ -84,9 +99,9 @@ class BookingManagementController extends Controller
         ]);
 
         // Generate a professional unique booking ID (e.g., #48291)
-        $bookingId = '#' . str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
+        $bookingId = str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
 
-        Booking::create([
+        $booking = Booking::create([
             'booking_id' => $bookingId,
             'passenger_id' => $request->passenger_id,
             'driver_id' => $request->driver_id,
@@ -100,7 +115,10 @@ class BookingManagementController extends Controller
             'payment_status' => 'unpaid',
         ]);
 
-        return redirect()->route('admin.booking.management')
-            ->with('success', 'New booking ' . $bookingId . ' has been created successfully!');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'New booking ' . $bookingId . ' has been created successfully!',
+            'data' => $booking // Return the newly created booking
+        ]);
     }
 }

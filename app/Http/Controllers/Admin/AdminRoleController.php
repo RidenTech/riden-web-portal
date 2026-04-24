@@ -15,7 +15,7 @@ class AdminRoleController extends Controller
     public function index()
     {
         $admins = Admin::latest()->get();
-        return view('admin.roles.index', compact('admins'));
+        return response()->json(['status' => 'success', 'data' => $admins]);
     }
 
     /**
@@ -23,7 +23,7 @@ class AdminRoleController extends Controller
      */
     public function create()
     {
-        return view('admin.roles.create');
+        return response()->json(['status' => 'success', 'data' => []]);
     }
 
     /**
@@ -58,7 +58,7 @@ class AdminRoleController extends Controller
             'updated_at' => $request->updated_at,
         ]);
 
-        return redirect()->route('admin.roles.index')->with('success', 'Admin created and invited successfully.');
+        return response()->json(['status' => 'success', 'message' => 'Admin created and invited successfully.']);
     }
 
     /**
@@ -67,7 +67,7 @@ class AdminRoleController extends Controller
     public function edit($id)
     {
         $admin = Admin::findOrFail($id);
-        return view('admin.roles.edit', compact('admin'));
+        return response()->json(['status' => 'success', 'data' => $admin]);
     }
 
     /**
@@ -114,7 +114,7 @@ class AdminRoleController extends Controller
 
         $admin->update($data);
 
-        return redirect()->route('admin.roles.index')->with('success', 'Admin updated successfully.');
+        return response()->json(['status' => 'success', 'message' => 'Admin updated successfully.']);
     }
 
     /**
@@ -124,11 +124,11 @@ class AdminRoleController extends Controller
     {
         // Security check: Don't allow deleting yourself
         if (auth()->guard('admin')->id() == $id) {
-            return back()->with('error', 'You cannot delete your own account.');
+            return response()->json(['status' => 'error', 'message' => 'You cannot delete your own account.'], 403);
         }
 
         if ($request->isMethod('get')) {
-             return back()->with('error', 'Direct GET deletion is now deprecated for security. Please use the button.');
+             return response()->json(['status' => 'error', 'message' => 'Direct GET deletion is now deprecated for security.'], 405);
         }
 
         $admin = Admin::findOrFail($id);
@@ -138,6 +138,6 @@ class AdminRoleController extends Controller
             'deleted_at' => $request->deleted_at ?? now()
         ]);
 
-        return redirect()->route('admin.roles.index')->with('success', 'Admin deleted successfully.');
+        return response()->json(['status' => 'success', 'message' => 'Admin deleted successfully.']);
     }
 }

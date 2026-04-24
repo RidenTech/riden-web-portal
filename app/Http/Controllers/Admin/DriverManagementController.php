@@ -15,12 +15,12 @@ class DriverManagementController extends Controller
     public function index()
     {
         $drivers = Driver::where('status', '!=', 'Requested')->latest()->paginate(10);
-        return view('admin.drivers.directory', compact('drivers'));
+        return response()->json(['status' => 'success', 'data' => $drivers]);
     }
 
     public function create()
     {
-        return view('admin.drivers.create');
+        return response()->json(['status' => 'success', 'data' => []]);
     }
 
     public function store(Request $request)
@@ -44,7 +44,6 @@ class DriverManagementController extends Controller
 
         // 1. Save Driver
         $driverData = $request->only(['first_name', 'last_name', 'email', 'phone', 'gender']);
-        $driverData['unique_id'] = '#' . rand(10000, 99999);
         $driverData['status'] = 'Active';
 
         if ($request->hasFile('avatar')) {
@@ -78,14 +77,17 @@ class DriverManagementController extends Controller
             }
         }
 
-        return redirect()->route('admin.drivers.directory')
-            ->with('status', 'Driver registered successfully with vehicle and documents.');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Driver registered successfully with vehicle and documents.',
+            'data' => $driver
+        ]);
     }
 
     public function show($id)
     {
         $driver = Driver::with(['vehicle', 'documents'])->findOrFail($id);
-        return view('admin.drivers.view', compact('driver'));
+        return response()->json(['status' => 'success', 'data' => $driver]);
     }
 
     public function toggleStatus(Request $request, $id)
@@ -94,12 +96,12 @@ class DriverManagementController extends Controller
         $newStatus = $request->status;
         
         if (!in_array($newStatus, ['Active', 'Blocked', 'Suspended'])) {
-            return back()->with('statusDanger', 'Invalid status selected.');
+            return response()->json(['status' => 'error', 'message' => 'Invalid status selected.'], 400);
         }
 
         $driver->update(['status' => $newStatus]);
 
-        return back()->with('status', 'Driver status updated to ' . $newStatus);
+        return response()->json(['status' => 'success', 'message' => 'Driver status updated to ' . $newStatus]);
     }
 
     public function destroy($id)
@@ -107,14 +109,13 @@ class DriverManagementController extends Controller
         $driver = Driver::findOrFail($id);
         $driver->delete();
 
-        return redirect()->route('admin.drivers.directory')
-            ->with('status', 'Driver moved to trash.');
+        return response()->json(['status' => 'success', 'message' => 'Driver moved to trash.']);
     }
 
     public function edit($id)
     {
         $driver = Driver::with(['vehicle', 'documents'])->findOrFail($id);
-        return view('admin.drivers.edit', compact('driver'));
+        return response()->json(['status' => 'success', 'data' => $driver]);
     }
 
     public function update(Request $request, $id)
@@ -195,7 +196,10 @@ class DriverManagementController extends Controller
             }
         }
 
-        return redirect()->route('admin.drivers.view', $driver->id)
-            ->with('status', 'Driver records and documents updated successfully.');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Driver records and documents updated successfully.',
+            'data' => $driver
+        ]);
     }
 }

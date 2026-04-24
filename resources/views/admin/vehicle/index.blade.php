@@ -44,8 +44,9 @@
                 <table class="table riden-table-elite align-middle">
                     <thead>
                         <tr>
-                            <th class="ps-4">Car Image</th>
-                            <th>Driver ID</th>
+                            <th class="ps-4">ID</th>
+                            <th>Car Image</th>
+                            <th>Driver Name</th>
                             <th>Car Name</th>
                             <th>Model No</th>
                             <th>Plate No</th>
@@ -57,7 +58,8 @@
                     <tbody>
                         @forelse ($vehicles as $vehicle)
                         <tr>
-                            <td class="ps-4">
+                            <td class="ps-4 text-muted fw-bold">{{ $vehicle->id }}</td>
+                            <td>
                                 <div class="d-flex align-items-center">
                                     <div class="rounded-3 overflow-hidden me-2" style="width: 60px; height: 40px; background: #f8f9fa; border: 1px solid #eee;">
                                         @if($vehicle->front_image)
@@ -69,9 +71,9 @@
                                 </div>
                             </td>
                             <td>
-                                <span class="driver-id-link tippy-driver" 
-                                      data-tippy-content="<strong>{{ $vehicle->driver->name ?? 'N/A' }}</strong><br>{{ $vehicle->driver->email ?? 'No Email' }}">
-                                    {{ $vehicle->driver->unique_id ?? 'UNASSIGNED' }}
+                                <span class="driver-id-link tippy-driver fw-semibold text-primary" style="cursor: pointer;"
+                                      data-tippy-content="<div class='text-start p-1'><strong>{{ $vehicle->driver->first_name ?? 'N/A' }} {{ $vehicle->driver->last_name ?? '' }} (ID: {{ $vehicle->driver->id ?? 'N/A' }})</strong><br><small><i class='bi bi-envelope me-1'></i>{{ $vehicle->driver->email ?? 'No Email' }}</small><br><small><i class='bi bi-telephone me-1'></i>{{ $vehicle->driver->phone ?? 'No Phone' }}</small></div>">
+                                    {{ $vehicle->driver->first_name ?? 'UNASSIGNED' }} {{ $vehicle->driver->last_name ?? '' }}
                                 </span>
                             </td>
                             <td class="fw-bold">{{ $vehicle->model }}</td>

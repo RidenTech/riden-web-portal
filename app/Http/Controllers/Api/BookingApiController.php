@@ -60,15 +60,7 @@ class BookingApiController extends Controller
         }
 
         try {
-            // Senior standard: Robust Purely Numeric Unique ID generation
-            $bookingId = rand(100000, 999999);
-            
-            while (Booking::where('booking_id', $bookingId)->exists()) {
-                $bookingId = rand(100000, 999999);
-            }
-
             $booking = Booking::create([
-                'booking_id' => $bookingId,
                 'passenger_id' => $request->user()->id,
                 'pickup_location' => $request->pickup_location,
                 'dropoff_location' => $request->dropoff_location,

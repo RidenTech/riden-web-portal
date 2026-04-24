@@ -64,7 +64,7 @@
                             <span class="fw-semibold">{{ $driver->first_name }} {{ $driver->last_name }}</span>
                         </div>
                     </td>
-                    <td class="text-muted fw-semibold">{{ $driver->unique_id }}</td>
+                    <td class="text-muted fw-semibold">{{ $driver->id }}</td>
                     <td class="fw-semibold">{{ $driver->phone }}</td>
                     <td class="text-center">
                         @php

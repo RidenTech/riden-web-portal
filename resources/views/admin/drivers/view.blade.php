@@ -253,7 +253,7 @@
             </div>
 
             <div class="hero-details-premium">
-                <span class="id-label-senior">{{ $driver->unique_id }}</span>
+                <span class="id-label-senior">{{ $driver->id }}</span>
                 <h2>{{ $driver->first_name }} {{ $driver->last_name }}</h2>
                 <div class="info-strip-hero">
                     <span><i class="bi bi-envelope-fill me-1"></i> {{ $driver->email }}</span>

@@ -35,7 +35,7 @@
             <thead>
                 <tr>
                     <th class="ps-4">Name</th>
-                    <th>Unique ID</th>
+                    <th>passenger ID</th>
                     <th>Phone Number</th>
                     <th>Bookings</th>
                     <th class="text-center">Status</th>
@@ -54,7 +54,7 @@
                                 <span class="fw-semibold">{{ $p->first_name }} {{ $p->last_name }}</span>
                             </div>
                         </td>
-                        <td class="text-muted fw-semibold">{{ $p->unique_id }}</td>
+                        <td class="text-muted fw-semibold">{{ $p->id }}</td>
                         <td class="fw-semibold">{{ $p->phone }}</td>
                         <td class="fw-semibold">0</td>
                         <td class="text-center">

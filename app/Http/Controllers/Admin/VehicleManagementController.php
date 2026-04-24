@@ -12,13 +12,13 @@ class VehicleManagementController extends Controller
     public function index()
     {
         $vehicles = Vehicle::with('driver')->paginate(10);
-        return view('admin.vehicle.index', compact('vehicles'));
+        return response()->json(['status' => 'success', 'data' => $vehicles]);
     }
 
     public function create()
     {
         $drivers = Driver::all();
-        return view('admin.vehicle.create', compact('drivers'));
+        return response()->json(['status' => 'success', 'data' => ['drivers' => $drivers]]);
     }
 
     public function store(Request $request)
@@ -53,14 +53,14 @@ class VehicleManagementController extends Controller
 
         Vehicle::create($data);
 
-        return redirect()->route('admin.vehicle.management')->with('success', 'Vehicle added successfully with images!');
+        return response()->json(['status' => 'success', 'message' => 'Vehicle added successfully with images!']);
     }
 
     public function edit($id)
     {
         $vehicle = Vehicle::findOrFail($id);
         $drivers = Driver::all();
-        return view('admin.vehicle.edit', compact('vehicle', 'drivers'));
+        return response()->json(['status' => 'success', 'data' => ['vehicle' => $vehicle, 'drivers' => $drivers]]);
     }
 
     public function update(Request $request, $id)
@@ -103,7 +103,7 @@ class VehicleManagementController extends Controller
 
         $vehicle->update($data);
 
-        return redirect()->route('admin.vehicle.management')->with('success', 'Vehicle updated successfully!');
+        return response()->json(['status' => 'success', 'message' => 'Vehicle updated successfully!']);
     }
 
     public function destroy($id)
@@ -120,6 +120,6 @@ class VehicleManagementController extends Controller
 
         $vehicle->delete();
 
-        return redirect()->route('admin.vehicle.management')->with('success', 'Vehicle deleted successfully!');
+        return response()->json(['status' => 'success', 'message' => 'Vehicle deleted successfully!']);
     }
 }
