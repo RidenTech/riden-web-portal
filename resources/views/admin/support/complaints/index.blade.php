@@ -99,6 +99,8 @@
             width: 100%;
         }
     </style>
+    <!-- Summernote CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -270,8 +272,26 @@
 @endsection
 
 @push('scripts')
+<!-- Summernote JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    $(document).ready(function() {
+        $('textarea[name="description"]').summernote({
+            placeholder: 'Enter complaint details here...',
+            tabsize: 2,
+            height: 200,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+
         const userTypeSelect = document.getElementById('userTypeSelect');
         const driverGroup = document.getElementById('driverSelectGroup');
         const passengerGroup = document.getElementById('passengerSelectGroup');
@@ -286,7 +306,6 @@
             }
         });
 
-        // Trigger change on load to set initial state
         userTypeSelect.dispatchEvent(new Event('change'));
     });
 </script>
