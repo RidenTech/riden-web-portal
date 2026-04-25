@@ -91,7 +91,7 @@ Route::prefix('admin')->group(function () {
         // Support Tickets
         Route::middleware(['admin.module:Support Ticket'])->group(function () {
             Route::group(['prefix' => 'support-tickets', 'as' => 'admin.support.'], function () {
-                Route::get('/complaints', [App\Http\Controllers\Web\SupportController::class, 'index'])->name('complaints.index');
+                Route::get('/', [App\Http\Controllers\Web\SupportController::class, 'index'])->name('complaints.index');
                 Route::post('/store', [App\Http\Controllers\Web\SupportController::class, 'store'])->name('complaints.store');
                 Route::patch('/{id}/status', [App\Http\Controllers\Web\SupportController::class, 'updateStatus'])->name('complaints.updateStatus');
             });
