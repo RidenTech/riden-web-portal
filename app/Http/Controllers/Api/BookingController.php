@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
@@ -59,17 +61,21 @@ class BookingController extends Controller
         }
 
         try {
+            // Generate a unique booking ID (e.g., #48291)
+            $bookingId = '#' . str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
+
             $booking = Booking::create([
+                'booking_id' => $bookingId,
                 'passenger_id' => $request->user()->id,
                 'pickup_location' => $request->pickup_location,
                 'dropoff_location' => $request->dropoff_location,
                 'pickup_time' => $request->pickup_time,
-                'distance' => $request->distance,
-                'duration' => $request->duration,
+                'distance' => $request->distance ?? '0.0 km',
+                'duration' => $request->duration ?? '0 min',
                 'fare' => $request->fare,
                 'payment_method' => $request->payment_method,
-                'payment_status' => ($request->payment_method == 'Cash') ? 'Unpaid' : 'Paid',
-                'status' => 'pending', // Fixed: Must be lowercase to match database enum
+                'payment_status' => (strtolower($request->payment_method) == 'cash') ? 'unpaid' : 'paid',
+                'status' => 'pending', 
                 'vehicle_id' => $request->vehicle_id,
             ]);
 
