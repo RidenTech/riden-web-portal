@@ -75,6 +75,13 @@ Route::prefix('admin')->group(function () {
             Route::delete('/reviews-ratings/passenger/{id}', [ReviewController::class, 'destroyPassenger'])->name('admin.reviews.destroyPassenger');
         });
 
+        // Support & Tickets
+        Route::prefix('support')->group(function () {
+            Route::get('/', [App\Http\Controllers\Web\SupportController::class, 'index'])->name('admin.support.index');
+            Route::post('/store', [App\Http\Controllers\Web\SupportController::class, 'store'])->name('admin.support.store');
+            Route::patch('/{id}/status', [App\Http\Controllers\Web\SupportController::class, 'updateStatus'])->name('admin.support.updateStatus');
+        });
+
         Route::middleware(['admin.module:Payment Management'])->get('/drivers-payouts', function () {
             return view('admin.payouts.index');
         })->name('admin.payouts.drivers');
