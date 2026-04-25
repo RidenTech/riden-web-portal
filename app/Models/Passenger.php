@@ -34,12 +34,12 @@ class Passenger extends Authenticatable
 
     public function receivedReviews()
     {
-        return $this->hasMany(PassengerReview::class, 'passenger_id');
+        return $this->hasMany(Review::class, 'passenger_id')->where('review_type', 'passenger');
     }
 
     public function givenReviews()
     {
-        return $this->hasMany(Review::class, 'passenger_id');
+        return $this->hasMany(Review::class, 'passenger_id')->where('review_type', 'driver');
     }
 
     public function bookings()

@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Review extends Model
 {
     use SoftDeletes;
-    protected $table = 'driver_reviews';
+
+    protected $table = 'reviews';
 
     protected $fillable = [
+        'review_type', // 'driver' or 'passenger'
         'driver_id',
         'passenger_id',
         'reviewer_name',
@@ -18,13 +20,27 @@ class Review extends Model
         'review_text'
     ];
 
+    /**
+     * The subject of the review if it's a driver review
+     */
     public function driver()
     {
         return $this->belongsTo(Driver::class);
     }
 
+    /**
+     * The subject of the review if it's a passenger review
+     */
     public function passenger()
     {
         return $this->belongsTo(Passenger::class);
+    }
+
+    /**
+     * Scope to filter by type
+     */
+    public function scopeOfType($query, $type)
+    {
+        return $query->where('review_type', $type);
     }
 }

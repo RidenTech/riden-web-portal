@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Review;
-use App\Models\PassengerReview;
 use App\Models\Driver;
 use App\Models\Passenger;
 use Illuminate\Http\Request;
@@ -17,7 +16,7 @@ class ReviewController extends Controller
         
         if ($tab === 'drivers') {
             $drivers = Driver::all();
-            $reviews = Review::with('driver')->latest()->get();
+            $reviews = Review::ofType('driver')->with('driver')->latest()->get();
             
             $totalReviews = $reviews->count();
             $averageRating = $totalReviews > 0 ? number_format($reviews->avg('rating'), 1) : 0;
@@ -27,7 +26,7 @@ class ReviewController extends Controller
             return view('admin.reviews.index', compact('tab', 'drivers', 'reviews', 'totalReviews', 'averageRating', 'ratingProgress'));
         } else {
             $passengers = Passenger::all();
-            $reviews = PassengerReview::with('passenger')->latest()->get();
+            $reviews = Review::ofType('passenger')->with('passenger')->latest()->get();
             
             $totalReviews = $reviews->count();
             $averageRating = $totalReviews > 0 ? number_format($reviews->avg('rating'), 1) : 0;
@@ -69,14 +68,15 @@ class ReviewController extends Controller
             'review_text' => 'required|string'
         ]);
 
-        $review = Review::create([
+        Review::create([
+            'review_type' => 'driver',
             'driver_id' => $request->driver_id,
             'reviewer_name' => $request->reviewer_name,
             'rating' => $request->rating,
             'review_text' => $request->review_text,
         ]);
 
-        return redirect()->route('admin.reviews.ratings')->with('status', 'Review added successfully!');
+        return redirect()->route('admin.reviews.ratings', ['tab' => 'drivers'])->with('status', 'Driver review added successfully!');
     }
 
     public function storePassenger(Request $request)
@@ -88,7 +88,8 @@ class ReviewController extends Controller
             'review_text' => 'required|string'
         ]);
 
-        PassengerReview::create([
+        Review::create([
+            'review_type' => 'passenger',
             'passenger_id' => $request->passenger_id,
             'reviewer_name' => $request->reviewer_name,
             'rating' => $request->rating,
@@ -108,10 +109,9 @@ class ReviewController extends Controller
 
     public function destroyPassenger($id)
     {
-        $review = PassengerReview::findOrFail($id);
+        $review = Review::findOrFail($id);
         $review->delete();
 
         return redirect()->route('admin.reviews.ratings', ['tab' => 'passengers'])->with('status', 'Passenger review deleted successfully!');
     }
 }
-

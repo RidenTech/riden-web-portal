@@ -38,12 +38,12 @@ class Driver extends Model
 
     public function receivedReviews()
     {
-        return $this->hasMany(Review::class, 'driver_id');
+        return $this->hasMany(Review::class, 'driver_id')->where('review_type', 'driver');
     }
 
     public function givenReviews()
     {
-        return $this->hasMany(PassengerReview::class, 'driver_id');
+        return $this->hasMany(Review::class, 'driver_id')->where('review_type', 'passenger');
     }
 
     public function bookings()

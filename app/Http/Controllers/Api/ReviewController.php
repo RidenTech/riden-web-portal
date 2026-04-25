@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Review;
-use App\Models\PassengerReview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,11 +16,10 @@ class ReviewController extends Controller
     {
         $type = $request->get('type', 'driver'); // 'driver' or 'passenger'
 
-        if ($type === 'passenger') {
-            $reviews = PassengerReview::with(['passenger', 'driver'])->latest()->paginate($request->get('per_page', 10));
-        } else {
-            $reviews = Review::with(['driver', 'passenger'])->latest()->paginate($request->get('per_page', 10));
-        }
+        $reviews = Review::ofType($type)
+            ->with(['driver', 'passenger'])
+            ->latest()
+            ->paginate($request->get('per_page', 10));
 
         return response()->json([
             'status' => 'success',
@@ -52,7 +50,9 @@ class ReviewController extends Controller
             return response()->json(['status' => 'error', 'errors' => $validator->errors()], 422);
         }
 
-        $review = Review::create($request->all());
+        $data = $request->all();
+        $data['review_type'] = 'driver';
+        $review = Review::create($data);
 
         return response()->json([
             'status' => 'success',
@@ -75,7 +75,9 @@ class ReviewController extends Controller
             return response()->json(['status' => 'error', 'errors' => $validator->errors()], 422);
         }
 
-        $review = PassengerReview::create($request->all());
+        $data = $request->all();
+        $data['review_type'] = 'passenger';
+        $review = Review::create($data);
 
         return response()->json([
             'status' => 'success',
@@ -89,14 +91,9 @@ class ReviewController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $type = $request->get('type', 'driver');
-
-        if ($type === 'passenger') {
-            $review = PassengerReview::findOrFail($id);
-        } else {
-            $review = Review::findOrFail($id);
-        }
-        
+        // For security/clarity we could check the type but findOrFail is sufficient
+        $review = Review::findOrFail($id);
+        $type = $review->review_type;
         $review->delete();
 
         return response()->json([
