@@ -119,9 +119,14 @@
         
         <!-- Header -->
         <div class="support-header">
-            <h2 class="support-title">Support Ticket</h2>
+            <div class="d-flex align-items-center">
+                <h2 class="support-title mr-4">Support Ticket</h2>
+                <button class="btn-add-ticket" style="background: #FF2E2E; padding: 12px 25px;" data-bs-toggle="modal" data-bs-target="#addTicketModal">
+                    <i class="bi bi-plus-lg"></i> Add Ticket
+                </button>
+            </div>
             <div class="header-actions d-flex align-items-center">
-                <div class="riden-global-search mr-3" style="width: 300px;">
+                <div class="riden-global-search" style="width: 300px;">
                     <form action="{{ route('admin.support.index') }}" method="GET">
                         <input type="hidden" name="tab" value="{{ $activeTab }}">
                         <div class="input-group-riden" style="background: #f5f5f5; border-radius: 50px; padding: 5px 20px;">
@@ -130,9 +135,6 @@
                         </div>
                     </form>
                 </div>
-                <button class="btn-add-ticket" data-bs-toggle="modal" data-bs-target="#addTicketModal">
-                    <i class="bi bi-plus-lg"></i> Add Ticket
-                </button>
             </div>
         </div>
 
