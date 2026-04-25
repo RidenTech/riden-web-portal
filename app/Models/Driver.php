@@ -35,4 +35,19 @@ class Driver extends Model
     {
         return $this->hasMany(DriverDocument::class);
     }
+
+    public function receivedReviews()
+    {
+        return $this->hasMany(Review::class, 'driver_id');
+    }
+
+    public function givenReviews()
+    {
+        return $this->hasMany(PassengerReview::class, 'driver_id');
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'driver_id');
+    }
 }

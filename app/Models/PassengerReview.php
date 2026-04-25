@@ -5,26 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Review extends Model
+class PassengerReview extends Model
 {
     use SoftDeletes;
-    protected $table = 'driver_reviews';
 
     protected $fillable = [
-        'driver_id',
         'passenger_id',
+        'driver_id',
         'reviewer_name',
         'rating',
         'review_text'
     ];
 
-    public function driver()
-    {
-        return $this->belongsTo(Driver::class);
-    }
-
     public function passenger()
     {
         return $this->belongsTo(Passenger::class);
+    }
+
+    public function driver()
+    {
+        return $this->belongsTo(Driver::class);
     }
 }

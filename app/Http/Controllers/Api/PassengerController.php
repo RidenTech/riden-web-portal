@@ -312,7 +312,7 @@ class PassengerController extends Controller
      */
     public function show($id)
     {
-        $passenger = Passenger::with(['bookings'])->find($id);
+        $passenger = Passenger::with(['bookings', 'receivedReviews'])->find($id);
 
         if (!$passenger) {
             return response()->json(['status' => 'error', 'message' => 'Passenger not found'], 404);

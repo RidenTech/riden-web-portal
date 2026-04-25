@@ -70,7 +70,9 @@ Route::prefix('admin')->group(function () {
         Route::middleware(['admin.module:Reviews & Ratings'])->group(function () {
             Route::get('/reviews-ratings', [ReviewController::class, 'index'])->name('admin.reviews.ratings');
             Route::post('/reviews-ratings/store', [ReviewController::class, 'store'])->name('admin.reviews.store');
+            Route::post('/reviews-ratings/store-passenger', [ReviewController::class, 'storePassenger'])->name('admin.reviews.storePassenger');
             Route::delete('/reviews-ratings/{id}', [ReviewController::class, 'destroy'])->name('admin.reviews.destroy');
+            Route::delete('/reviews-ratings/passenger/{id}', [ReviewController::class, 'destroyPassenger'])->name('admin.reviews.destroyPassenger');
         });
 
         Route::middleware(['admin.module:Payment Management'])->get('/drivers-payouts', function () {

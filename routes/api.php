@@ -35,6 +35,12 @@ Route::prefix('passenger')->group(function () {
             Route::get('/{id}', [BookingController::class, 'show']);
             Route::post('/{id}/cancel', [BookingController::class, 'cancel']);
         });
+
+        // Review APIs
+        Route::prefix('reviews')->group(function () {
+            Route::get('/', [App\Http\Controllers\Api\ReviewController::class, 'index']); // Get their own reviews or driver reviews
+            Route::post('/store', [App\Http\Controllers\Api\ReviewController::class, 'store']); // Review a driver
+        });
     });
 });
 

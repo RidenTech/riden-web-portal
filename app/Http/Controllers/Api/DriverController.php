@@ -71,7 +71,7 @@ class DriverController extends Controller
      */
     public function show($id)
     {
-        $driver = Driver::with(['vehicle', 'bookings'])->find($id);
+        $driver = Driver::with(['vehicle', 'bookings', 'receivedReviews'])->find($id);
 
         if (!$driver) {
             return response()->json(['status' => 'error', 'message' => 'Driver not found'], 404);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Review;
+use App\Models\PassengerReview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,8 +15,13 @@ class ReviewController extends Controller
      */
     public function index(Request $request)
     {
-        // Senior developer note: Standardizing on 'Review' model which maps to 'driver_reviews' table
-        $reviews = Review::with(['driver', 'passenger'])->latest()->paginate($request->get('per_page', 10));
+        $type = $request->get('type', 'driver'); // 'driver' or 'passenger'
+
+        if ($type === 'passenger') {
+            $reviews = PassengerReview::with(['passenger', 'driver'])->latest()->paginate($request->get('per_page', 10));
+        } else {
+            $reviews = Review::with(['driver', 'passenger'])->latest()->paginate($request->get('per_page', 10));
+        }
 
         return response()->json([
             'status' => 'success',
@@ -28,6 +34,12 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
+        $type = $request->get('type', 'driver');
+
+        if ($type === 'passenger') {
+            return $this->storePassenger($request);
+        }
+
         $validator = Validator::make($request->all(), [
             'driver_id' => 'required|exists:drivers,id',
             'passenger_id' => 'nullable|exists:passengers,id',
@@ -44,7 +56,30 @@ class ReviewController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Review created successfully',
+            'message' => 'Driver review created successfully',
+            'data' => $review
+        ], 201);
+    }
+
+    private function storePassenger(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'passenger_id' => 'required|exists:passengers,id',
+            'driver_id' => 'nullable|exists:drivers,id',
+            'reviewer_name' => 'nullable|string|max:255',
+            'rating' => 'required|numeric|min:1|max:5',
+            'review_text' => 'nullable|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 422);
+        }
+
+        $review = PassengerReview::create($request->all());
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Passenger review created successfully',
             'data' => $review
         ], 201);
     }
@@ -52,14 +87,21 @@ class ReviewController extends Controller
     /**
      * Delete review
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $review = Review::findOrFail($id);
+        $type = $request->get('type', 'driver');
+
+        if ($type === 'passenger') {
+            $review = PassengerReview::findOrFail($id);
+        } else {
+            $review = Review::findOrFail($id);
+        }
+        
         $review->delete();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Review deleted successfully'
+            'message' => ucfirst($type) . ' review deleted successfully'
         ]);
     }
 }

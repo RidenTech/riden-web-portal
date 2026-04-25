@@ -31,4 +31,19 @@ class Passenger extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    public function receivedReviews()
+    {
+        return $this->hasMany(PassengerReview::class, 'passenger_id');
+    }
+
+    public function givenReviews()
+    {
+        return $this->hasMany(Review::class, 'passenger_id');
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'passenger_id');
+    }
 }
