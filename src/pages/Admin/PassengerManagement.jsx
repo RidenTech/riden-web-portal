@@ -9,8 +9,8 @@ export default function PassengerManagement() {
     const [passengers, setPassengers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-    const [startDate, setStartDate] = useState(startOfWeek(new Date()));
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const [exportOpen, setExportOpen] = useState(false);
     const { showToast } = useToast();
     const [totalItems, setTotalItems] = useState(0);
@@ -105,7 +105,7 @@ export default function PassengerManagement() {
             </div>
 
             {/* Table */}
-            <Table headers={['Name', 'Unique ID', 'Phone Number', 'Joined', 'Status']}>
+            <Table headers={[' ID', 'Name', 'Phone Number', 'Joined', 'Status']}>
                 {loading ? (
                     <tr>
                         <td colSpan="5" className="text-center py-10">
@@ -122,9 +122,11 @@ export default function PassengerManagement() {
                     passengers.map((p) => (
                         <tr
                             key={p.id}
-                            onClick={() => navigate(`/passenger/detail/${encodeURIComponent(p.unique_id || p.id)}`)}
+                            onClick={() => navigate(`/passenger/detail/${p.id}`)}
                             className="cursor-pointer hover:bg-black/[0.02] transition-colors border-b border-[#F3F4F6]"
                         >
+
+                            <td className="py-[18px] px-[30px] text-[#6B7280] font-[700] italic tracking-tight">#{p.id}</td>
                             <td className="py-[18px] px-[30px]">
                                 <div className="flex items-center gap-3">
                                     <div className="w-[44px] h-[44px] rounded-full overflow-hidden border-2 border-white shadow-sm">
@@ -140,7 +142,6 @@ export default function PassengerManagement() {
                                     <span className="font-[700] text-[#111]">{p.first_name + " " + p.last_name}</span>
                                 </div>
                             </td>
-                            <td className="py-[18px] px-[30px] text-[#6B7280] font-[700] italic tracking-tight">{p.unique_id}</td>
                             <td className="py-[18px] px-[30px] text-[#111] font-[700]">{p.phone}</td>
                             <td className="py-[18px] px-[30px] text-[#6B7280] font-[700]">{p.created_at?.slice(0, 10)}</td>
                             <td className="py-[18px] px-[30px]">

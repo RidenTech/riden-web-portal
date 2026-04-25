@@ -7,11 +7,16 @@ export const Table = ({ headers, children, headerBg = 'bg-[#FFEEEE]', tableClass
         <table className={`w-full text-left border-collapse ${tableClassName}`}>
             <thead>
                 <tr className={`${headerBg}`}>
-                    {headers.map((header, i) => (
-                        <th key={i} className={`py-[22px] px-[30px] text-sm font-[800] ${headerTextColor} capitalize whitespace-nowrap ${headerAlign}`}>
-                            {header}
-                        </th>
-                    ))}
+                    {headers.map((header, i) => {
+                        const isObject = typeof header === 'object';
+                        const label = isObject ? header.label : header;
+                        const align = isObject ? header.align : headerAlign;
+                        return (
+                            <th key={i} className={`py-[22px] px-[30px] text-sm font-[800] ${headerTextColor} capitalize whitespace-nowrap ${align}`}>
+                                {label}
+                            </th>
+                        );
+                    })}
                 </tr>
             </thead>
             <tbody className="divide-y divide-[#F3F4F6]">
@@ -128,21 +133,20 @@ export const MiniChart = ({ variant = 'green', data = [30, 50, 40, 75, 100, 60, 
 };
 
 export const Tabs = ({ options, activeTab, onTabChange, className = '' }) => (
-    <div className={`flex justify-between items-center  mb-4 ${className}`}>
+    <div className={`bg-[#D10000] rounded-full p-1.5 flex flex-wrap gap-2 w-fit mb-4 ${className}`}>
         {options.map((opt) => (
             <button
                 key={opt.id}
-                onClick={() => onTabChange(opt.id)
-                }
-                className={`px-10 w-full  py-4 text-lg font-[700] transition-all duration-300  ${activeTab === opt.id
-                    ? 'bg-[#D10000] text-white rounded-full'
-                    : 'border-b-2 border-[#ECF0F1] text-[#111] hover:text-[#D10000]'
+                onClick={() => onTabChange(opt.id)}
+                className={`px-8 py-3 rounded-full text-[14px] font-[700] transition-all duration-300 flex items-center justify-center gap-2 ${activeTab === opt.id
+                    ? 'bg-white text-[#D10000] shadow-md'
+                    : 'text-white hover:bg-white/10'
                     }`}
             >
                 {opt.label || opt.id}
                 {opt.count !== undefined && (
-                    <span className="text-sm ">
-                        ({opt.count})
+                    <span className={`text-[12px] px-2 py-0.5 rounded-full ${activeTab === opt.id ? 'bg-[#D10000]/10 text-[#D10000]' : 'bg-black/20 text-white'}`}>
+                        {opt.count}
                     </span>
                 )}
             </button>
@@ -195,6 +199,7 @@ export const DateRangePicker = ({ startDate, endDate, onStartDateChange, onEndDa
                     onChange={onStartDateChange}
                     placeholderText="From"
                     maxDate={new Date()}
+                    dateFormat="d-MMM-yyyy"
                     className="pl-11 pr-4 py-2.5 bg-white text-[14px] font-[600] w-full outline-none transition-all rounded-full"
                 />
             </div>
@@ -206,7 +211,9 @@ export const DateRangePicker = ({ startDate, endDate, onStartDateChange, onEndDa
                     selected={endDate}
                     onChange={onEndDateChange}
                     placeholderText="To"
+                    minDate={startDate}
                     maxDate={new Date()}
+                    dateFormat="d-MMM-yyyy"
                     className="pl-11 pr-4 py-2.5 bg-white text-[14px] font-[600] w-full outline-none transition-all rounded-full"
                 />
             </div>
@@ -232,8 +239,17 @@ export const DatePickerStyles = () => (
             border-bottom: none !important;
             padding-top: 15px !important;
         }
-        .react-datepicker__current-month, .react-datepicker__day-name {
+        .react-datepicker__navigation {
+            top: 15px !important;
+        }
+        .react-datepicker__current-month {
             color: white !important;
+            font-weight: 700 !important;
+            font-size: 15px !important;
+            margin-bottom: 8px !important;
+        }
+        .react-datepicker__day-name {
+            color: #111 !important;
             font-weight: 700 !important;
         }
         .react-datepicker__day--selected, .react-datepicker__day--keyboard-selected {
@@ -254,19 +270,57 @@ export const DatePickerStyles = () => (
 export const Pagination = ({ totalItems, itemsPerPage = 10, currentPage = 1, onPageChange }) => {
     if (!totalItems || totalItems <= itemsPerPage) return null;
 
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    const handlePrev = () => {
+        if (currentPage > 1) onPageChange(currentPage - 1);
+    };
+
+    const handleNext = () => {
+        if (currentPage < totalPages) onPageChange(currentPage + 1);
+    };
+
+    // Simple page numbers generator
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+    }
+
     return (
         <div className="flex justify-end items-center gap-2 mt-6 list-none">
-            <button className="w-[34px] h-[34px] flex items-center justify-center rounded-full bg-[#f1f1f1] text-[#111] text-lg hover:bg-[#D10000] hover:text-white transition-all">
+            <button
+                onClick={handlePrev}
+                disabled={currentPage === 1}
+                className={`w-[34px] h-[34px] flex items-center justify-center rounded-full transition-all ${currentPage === 1
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-[#f1f1f1] text-[#111] hover:bg-[#D10000] hover:text-white'
+                    }`}
+            >
                 <i className="bi bi-chevron-left"></i>
             </button>
-            <button className="w-[34px] h-[34px] flex items-center justify-center rounded-full border border-riden-red text-riden-red font-[800] text-[13px] bg-white ring-2 ring-riden-red/20">
-                1
-            </button>
-            <button className="w-[34px] h-[34px] flex items-center justify-center rounded-full border border-gray-100 text-[#374151] font-[600] text-[13px] hover:bg-[#D10000] hover:text-white transition-all">
-                2
-            </button>
-            <button className="w-[34px] h-[34px] flex items-center justify-center rounded-full bg-[#D10000] text-white text-lg shadow-lg shadow-red-100 ring-2 ring-riden-red/20">
-                <i className="bi bi-chevron-right"></i>
+
+            {pages.map(page => (
+                <button
+                    key={page}
+                    onClick={() => onPageChange(page)}
+                    className={`w-[34px] h-[34px] flex items-center justify-center rounded-full font-[800] text-[13px] transition-all ${currentPage === page
+                        ? 'bg-[#D10000] text-white shadow-lg shadow-red-100 ring-2 ring-[#D10000]/20'
+                        : 'border border-gray-100 text-[#374151] hover:bg-[#D10000] hover:text-white'
+                        }`}
+                >
+                    {page}
+                </button>
+            ))}
+
+            <button
+                onClick={handleNext}
+                disabled={currentPage === totalPages}
+                className={`w-[34px] h-[34px] flex items-center justify-center rounded-full transition-all ${currentPage === totalPages
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-[#D10000] text-white shadow-lg shadow-red-100 ring-2 ring-[#D10000]/20'
+                    }`}
+            >
+                <i className="bi bi-chevron-right text-lg"></i>
             </button>
         </div>
     );

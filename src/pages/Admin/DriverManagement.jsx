@@ -10,8 +10,8 @@ export default function DriverManagement() {
     const navigate = useNavigate();
     const { showToast } = useToast();
     const [activeTab, setActiveTab] = useState('active');
-    const [startDate, setStartDate] = useState(startOfWeek(new Date()));
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const [exportOpen, setExportOpen] = useState(false);
 
     // API States
@@ -129,7 +129,7 @@ export default function DriverManagement() {
             />
 
             {/* Table */}
-            <Table headers={['Name', 'Unique ID', 'Phone Number', 'Status']}>
+            <Table headers={['ID', 'Name', 'Phone Number', 'Status']}>
                 {loading ? (
                     <tr><td colSpan="4" className="text-center py-10"><div className="animate-spin inline-block w-6 h-6 border-2 border-red-600 rounded-full border-t-transparent"></div></td></tr>
                 ) : drivers.length === 0 ? (
@@ -138,9 +138,11 @@ export default function DriverManagement() {
                     drivers.map((d) => (
                         <tr
                             key={d.id}
-                            onClick={() => navigate(`/drivers/detail/${encodeURIComponent(d.unique_id)}`)}
+                            onClick={() => navigate(`/drivers/detail/${d.id}`)}
                             className="cursor-pointer hover:bg-black/[0.02] transition-colors border-b border-[#F3F4F6]"
                         >
+
+                            <td className="py-[18px] px-[30px] text-[#6B7280] font-[700] italic tracking-tight">#{d.id}</td>
                             <td className="py-[18px] px-[30px]">
                                 <div className="flex items-center gap-3">
                                     <div className="w-[44px] h-[44px] rounded-full overflow-hidden border-2 border-white shadow-sm bg-gray-100">
@@ -153,7 +155,6 @@ export default function DriverManagement() {
                                     <span className="font-[700] text-[#111]">{d.first_name} {d.last_name}</span>
                                 </div>
                             </td>
-                            <td className="py-[18px] px-[30px] text-[#6B7280] font-[700] italic tracking-tight">{d.unique_id}</td>
                             <td className="py-[18px] px-[30px] text-[#111] font-[700]">{d.phone}</td>
                             <td className="py-[18px] px-[30px]">
                                 <Badge variant={d.status?.toLowerCase() === 'active' ? 'active' : d.status?.toLowerCase()}>{d.status}</Badge>

@@ -23,47 +23,48 @@ export default function DriverDetail() {
         try {
             setLoading(true);
             const response = await getDriverById(id);
-            const data = response.data || response;
+            const driverData = response.data || response;
 
-            if (!data) {
+            if (!driverData) {
                 setDriver(null);
                 return;
             }
 
             setDriver({
-                ...data,
-                id: data.id || id, // Fallback to unique_id from URL if id missing
-                unique_id: data.unique_id || id,
-                name: data.name || `${data.first_name || ''} ${data.last_name || ''}`.trim() || 'N/A',
-                since: data.created_at ? `Since ${new Date(data.created_at).toLocaleDateString()}` : (data.since || 'N/A'),
-                rating: data.rating || 5,
-                reviews_count: data.reviews_count || 0,
+                ...driverData,
+                id: driverData.id,
+                unique_id: driverData.unique_id,
+                name: driverData.name || `${driverData.first_name || ''} ${driverData.last_name || ''}`.trim() || 'N/A',
+                since: driverData.created_at ? `Since ${new Date(driverData.created_at).toLocaleDateString()}` : 'N/A',
+                rating: driverData.rating || 5,
+                reviews_count: driverData.reviews_count || 0,
                 stats: {
-                    total_rides: data.total_rides || data.stats?.total_rides || 0,
-                    completed_rides: data.completed_rides || data.stats?.completed_rides || 0,
-                    revenue: data.revenue || data.stats?.revenue || '$0.00'
+                    total_rides: driverData.total_rides || driverData.stats?.total_rides || 0,
+                    completed_rides: driverData.completed_rides || driverData.stats?.completed_rides || 0,
+                    revenue: driverData.revenue || driverData.stats?.revenue || '$0.00'
                 },
-                vehicle: data.vehicle ? {
-                    ...data.vehicle,
-                    license_plate: data.vehicle.license_plate || data.vehicle.licensePlate || 'N/A',
-                    type: data.vehicle.type || data.vehicle.vehicle_type || 'N/A'
+                vehicle: driverData.vehicle ? {
+                    ...driverData.vehicle,
+                    license_plate: driverData.vehicle.license_plate || 'N/A',
+                    type: driverData.vehicle.type || 'N/A'
                 } : {
-                    model: data.vehicle_model || 'N/A',
-                    year: data.vehicle_year || 'N/A',
-                    color: data.vehicle_color || 'N/A',
-                    license_plate: data.license_plate || data.licensePlate || 'N/A',
-                    type: data.vehicle_type || data.type || 'N/A'
+                    model: driverData.vehicle_model || 'N/A',
+                    year: driverData.vehicle_year || 'N/A',
+                    color: driverData.vehicle_color || 'N/A',
+                    license_plate: driverData.license_plate || 'N/A',
+                    type: driverData.vehicle_type || 'N/A'
                 },
-                gender: data.gender || 'N/A',
-                phone: data.phone || 'N/A',
-                email: data.email || 'N/A',
-                documents: data.documents || [],
-                payments: data.payments || {
+                gender: driverData.gender || 'N/A',
+                phone: driverData.phone || 'N/A',
+                email: driverData.email || 'N/A',
+                avatar: driverData.avatar || driverData.profile_image || null,
+                documents: driverData.documents || [],
+                payments: driverData.payments || {
                     p1: 'N/A', p2: 'N/A', p3: 'N/A',
                     o1: 'N/A', o2: 'N/A'
                 }
             });
-            setDriverStatus(data.status?.toLowerCase() || 'active');
+            setDriverStatus(driverData.status?.toLowerCase() || 'active');
         } catch (error) {
             console.error("Error fetching driver:", error);
             showToast("Failed to load driver details", "error");
@@ -672,7 +673,7 @@ export default function DriverDetail() {
                             </div>
 
                             <div className="p-6">
-                                <p className="text-[13px] font-medium text-gray-800 mb-6 font-semibold">Driver : {driver.name} (ID: {driver.unique_id})</p>
+                                <p className="text-[13px] font-medium text-gray-800 mb-6 font-semibold">Driver : {driver.name} (ID: {driver.id})</p>
 
                                 <div className="mb-5">
                                     <p className="text-[15px] font-bold text-gray-900 mb-3">Duration Type</p>

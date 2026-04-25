@@ -5,8 +5,8 @@ import { Badge, Button, Table, Label, InputWrapper, Input, SearchBar, Pagination
 
 export default function ManageNotifications() {
     const [view, setView] = useState('list'); // 'list' or 'add'
-    const [startDate, setStartDate] = useState(startOfWeek(new Date()));
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
     const alerts = [
         { date: '22 March 2025', title: 'App Update', message: 'Update your app for new features...', status: 'Sent' },

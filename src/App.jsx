@@ -5,7 +5,7 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import PublicRoute from './routes/PublicRoute';
 import Login from './pages/Auth/Login';
 import ForgotPassword from './pages/Auth/ForgotPassword';
-import Dashboard from './pages/Admin/Dashboard';
+// Dashboard absorbed into Analytics
 import DriverManagement from './pages/Admin/DriverManagement';
 import DriverCreate from './pages/Admin/DriverCreate';
 import DriverDetail from './pages/Admin/DriverDetail';
@@ -29,11 +29,11 @@ import SupportTicket from './pages/Admin/SupportTicket';
 import ReportManagement from './pages/Admin/ReportManagement';
 import Analytics from './pages/Admin/Analytics';
 import CMSManagement from './pages/Admin/CMSManagement';
-import AdminProfile from './pages/Admin/AdminProfile';
-import AdminRoles from './pages/Admin/AdminRoles';
-import AdminCreate from './pages/Admin/AdminCreate';
-import AdminEdit from './pages/Admin/AdminEdit';
-import AdminDetail from './pages/Admin/AdminDetail';
+import Profile from './pages/Admin/Profile';
+import UserManagement from './pages/Admin/UserManagment';
+import UserCreate from './pages/Admin/UserCreate';
+import UserEdit from './pages/Admin/UserEdit';
+import UserDetail from './pages/Admin/UserDetail';
 import ReviewManagement from './pages/Admin/ReviewManagement';
 import ManageNotifications from './pages/Admin/ManageNotifications';
 import Unauthorized from './pages/Unauthorized';
@@ -53,25 +53,20 @@ function App() {
           {/* Core Protected Routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/unauthorized" element={<Unauthorized />} />
-            <Route path="/profile" element={<AdminProfile />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
 
-          {/* Dashboard */}
+          {/* Dashboard & Analytics Combined */}
           <Route element={<ProtectedRoute module="Dashboard" />}>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<Analytics />} />
           </Route>
 
-          {/* Analytics */}
-          <Route element={<ProtectedRoute module="Analytics/Stats" />}>
-            <Route path="/analytics" element={<Analytics />} />
-          </Route>
-
-          {/* Admin Roles */}
-          <Route element={<ProtectedRoute module="Admin Roles" />}>
-            <Route path="/admin-roles" element={<AdminRoles />} />
-            <Route path="/admin-roles/create" element={<AdminCreate />} />
-            <Route path="/admin-roles/edit/:id" element={<AdminEdit />} />
-            <Route path="/admin-roles/detail/:id" element={<AdminDetail />} />
+          {/* User Management */}
+          <Route element={<ProtectedRoute module="User Management" />}>
+            <Route path="/users" element={<UserManagement />} />
+            <Route path="/users/create" element={<UserCreate />} />
+            <Route path="/users/edit/:id" element={<UserEdit />} />
+            <Route path="/users/detail/:id" element={<UserDetail />} />
           </Route>
 
           {/* Drivers */}

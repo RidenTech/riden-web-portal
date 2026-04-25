@@ -13,7 +13,7 @@ export default function AdminCreate() {
     const [errors, setErrors] = useState({});
 
     const modules = [
-        'Dashboard', 'Analytics/Stats', 'Admin Roles', 'Driver Management',
+        'Dashboard', 'Analytics/Stats', 'User Management', 'Driver Management',
         'Vehicles Management', 'Booking Management', 'Reviews & Ratings',
         'Promo code Management', 'Fare Management', 'Commission Management',
         'Payment Management', 'Report Management', 'Passenger Management',
@@ -112,7 +112,7 @@ export default function AdminCreate() {
 
                 // Navigate back to admin roles list after 1 second
                 setTimeout(() => {
-                    navigate('/admin-roles');
+                    navigate('/users');
                 }, 1000);
             }
         } catch (error) {
@@ -152,10 +152,10 @@ export default function AdminCreate() {
     };
 
     return (
-        <AdminLayout title="Admin Roles">
+        <AdminLayout title="User Management">
             <div className="mx-auto">
                 <div className="riden-addadmin-head flex items-center gap-4 mb-4">
-                    <Link to="/admin-roles" className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors">
+                    <Link to="/users" className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors">
                         <i className="bi bi-chevron-left text-sm"></i>
                     </Link>
                     <h2 className="text-xl font-bold text-gray-900 tracking-tight">Add New Admin</h2>
@@ -318,7 +318,7 @@ export default function AdminCreate() {
 
                         {/* Form Actions */}
                         <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-gray-100">
-                            <Link to="/admin-roles">
+                            <Link to="/users">
                                 <Button
                                     type="button"
                                     variant="outline"

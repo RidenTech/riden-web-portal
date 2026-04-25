@@ -4,8 +4,8 @@ import AdminLayout from '@/layouts/AdminLayout';
 import { Button, Table, SearchBar, Pagination, DateRangePicker, DatePickerStyles } from '@/components/UI';
 
 export default function CommissionManagement() {
-    const [startDate, setStartDate] = useState(startOfWeek(new Date()));
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const [view, setView] = useState('list');
     const [editingType, setEditingType] = useState(null);
     const [editValue, setEditValue] = useState('');

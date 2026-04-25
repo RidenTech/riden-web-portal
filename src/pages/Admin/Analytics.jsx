@@ -2,7 +2,8 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { getDashboardAnalytics } from '../../api/dashboard';
+import { getDashboardAnalytics, getDashboardStats } from '../../api/dashboard';
+import { MiniChart } from '@/components/UI';
 
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -11,15 +12,17 @@ import {
 import { format, startOfWeek, startOfMonth, startOfYear, parseISO } from 'date-fns';
 
 export default function Analytics() {
-    const [activeTab, setActiveTab] = useState('driver');
-    const [startDate, setStartDate] = useState(startOfWeek(new Date()));
-    const [endDate, setEndDate] = useState(new Date());
+    const [activeTab, setActiveTab] = useState('dashboard');
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const [globalPeriod, setGlobalPeriod] = useState('This Week');
     const [analytics, setAnalytics] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [stats, setStats] = useState(null);
 
     const tabs = [
+        { id: 'dashboard', label: 'Live Dashboard' },
         { id: 'driver', label: 'Driver Analytics' },
         { id: 'passenger', label: 'Passengers Insights' },
         { id: 'ride', label: 'Ride Analytics' },
@@ -29,13 +32,22 @@ export default function Analytics() {
     const loadData = useCallback(async () => {
         try {
             setLoading(true);
-            const analyticsRes = await getDashboardAnalytics();
+            const [analyticsRes, statsRes] = await Promise.all([
+                getDashboardAnalytics(),
+                getDashboardStats()
+            ]);
 
             if (analyticsRes.status === 'success') {
                 setAnalytics(analyticsRes.data);
                 setError(null);
             } else {
                 setError('Failed to load analytics data');
+            }
+
+            if (statsRes.status === 'success') {
+                setStats(statsRes.data);
+            } else {
+                setStats(statsRes.data || statsRes);
             }
         } catch (error) {
             console.error("Error loading dashboard data", error);
@@ -52,6 +64,7 @@ export default function Analytics() {
     // Filter data based on date range
     const filterDataByDateRange = useCallback((data, dateField = 'date') => {
         if (!data || !Array.isArray(data)) return [];
+        if (!startDate || !endDate) return data; // Skip filtering if dates are not selected
 
         return data.filter(item => {
             const itemDate = parseISO(item[dateField]);
@@ -107,10 +120,25 @@ export default function Analytics() {
         );
     }
 
+    // Get chart data from analytics
+    const getActiveDriversChartData = () => {
+        if (analytics?.passenger_growth) {
+            return analytics.passenger_growth.slice(-7).map(item => item.total);
+        }
+        return [30, 50, 40, 75, 100, 60, 25]; // fallback data
+    };
+
+    const getOngoingRidesChartData = () => {
+        if (analytics?.booking_trends) {
+            return analytics.booking_trends.slice(-7).map(item => item.total);
+        }
+        return [30, 50, 100, 75, 60, 45, 20]; // fallback data
+    };
+
     return (
-        <AdminLayout title="Analytics">
+        <AdminLayout title="Dashboard & Analytics">
             {/* Filters Row */}
-            <div className="flex flex-wrap items-center gap-2 mb-4">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
                 <div className="relative group">
                     <select
                         value={globalPeriod}
@@ -126,7 +154,7 @@ export default function Analytics() {
                 </div>
 
                 <div className="flex items-center gap-2 ml-2">
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 r">
                         <div className="relative border border-[#D10000] w-[200px] rounded-full">
                             <div className="absolute left-1 top-1/2 -translate-y-1/2 w-8 h-8 rounded-[30px] bg-[#D10000] flex items-center justify-center text-white z-10">
                                 <i className="bi bi-calendar-check text-[14px]"></i>
@@ -136,6 +164,7 @@ export default function Analytics() {
                                 onChange={(date) => setStartDate(date)}
                                 placeholderText="From"
                                 maxDate={new Date()}
+                                dateFormat="d-MMM-yyyy"
                                 className="pl-11 pr-4 py-2 bg-white border-[1.5px] border-[#666]/30 rounded-full text-[14px] font-[600] w-44 outline-none focus:border-[#D10000] transition-all shadow-sm"
                             />
                         </div>
@@ -147,7 +176,9 @@ export default function Analytics() {
                                 selected={endDate}
                                 onChange={(date) => setEndDate(date)}
                                 placeholderText="To"
+                                minDate={startDate}
                                 maxDate={new Date()}
+                                dateFormat="d-MMM-yyyy"
                                 className="pl-11 pr-4 py-2 bg-white rounded-full text-[14px] font-[600] outline-none focus:border-[#D10000] transition-all"
                             />
                         </div>
@@ -155,49 +186,7 @@ export default function Analytics() {
                 </div>
             </div>
 
-            {/* Top KPI Summary Bar - Using real data from stats */}
-            <div className="bg-[#FF161F1A] rounded-[30px] p-8 mb-4 border border-[#FEE2E2] relative overflow-hidden">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 items-center relative z-10">
-                    {analytics && [
-                        {
-                            label: 'Total Bookings',
-                            value: analytics.booking_trends?.reduce((sum, item) => sum + item.total, 0) || 0,
-                            icon: 'bi-car-front-fill'
-                        },
-                        {
-                            label: 'Total Passengers',
-                            value: analytics.passenger_growth?.reduce((sum, item) => sum + item.total, 0) || 0,
-                            icon: 'bi-people-fill'
-                        },
-                        {
-                            label: 'Peak Day',
-                            value: analytics.booking_trends?.length > 0
-                                ? format(parseISO(analytics.booking_trends.reduce((max, item) =>
-                                    item.total > max.total ? item : max
-                                ).date), 'MMM dd')
-                                : 'N/A',
-                            icon: 'bi-calendar-heart-fill'
-                        },
-                        {
-                            label: 'Avg Daily Bookings',
-                            value: analytics.booking_trends?.length > 0
-                                ? Math.round(analytics.booking_trends.reduce((sum, item) => sum + item.total, 0) / analytics.booking_trends.length)
-                                : 0,
-                            icon: 'bi-graph-up-arrow'
-                        },
-                    ].map((kpi, i) => (
-                        <div key={i} className={`flex items-center gap-4 px-2 ${i < 3 ? 'border-r-2 border-[#D10000]' : ''}`}>
-                            <div className="w-[64px] h-[64px] rounded-full bg-white shadow-[0_8px_30px_rgba(209,0,0,0.08)] flex items-center justify-center shrink-0">
-                                <i className={`bi ${kpi.icon} text-[26px] text-[#D10000]`}></i>
-                            </div>
-                            <div>
-                                <p className="text-[14px] font-[600] text-[#6B7280] mb-0.5">{kpi.label}</p>
-                                <h3 className="text-[32px] font-[600] text-[#111] leading-none tracking-tight">{kpi.value}</h3>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+
 
             {/* Sub-Navigation */}
             <div className="bg-[#D10000] rounded-full p-1.5 flex mb-4 w-fit">
@@ -206,8 +195,8 @@ export default function Analytics() {
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={`px-8 py-3 rounded-full text-[15px] font-[700] transition-all duration-300 ${activeTab === tab.id
-                                ? 'bg-white text-[#D10000] shadow-md'
-                                : 'text-white hover:bg-white/10'
+                            ? 'bg-white text-[#D10000] shadow-md'
+                            : 'text-white hover:bg-white/10'
                             }`}
                     >
                         {tab.label}
@@ -217,6 +206,121 @@ export default function Analytics() {
 
             {/* Tab Content */}
             <div className="animate-fade-in transition-all">
+                {activeTab === 'dashboard' && (
+                    <>
+                        {/* Top KPI Summary Bar - Using real data from stats */}
+                        <div className="bg-[#FF161F1A] rounded-[30px] p-8 mb-4 border border-[#FEE2E2] relative overflow-hidden">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 items-center relative z-10">
+                                {[
+                                    {
+                                        label: 'Total Bookings',
+                                        value: stats?.total_bookings || 0,
+                                        icon: 'bi-car-front-fill'
+                                    },
+                                    {
+                                        label: 'Total Passengers',
+                                        value: stats?.total_passengers || 0,
+                                        icon: 'bi-people-fill'
+                                    },
+                                    {
+                                        label: 'Active Drivers',
+                                        value: stats?.total_drivers || 0,
+                                        icon: 'bi-person-check-fill'
+                                    },
+                                    {
+                                        label: 'Platform Revenue',
+                                        value: `$${stats?.revenue || 0}`,
+                                        icon: 'bi-currency-dollar'
+                                    },
+                                ].map((kpi, i) => (
+                                    <div key={i} className={`flex items-center gap-4 px-2 ${i < 3 ? 'border-r-2 border-[#D10000]' : ''}`}>
+                                        <div className="w-[64px] h-[64px] rounded-full bg-white shadow-[0_8px_30px_rgba(209,0,0,0.08)] flex items-center justify-center shrink-0">
+                                            <i className={`bi ${kpi.icon} text-[26px] text-[#D10000]`}></i>
+                                        </div>
+                                        <div>
+                                            <p className="text-[14px] font-[600] text-[#6B7280] mb-0.5">{kpi.label}</p>
+                                            <h3 className="text-[32px] font-[600] text-[#111] leading-none tracking-tight">{kpi.value}</h3>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Live Map & Ongoing Ride Section (from Dashboard) */}
+                        <div className="bg-white rounded-[30px] overflow-hidden relative h-[600px] border border-[#E5E7EB] mb-6">
+                            <iframe
+                                className="w-full h-full border-none contrast-[1.05]"
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1469550.0538914043!2d-80.443189!3d43.834789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4cd44b1c1d1a8d05%3A0xe10ad5de81c4e7ab!2sToronto%2C%20ON%2C%20Canada!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
+                                allowFullScreen=""
+                                loading="lazy"
+                                title="Live Map"
+                            ></iframe>
+
+                            {/* Ongoing Ride Card Overlay */}
+                            <div className="absolute top-[8%] right-[5%] bg-white rounded-[40px] p-6 w-[360px] shadow-[0_15px_50px_rgba(0,0,0,0.1)] z-10 transition-all hover:scale-[1.02]">
+                                <h4 className="text-[17px] font-[800] text-[#D10000] mb-6">Ongoing Ride Preview</h4>
+
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center gap-4">
+                                        <img src="https://i.pravatar.cc/150?img=11" alt="Driver" className="w-[54px] h-[54px] rounded-[14px] object-cover" />
+                                        <div>
+                                            <h5 className="text-[15px] font-[800] text-[#111]">Sergio Morsis</h5>
+                                            <p className="text-[11px] text-[#6B7280] font-[500] uppercase tracking-wider">
+                                                Driver • {stats?.completed_bookings || 0} Rides
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button className="w-11 h-11 rounded-full border border-[#E5E7EB] flex items-center justify-center text-[#D10000] hover:bg-[#D10000] hover:text-white transition-all shadow-sm">
+                                        <i className="bi bi-telephone-fill"></i>
+                                    </button>
+                                </div>
+
+                                <div className="relative pl-6 mb-4">
+                                    <div className="absolute left-[3px] top-[14px] bottom-[14px] w-[2px] border-l-2 border-dashed border-[#CBD5E1]"></div>
+                                    <div className="relative mb-4">
+                                        <div className="absolute -left-[27px] top-[6px] w-[11px] h-[11px] bg-black rounded-full"></div>
+                                        <h6 className="text-[14px] font-[800] text-[#111]">Office</h6>
+                                        <p className="text-[12px] text-[#6B7280]">2972 Westheimer Rd. Santa Ana, IL 85486</p>
+                                    </div>
+                                    <div className="relative">
+                                        <div className="absolute -left-[30px] top-[5px] text-[#D10000]">
+                                            <i className="bi bi-geo-alt-fill text-[16px]"></i>
+                                        </div>
+                                        <h6 className="text-[14px] font-[800] text-[#111]">Coffee shop</h6>
+                                        <p className="text-[12px] text-[#6B7280]">1901 Thornridge Cir. Shiloh, HI 81063</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-between border-t border-[#F1F5F9] pt-6 mb-4">
+                                    <div className="text-center">
+                                        <p className="text-[10px] font-[800] text-[#94A3B8] uppercase tracking-wider mb-1">Distance</p>
+                                        <p className="text-[13px] font-[800] text-[#111]">0.2 km</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-[10px] font-[800] text-[#94A3B8] uppercase tracking-wider mb-1">Time</p>
+                                        <p className="text-[13px] font-[800] text-[#111]">2 min</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-[10px] font-[800] text-[#94A3B8] uppercase tracking-wider mb-1">Fare Est.</p>
+                                        <p className="text-[13px] font-[800] text-[#D10000]">
+                                            ${stats?.revenue > 0 ? (stats.revenue / (stats.total_bookings || 1)).toFixed(2) : '25.00'}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-4 border-t border-[#F1F5F9] pt-4">
+                                    <div className="w-12 h-10 rounded-[10px] overflow-hidden bg-gray-50 flex items-center justify-center border border-gray-100">
+                                        <img src="/assets/images/vehicle-alto.png" alt="Car" className="w-[80%] h-auto object-contain" />
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-2 h-2 bg-black rounded-full"></div>
+                                        <span className="text-[12px] font-[800] text-[#111]">Black Suzuki Alto (BKG-220)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )}
                 {activeTab === 'driver' && (
                     <DriverAnalytics
                         bookingTrends={filterDataByDateRange(analytics?.booking_trends)}
@@ -258,8 +362,17 @@ export default function Analytics() {
                     border-bottom: none !important;
                     padding-top: 15px !important;
                 }
-                .react-datepicker__current-month, .react-datepicker__day-name {
+                .react-datepicker__navigation {
+                    top: 15px !important;
+                }
+                .react-datepicker__current-month {
                     color: white !important;
+                    font-weight: 700 !important;
+                    font-size: 15px !important;
+                    margin-bottom: 8px !important;
+                }
+                .react-datepicker__day-name {
+                    color: #111 !important;
                     font-weight: 700 !important;
                 }
                 .react-datepicker__day--selected, .react-datepicker__day--keyboard-selected {
@@ -275,7 +388,7 @@ export default function Analytics() {
                     border-color: white !important;
                 }
             ` }} />
-        </AdminLayout>
+        </AdminLayout >
     );
 }
 
@@ -295,28 +408,34 @@ function DriverAnalytics({ bookingTrends }) {
 
     return (
         <div className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white border-[1.5px] border-[#D10000] rounded-[30px] px-8 py-6 flex justify-between items-center shadow-sm relative overflow-hidden group">
-                    <div>
-                        <h4 className="text-[18px] font-[600] text-[#111] mb-4">Total Bookings</h4>
-                        <p className="text-[44px] font-[600] text-[#111] leading-none">
-                            {bookingTrends?.reduce((sum, item) => sum + item.total, 0) || 0}
-                        </p>
-                    </div>
-                    <img src="/assets/images/activedriver.png" className="w-[160px] h-auto object-contain" alt="Total Bookings" />
-                </div>
-                <div className="bg-white border-[1.5px] border-[#D10000] rounded-[30px] px-8 py-6 flex justify-between items-center shadow-sm relative overflow-hidden group">
-                    <div>
-                        <h4 className="text-[18px] font-[600] text-[#111] mb-4">Peak Day</h4>
-                        <p className="text-[44px] font-[600] text-[#111] leading-none">
-                            {bookingTrends?.length > 0
+            <div className="bg-[#FF161F1A] rounded-[30px] p-8 mb-4 border border-[#FEE2E2] relative overflow-hidden">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-0 items-center relative z-10">
+                    {[
+                        {
+                            label: 'Total Bookings',
+                            value: bookingTrends?.reduce((sum, item) => sum + item.total, 0) || 0,
+                            icon: 'bi-car-front-fill'
+                        },
+                        {
+                            label: 'Peak Day',
+                            value: bookingTrends?.length > 0
                                 ? format(parseISO(bookingTrends.reduce((max, item) =>
                                     item.total > max.total ? item : max
                                 ).date), 'MMM dd')
-                                : 'N/A'}
-                        </p>
-                    </div>
-                    <img src="/assets/images/offlinedriver.png" className="w-[160px] h-auto object-contain" alt="Peak Day" />
+                                : 'N/A',
+                            icon: 'bi-calendar-heart-fill'
+                        }
+                    ].map((kpi, i) => (
+                        <div key={i} className={`flex items-center gap-4 px-6 ${i === 0 ? 'border-r-2 border-[#D10000]' : ''}`}>
+                            <div className="w-[64px] h-[64px] rounded-full bg-white shadow-[0_8px_30px_rgba(209,0,0,0.08)] flex items-center justify-center shrink-0">
+                                <i className={`bi ${kpi.icon} text-[26px] text-[#D10000]`}></i>
+                            </div>
+                            <div>
+                                <p className="text-[14px] font-[600] text-[#6B7280] mb-0.5">{kpi.label}</p>
+                                <h3 className="text-[32px] font-[600] text-[#111] leading-none tracking-tight">{kpi.value}</h3>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
 
@@ -397,20 +516,30 @@ function PassengerAnalytics({ passengerGrowth }) {
 
     return (
         <div className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white border-[1.5px] border-[#D10000] rounded-[30px] px-8 py-6 flex justify-between items-center shadow-sm relative overflow-hidden group">
-                    <div>
-                        <h4 className="text-[18px] font-[600] text-[#111] mb-8">Total Passengers (All Time)</h4>
-                        <p className="text-[44px] font-[600] text-[#111] leading-none">{totalPassengers}</p>
-                    </div>
-                    <img src="/assets/images/totalpassenger.png" className="w-[160px] h-auto object-contain" alt="Total Passengers" />
-                </div>
-                <div className="bg-white border-[1.5px] border-[#D10000] rounded-[30px] px-8 py-6 flex justify-between items-center shadow-sm relative overflow-hidden group">
-                    <div>
-                        <h4 className="text-[18px] font-[600] text-[#111] mb-8">Average Daily Growth</h4>
-                        <p className="text-[44px] font-[600] text-[#111] leading-none">{avgGrowth}</p>
-                    </div>
-                    <img src="/assets/images/activepassenger.png" className="w-[160px] h-auto object-contain" alt="Average Growth" />
+            <div className="bg-[#FF161F1A] rounded-[30px] p-8 mb-4 border border-[#FEE2E2] relative overflow-hidden">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-0 items-center relative z-10">
+                    {[
+                        {
+                            label: 'Total Passengers (All Time)',
+                            value: totalPassengers,
+                            icon: 'bi-people-fill'
+                        },
+                        {
+                            label: 'Average Daily Growth',
+                            value: avgGrowth,
+                            icon: 'bi-graph-up-arrow'
+                        }
+                    ].map((kpi, i) => (
+                        <div key={i} className={`flex items-center gap-4 px-6 ${i === 0 ? 'border-r-2 border-[#D10000]' : ''}`}>
+                            <div className="w-[64px] h-[64px] rounded-full bg-white shadow-[0_8px_30px_rgba(209,0,0,0.08)] flex items-center justify-center shrink-0">
+                                <i className={`bi ${kpi.icon} text-[26px] text-[#D10000]`}></i>
+                            </div>
+                            <div>
+                                <p className="text-[14px] font-[600] text-[#6B7280] mb-0.5">{kpi.label}</p>
+                                <h3 className="text-[32px] font-[600] text-[#111] leading-none tracking-tight">{kpi.value}</h3>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
 
@@ -489,27 +618,29 @@ function RideAnalytics({ bookingTrends }) {
 
     return (
         <div className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {[
-                    { label: 'Total Rides', value: totalRides, icon: 'bi-car-front-fill' },
-                    { label: 'Average Daily', value: avgRides, icon: 'bi-calendar-check-fill' },
-                    {
-                        label: 'Peak Day Volume', value: bookingTrends?.length > 0
-                            ? Math.max(...bookingTrends.map(item => item.total))
-                            : 0,
-                        icon: 'bi-graph-up-arrow'
-                    },
-                ].map((stat, i) => (
-                    <div key={i} className="bg-white border-[1.5px] border-[#D10000] rounded-[30px] p-8 flex justify-between items-center relative overflow-hidden group hover:bg-[#FFF8F8] transition-all">
-                        <div>
-                            <p className="text-[17px] font-[600] text-[#111] mb-2">{stat.label}</p>
-                            <h3 className="text-[44px] font-[600] text-[#111] leading-none">{stat.value}</h3>
+            <div className="bg-[#FF161F1A] rounded-[30px] p-8 mb-4 border border-[#FEE2E2] relative overflow-hidden">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-0 items-center relative z-10">
+                    {[
+                        { label: 'Total Rides', value: totalRides, icon: 'bi-car-front-fill' },
+                        { label: 'Average Daily', value: avgRides, icon: 'bi-calendar-check-fill' },
+                        {
+                            label: 'Peak Day Volume', value: bookingTrends?.length > 0
+                                ? Math.max(...bookingTrends.map(item => item.total))
+                                : 0,
+                            icon: 'bi-graph-up-arrow'
+                        },
+                    ].map((kpi, i) => (
+                        <div key={i} className={`flex items-center gap-4 px-6 ${i < 2 ? 'border-r-2 border-[#D10000]' : ''}`}>
+                            <div className="w-[64px] h-[64px] rounded-full bg-white shadow-[0_8px_30px_rgba(209,0,0,0.08)] flex items-center justify-center shrink-0">
+                                <i className={`bi ${kpi.icon} text-[26px] text-[#D10000]`}></i>
+                            </div>
+                            <div>
+                                <p className="text-[14px] font-[600] text-[#6B7280] mb-0.5">{kpi.label}</p>
+                                <h3 className="text-[32px] font-[600] text-[#111] leading-none tracking-tight">{kpi.value}</h3>
+                            </div>
                         </div>
-                        <div className="w-16 h-16 rounded-full bg-[#fdfdfd] border-[1.5px] border-[#E5E7EB] flex items-center justify-center text-[#D10000]">
-                            <i className={`bi ${stat.icon} text-[32px]`}></i>
-                        </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
@@ -606,46 +737,30 @@ function FinancialAnalytics({ bookingTrends }) {
 
     return (
         <div className="space-y-5">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="bg-white border-[1.5px] border-[#666]/10 rounded-[30px] px-8 py-8 flex justify-between items-start shadow-sm relative overflow-hidden group">
-                    <div className="relative z-10">
-                        <div className="flex items-center gap-2 mb-6">
-                            <div className="w-8 h-8 rounded-full border-2 border-[#D10000] flex items-center justify-center text-[#D10000]">
-                                <i className="bi bi-currency-dollar font-bold"></i>
+            <div className="bg-[#FF161F1A] rounded-[30px] p-8 mb-4 border border-[#FEE2E2] relative overflow-hidden">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-0 items-center relative z-10">
+                    {[
+                        {
+                            label: 'Total Revenue',
+                            value: `$${totalRevenue.toLocaleString()}`,
+                            icon: 'bi-currency-dollar'
+                        },
+                        {
+                            label: 'Avg Per Day',
+                            value: `$${bookingTrends?.length > 0 ? Math.round(totalRevenue / bookingTrends.length).toLocaleString() : 0}`,
+                            icon: 'bi-graph-up-arrow'
+                        }
+                    ].map((kpi, i) => (
+                        <div key={i} className={`flex items-center gap-4 px-6 ${i === 0 ? 'border-r-2 border-[#D10000]' : ''}`}>
+                            <div className="w-[64px] h-[64px] rounded-full bg-white shadow-[0_8px_30px_rgba(209,0,0,0.08)] flex items-center justify-center shrink-0">
+                                <i className={`bi ${kpi.icon} text-[26px] text-[#D10000]`}></i>
                             </div>
-                            <h4 className="text-[18px] font-[600] text-[#111]">Total Revenue</h4>
-                        </div>
-                        <div className="space-y-1 pl-2">
-                            <h5 className="text-[17px] font-[700] text-[#D10000]">${totalRevenue.toLocaleString()}</h5>
-                            <p className="text-[14px] font-[600] text-[#6B7280]">From {totalBookings} bookings</p>
-                        </div>
-                    </div>
-                    <img src="/assets/images/refunds.png" className="w-[180px] self-center h-auto object-contain relative z-10" alt="Revenue" />
-                </div>
-                <div className="bg-white border-[1.5px] border-[#666]/10 rounded-[30px] px-8 py-8 flex justify-between items-start shadow-sm relative overflow-hidden group">
-                    <div className="flex-1 relative z-10">
-                        <div className="flex items-center gap-2 mb-6">
-                            <div className="w-8 h-8 rounded-full border-2 border-[#D10000] flex items-center justify-center text-[#D10000]">
-                                <i className="bi bi-percent"></i>
-                            </div>
-                            <h4 className="text-[18px] font-[600] text-[#111]">Revenue Insights</h4>
-                        </div>
-                        <div className="space-y-3">
-                            <div className="flex justify-between items-center">
-                                <span className="text-[14px] font-[700] text-[#6B7280] uppercase">Avg Per Day</span>
-                                <span className="text-[14px] font-[600] text-[#111]">
-                                    ${bookingTrends?.length > 0 ? Math.round(totalRevenue / bookingTrends.length).toLocaleString() : 0}
-                                </span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-[14px] font-[700] text-[#6B7280] uppercase">Avg Per Booking</span>
-                                <span className="text-[14px] font-[600] text-[#111]">
-                                    ${totalBookings > 0 ? Math.round(totalRevenue / totalBookings).toLocaleString() : 0}
-                                </span>
+                            <div>
+                                <p className="text-[14px] font-[600] text-[#6B7280] mb-0.5">{kpi.label}</p>
+                                <h3 className="text-[32px] font-[600] text-[#111] leading-none tracking-tight">{kpi.value}</h3>
                             </div>
                         </div>
-                    </div>
-                    <img src="/assets/images/commission.png" className="w-[150px] self-center h-auto object-contain relative z-10" alt="Insights" />
+                    ))}
                 </div>
             </div>
 

@@ -8,7 +8,7 @@ export default function AdminProfile() {
     const [loading, setLoading] = useState(true);
 
     const allModules = [
-        'Dashboard', 'Analytics/Stats', 'Admin Roles', 'Driver Management',
+        'Dashboard', 'Analytics/Stats', 'User Management', 'Driver Management',
         'Vehicles Management', 'Booking Management', 'Reviews & Ratings',
         'Promo code Management', 'Fare Management', 'Commission Management',
         'Payment Management', 'Report Management', 'Passenger Management',

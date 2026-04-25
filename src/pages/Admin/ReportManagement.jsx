@@ -9,8 +9,8 @@ import { Table, Badge, Button, SearchBar, Pagination, DateRangePicker, DatePicke
 
 export default function ReportManagement() {
     const [activeTab, setActiveTab] = useState('financial');
-    const [startDate, setStartDate] = useState(startOfWeek(new Date()));
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
     const [exportOpen, setExportOpen] = useState(false);
 

@@ -5,8 +5,8 @@ import { Table, ConfirmationModal, useToast, SearchBar, DateRangePicker, DatePic
 
 export default function PassengerRequest() {
     const { showToast } = useToast();
-    const [startDate, setStartDate] = useState(startOfWeek(new Date()));
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const [exportOpen, setExportOpen] = useState(false);
     const [requests, setRequests] = useState([
         { id: 1, name: 'Eleanor Pena', date: 'Dec 20, 2025', time: '07:50pm', reason: 'Name Edit Request', status: 'pending', avatar: '21' },

@@ -71,10 +71,8 @@ export default function VehicleCreate() {
             Object.keys(formData).forEach(key => {
                 data.append(key, formData[key]);
 
-                // DUAL-SENDING: We send the values under both names to satisfy 
-                // the backend's inconsistent validation and database rules.
-                if (key === 'model') data.append('vehicle_name', formData[key]);
-                if (key === 'license_plate') data.append('plate_number', formData[key]);
+                if (key === 'model') data.append('model', formData[key]);
+                if (key === 'license_plate') data.append('license_plate', formData[key]);
             });
 
             if (images.front_image) data.append('front_image', images.front_image);

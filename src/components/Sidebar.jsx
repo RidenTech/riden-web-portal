@@ -70,9 +70,8 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
     };
 
     const menuItems = [
-        { label: 'Dashboard', icon: 'bi bi-house-door', href: '/', permission: 'Dashboard' },
-        { label: 'Analytics/Stats', icon: 'bi bi-bar-chart', href: '/analytics', permission: 'Analytics/Stats' },
-        { label: 'Admin Roles', icon: 'bi bi-person', href: '/admin-roles', permission: 'Admin Roles' },
+        { label: 'Analytics & Dashboard', icon: 'bi bi-grid-1x2', href: '/', permission: 'Dashboard' },
+        { label: 'User Management', icon: 'bi bi-person', href: '/users', permission: 'User Management' },
         {
             label: 'Driver Management',
             icon: 'bi bi-person-badge',

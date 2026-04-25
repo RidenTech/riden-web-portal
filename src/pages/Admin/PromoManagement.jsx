@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom';
 export default function PromoManagement() {
     const { showToast } = useToast();
     const [view, setView] = useState('list');
-    const [startDate, setStartDate] = useState(startOfWeek(new Date()));
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const [exportOpen, setExportOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedPromo, setSelectedPromo] = useState(null);

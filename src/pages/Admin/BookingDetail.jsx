@@ -1,74 +1,119 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
-import { Link, useLocation } from 'react-router-dom';
-import { Badge } from '@/components/UI';
-
-// Fake data keyed by status type for demonstration
-const fakeBookings = {
-    online: {
-        id: '#98738',
-        date: 'Sunday March 23, 2023',
-        status: 'ongoing',
-        statusLabel: 'Ongoing',
-        title: 'Ongoing Ride',
-        driver: { name: 'Sergio Morsis', rides: 43, reviews: 31, avatar: '11' },
-        vehicle: { name: 'Black Suzuki Alto', vehNo: 'xyz 3457', image: null },
-        pickup: { label: 'Office', address: '2972 Westheimer Rd. Santa Ana, Illinois 85486' },
-        dropoff: { label: 'Coffee shop', address: '1901 Thornridge Cir. Shiloh, Hawaii 81063' },
-        distance: '0.2 km',
-        time: '15 min',
-        fare: '$25.00',
-        passenger: { name: 'Guy Hawkins', rides: 43, reviews: 31, avatar: '12' },
-        payment: { brand: 'visa', last4: '234' },
-    },
-    success: {
-        id: '#34526',
-        date: 'Sunday March 23, 2023',
-        status: 'success',
-        statusLabel: 'Completed',
-        title: 'Completed Ride',
-        driver: { name: 'Sergio Morsis', rides: 43, reviews: 21, avatar: '11' },
-        vehicle: { name: 'Black Suzuki Alto', vehNo: 'ABC 1234', image: null },
-        pickup: { label: 'Office', address: '2972 Westheimer Rd. Santa Ana, Illinois 85486' },
-        dropoff: { label: 'Coffee shop', address: '1901 Thornridge Cir. Shiloh, Hawaii 81063' },
-        distance: '0.2 km',
-        time: '2 min',
-        fare: '$25.00',
-        passenger: { name: 'Guy Hawkins', rides: 43, reviews: 31, avatar: '12' },
-        payment: { brand: 'visa', last4: '234' },
-        rating: 4,
-        reviewText: 'Lorem ipsum is simply dummy text of the printing and typesetting industry.',
-        tip: 'The Passenger "Guy Hawkins" gives $10 as a tip to the driver "Sergio Morsis"',
-    },
-    danger: {
-        id: '#34526',
-        date: 'Sunday March 23, 2023',
-        status: 'danger',
-        statusLabel: 'Cancelled',
-        title: 'Cancelled Ride',
-        driver: { name: 'Sergio Morsis', rides: 43, reviews: 31, avatar: '11' },
-        vehicle: { name: 'Black Suzuki Alto', vehNo: 'LMN 5678', image: null },
-        pickup: { label: 'Office', address: '2972 Westheimer Rd. Santa Ana, Illinois 85486' },
-        dropoff: { label: 'Coffee shop', address: '1901 Thornridge Cir. Shiloh, Hawaii 81063' },
-        distance: '0.2 km',
-        time: '2 min',
-        fare: '$25.00',
-        passenger: { name: 'Guy Hawkins', rides: 43, reviews: 31, avatar: '12' },
-        payment: { brand: 'visa', last4: '234' },
-        cancellationReason: 'Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s.',
-    },
-};
+import { Link, useParams } from 'react-router-dom';
+import { Badge, useToast } from '@/components/UI';
+import { getBookingDetail } from '@/api/bookingApi';
+import { STORAGE_URL } from '@/api/api';
 
 export default function BookingDetail() {
-    const location = useLocation();
-    const bookingStatus = location.state?.bookingStatus || 'online';
-    const booking = fakeBookings[bookingStatus] || fakeBookings.online;
+    const { id } = useParams();
+    const { showToast } = useToast();
+    const [loading, setLoading] = useState(true);
+    const [bookingData, setBookingData] = useState(null);
 
-    const isOngoing = booking.status === 'ongoing';
-    const isCompleted = booking.status === 'success';
-    const isCancelled = booking.status === 'danger';
+    useEffect(() => {
+        const fetchBooking = async () => {
+            try {
+                setLoading(true);
+                const res = await getBookingDetail(id);
+                // Handle different payload wrappers
+                const data = res.data?.data || res.data || res;
+                if (data) {
+                    setBookingData(data);
+                }
+            } catch (error) {
+                console.error("Error fetching booking detail:", error);
+
+                // Fallback loop if show method throws 500
+                if (error.response?.status === 500) {
+                    try {
+                        let found = false;
+                        for (let page = 1; page <= 10; page++) {
+                            const loopRes = await import('@/api/api').then(m => m.default.get('/admin/bookings', { params: { page } }));
+                            const list = loopRes.data?.data?.data || loopRes.data?.data || [];
+                            const match = list.find(b => b.id == id);
+                            if (match) {
+                                setBookingData(match);
+                                found = true;
+                                break;
+                            }
+                            const meta = loopRes.data?.data || {};
+                            if (meta.current_page >= meta.last_page || !meta.next_page_url) break;
+                        }
+                        if (!found) showToast("Booking not found", "error");
+                    } catch (e) {
+                        showToast(error.response?.data?.message || "Failed to load booking details", "error");
+                    }
+                } else {
+                    showToast(error.response?.data?.message || "Failed to load booking details", "error");
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (id) fetchBooking();
+    }, [id]);
+
+    if (loading) {
+        return (
+            <AdminLayout title="Booking Management">
+                <div className="flex justify-center items-center h-[600px]">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D10000]"></div>
+                </div>
+            </AdminLayout>
+        );
+    }
+
+    if (!bookingData) {
+        return (
+            <AdminLayout title="Booking Management">
+                <div className="flex flex-col items-center justify-center p-10 text-gray-500">
+                    <i className="bi bi-file-earmark-x text-5xl mb-4"></i>
+                    <h3 className="text-xl">Booking Not Found</h3>
+                </div>
+            </AdminLayout>
+        );
+    }
+
+    const isOngoing = bookingData.status === 'pending' || bookingData.status === 'ongoing';
+    const isCompleted = bookingData.status === 'completed' || bookingData.status === 'success';
+    const isCancelled = bookingData.status === 'cancelled' || bookingData.status === 'danger';
 
     const statusVariant = isOngoing ? 'online' : isCompleted ? 'success' : 'danger';
+
+    // Map to normalized object for rendering
+    const booking = {
+        id: `#${bookingData.id}`,
+        date: new Date(bookingData.created_at).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+        statusLabel: bookingData.status?.charAt(0).toUpperCase() + bookingData.status?.slice(1),
+        title: isOngoing ? 'Ongoing Ride' : isCompleted ? 'Completed Ride' : 'Cancelled Ride',
+        driver: bookingData.driver ? {
+            name: `${bookingData.driver.first_name || ''} ${bookingData.driver.last_name || ''}`.trim() || 'Driver',
+            avatar: bookingData.driver.avatar ? `${STORAGE_URL}/${bookingData.driver.avatar}` : null,
+            rides: bookingData.driver.rides_count || 0,
+            reviews: bookingData.driver.reviews_count || 0
+        } : { name: 'Not Assigned', avatar: null, rides: 0, reviews: 0 },
+        vehicle: bookingData.vehicle || { name: 'Assigned Vehicle', vehNo: bookingData.vehicle_id || 'N/A' },
+        pickup: { label: 'Pickup Location', address: bookingData.pickup_location || 'N/A' },
+        dropoff: { label: 'Dropoff Location', address: bookingData.dropoff_location || 'N/A' },
+        distance: bookingData.distance || '0 km',
+        time: bookingData.duration || '0 min',
+        fare: `Rs ${bookingData.fare || '0.00'}`,
+        passenger: bookingData.passenger ? {
+            name: `${bookingData.passenger.first_name || ''} ${bookingData.passenger.last_name || ''}`.trim() || 'Passenger',
+            avatar: bookingData.passenger.avatar ? `${STORAGE_URL}/${bookingData.passenger.avatar}` : null,
+            rides: bookingData.passenger.rides_count || 0,
+            reviews: bookingData.passenger.reviews_count || 0
+        } : { name: 'Unknown', avatar: null, rides: 0, reviews: 0 },
+        payment: { brand: bookingData.payment_method || 'Cash', last4: bookingData.card_last_four || '----' },
+        rating: bookingData.rating || 0,
+        reviewText: bookingData.review || '',
+        tip: bookingData.tip_amount ? `Passenger gave Rs ${bookingData.tip_amount} as tip` : '',
+        cancellationReason: bookingData.cancellation_reason || 'No specific reason provided by user'
+    };
+
+
 
     return (
         <AdminLayout title="Booking Management">

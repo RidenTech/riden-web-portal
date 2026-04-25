@@ -34,7 +34,7 @@ export default function PassengerDetail() {
                 name: data.name || `${data.first_name || ''} ${data.last_name || ''}`.trim() || 'N/A',
                 since: data.created_at ? `Since ${new Date(data.created_at).toLocaleDateString()}` : (data.since || 'N/A'),
                 rating: data.rating || 5.0,
-                unique_id: data.unique_id || id,
+                id: data.id || id,
                 stats: {
                     total_rides: data.total_rides || data.stats?.total_rides || 0,
                     completed_rides: data.completed_rides || data.stats?.completed_rides || 0,
@@ -309,18 +309,18 @@ export default function PassengerDetail() {
                                         </div>
 
                                         <div className="flex items-center justify-between py-6 border-b border-gray-100">
-                                            <span className="text-sm font-semibold text-gray-500 w-1/3">Unique ID</span>
+                                            <span className="text-sm font-semibold text-gray-500 w-1/3">ID</span>
                                             {isEditing ? (
                                                 <div className="w-2/3">
                                                     <InputWrapper icon="bi bi-card-text" className="h-10 mb-0">
                                                         <Input
-                                                            value={passenger.unique_id}
-                                                            onChange={e => setPassenger({ ...passenger, unique_id: e.target.value })}
+                                                            value={passenger.id}
+                                                            onChange={e => setPassenger({ ...passenger, id: e.target.value })}
                                                         />
                                                     </InputWrapper>
                                                 </div>
                                             ) : (
-                                                <span className="text-sm font-bold text-[#D10000] w-2/3 tracking-wider">{passenger.unique_id}</span>
+                                                <span className="text-sm font-bold text-[#D10000] w-2/3 tracking-wider">#{passenger.id}</span>
                                             )}
                                         </div>
 
@@ -345,39 +345,48 @@ export default function PassengerDetail() {
                                 {activeTab === 'rides' && (
                                     <div className="flex flex-col">
                                         <div className="overflow-x-auto ">
-                                            <table className="w-full text-left border-collapse">
-                                                <thead>
-                                                    <tr className="bg-[#FFEAEA] text-xs font-bold text-gray-900 border-none">
-                                                        <th className="py-4 px-6 rounded-l-xl">Date</th>
-                                                        <th className="py-4 px-6">Booking ID</th>
-                                                        <th className="py-4 px-6">Driver</th>
-                                                        <th className="py-4 px-6 rounded-r-xl">Pickup / Dropoff</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="text-sm">
-                                                    {(showAllRides ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] : [1, 2, 3, 4, 5]).map((item, idx) => (
-                                                        <tr key={idx} className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
-                                                            <td className="py-4 px-6 text-gray-800 font-medium whitespace-nowrap">22 March 2025</td>
-                                                            <td className="py-4 px-6 text-gray-800 font-bold whitespace-nowrap">#34565</td>
-                                                            <td className="py-4 px-6 text-gray-600 font-medium whitespace-nowrap">Floyd Miles</td>
-                                                            <td className="py-4 px-6 text-gray-600 font-medium">
-                                                                123 Main Street <br />
-                                                                <i className="bi bi-arrow-down text-gray-400 text-[10px]"></i><br />
-                                                                Suite 405, Toronto
-                                                            </td>
+                                            {!passenger.rides || passenger.rides.length === 0 ? (
+                                                <div className="text-center py-20 bg-gray-50 rounded-2xl">
+                                                    <i className="bi bi-car-front text-4xl text-gray-300 mb-3 block"></i>
+                                                    <p className="text-gray-500 font-medium">No rides found for this passenger</p>
+                                                </div>
+                                            ) : (
+                                                <table className="w-full text-left border-collapse">
+                                                    <thead>
+                                                        <tr className="bg-[#FFEAEA] text-xs font-bold text-gray-900 border-none">
+                                                            <th className="py-4 px-6 rounded-l-xl">Date</th>
+                                                            <th className="py-4 px-6">Booking ID</th>
+                                                            <th className="py-4 px-6">Driver</th>
+                                                            <th className="py-4 px-6 rounded-r-xl">Pickup / Dropoff</th>
                                                         </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody className="text-sm">
+                                                        {(showAllRides ? passenger.rides : passenger.rides.slice(0, 5)).map((ride, idx) => (
+                                                            <tr key={idx} className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
+                                                                <td className="py-4 px-6 text-gray-800 font-medium whitespace-nowrap">{new Date(ride.created_at).toLocaleDateString()}</td>
+                                                                <td className="py-4 px-6 text-gray-800 font-bold whitespace-nowrap">{ride.unique_id}</td>
+                                                                <td className="py-4 px-6 text-gray-600 font-medium whitespace-nowrap">{ride.driver?.first_name ? `${ride.driver.first_name} ${ride.driver.last_name || ''}` : 'N/A'}</td>
+                                                                <td className="py-4 px-6 text-gray-600 font-medium">
+                                                                    {ride.pickup_address || 'N/A'} <br />
+                                                                    <i className="bi bi-arrow-down text-gray-400 text-[10px]"></i><br />
+                                                                    {ride.dropoff_address || 'N/A'}
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            )}
                                         </div>
-                                        <div className="mt-6 mb-2 px-6">
-                                            <button
-                                                onClick={() => setShowAllRides(!showAllRides)}
-                                                className="text-[#D10000] text-xs font-bold hover:underline transition-all"
-                                            >
-                                                {showAllRides ? 'Show Less' : 'View All'}
-                                            </button>
-                                        </div>
+                                        {passenger.rides && passenger.rides.length > 5 && (
+                                            <div className="mt-6 mb-2 px-6">
+                                                <button
+                                                    onClick={() => setShowAllRides(!showAllRides)}
+                                                    className="text-[#D10000] text-xs font-bold hover:underline transition-all"
+                                                >
+                                                    {showAllRides ? 'Show Less' : 'View All'}
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
 
@@ -489,7 +498,7 @@ export default function PassengerDetail() {
                             </div>
 
                             <div className="p-6">
-                                <p className="text-[13px] font-medium text-gray-800 mb-6 font-semibold">Passenger : {passenger.name} (ID: #2045)</p>
+                                <p className="text-[13px] font-medium text-gray-800 mb-6 font-semibold">Passenger : {passenger.name} (ID: {passenger.id})</p>
 
                                 <div className="mb-5">
                                     <p className="text-[15px] font-bold text-gray-900 mb-3">Duration Type</p>

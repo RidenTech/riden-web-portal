@@ -13,8 +13,8 @@ export default function SupportTicket() {
     const [tab, setTab] = useState('driver');
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [isReplying, setIsReplying] = useState(false);
-    const [startDate, setStartDate] = useState(startOfWeek(new Date()));
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
     // Image Upload State
     const [images, setImages] = useState([]);

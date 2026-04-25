@@ -5,14 +5,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { startOfWeek } from 'date-fns';
 import { getAdmins, deleteAdmin } from '../../api/adminApi';
 
-export default function AdminRoles() {
+export default function UserManagement() {
     const [adminRoles, setAdminRoles] = useState([]);
     const [filteredAdmins, setFilteredAdmins] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { showToast } = useToast();
-    const [startDate, setStartDate] = useState(startOfWeek(new Date()));
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedAdmin, setSelectedAdmin] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -23,8 +23,10 @@ export default function AdminRoles() {
         try {
             setLoading(true);
             const res = await getAdmins();
-            setAdminRoles(res.data); // backend array
-            setFilteredAdmins(res.data);
+            const payload = res.data || res || {};
+            const list = payload.data?.data || (Array.isArray(payload.data) ? payload.data : (Array.isArray(payload) ? payload : []));
+            setAdminRoles(list);
+            setFilteredAdmins(list);
         } catch (error) {
             console.log(error);
             showToast("Failed to load admins", "error");
@@ -104,8 +106,7 @@ export default function AdminRoles() {
 
                 // You can also show different messages based on status if needed
                 if (error.response.status === 403) {
-                    // 403 already has the message from backend, so we keep it
-                    // errorMessage already contains "Super admin cannot be deleted"
+
                     console.log('Permission denied:', errorMessage);
                 }
             } else if (error.request) {
@@ -164,7 +165,7 @@ export default function AdminRoles() {
     const currentAdmin = JSON.parse(localStorage.getItem('admin') || '{}');
 
     return (
-        <AdminLayout title="Admin Roles">
+        <AdminLayout title="User Management">
 
             <DatePickerStyles />
 
@@ -179,7 +180,7 @@ export default function AdminRoles() {
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
 
-                    <Link to="/admin-roles/create">
+                    <Link to="/users/create">
                         <Button className="px-8 py-3 rounded-full font-black uppercase tracking-widest shadow-xl shadow-red-100">
                             <i className="bi bi-plus-lg mr-2"></i> Add Admin
                         </Button>

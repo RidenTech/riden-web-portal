@@ -5,7 +5,7 @@ import { Label, InputWrapper, Input, Button } from '@/components/UI';
 
 export default function AdminEdit() {
     const modules = [
-        'Dashboard', 'Analytics/Stats', 'Admin Roles', 'Driver Management',
+        'Dashboard', 'Analytics/Stats', 'User Management', 'Driver Management',
         'Vehicles Management', 'Booking Management', 'Reviews & Ratings',
         'Promo code Management', 'Fare Management', 'Commission Management',
         'Payment Management', 'Report Management', 'Passenger Management',
@@ -22,10 +22,10 @@ export default function AdminEdit() {
     };
 
     return (
-        <AdminLayout title="Admin Roles">
+        <AdminLayout title="User Management">
             <div className="mx-auto">
                 <div className="flex items-center gap-4 mb-4">
-                    <Link to="/admin-roles" className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors">
+                    <Link to="/users" className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors">
                         <i className="bi bi-chevron-left text-sm"></i>
                     </Link>
                     <h2 className="text-xl font-bold text-gray-900 tracking-tight">Edit Admin
@@ -123,7 +123,7 @@ export default function AdminEdit() {
 
                     <div className="flex justify-end gap-3 mt-8">
                         <Button className="px-14 py-4 shadow-xl shadow-red-100  font-black uppercase tracking-widest">Update Admin</Button>
-                        <Link to="/admin-roles">
+                        <Link to="/users">
                             <Button variant="outline" className="px-14 py-4 border-gray-200 text-gray-500 hover:bg-gray-50  font-black uppercase tracking-widest">Cancel</Button>
                         </Link>
                     </div>

@@ -6,8 +6,8 @@ import { Badge, Button, Table, SearchBar, Pagination, DateRangePicker, DatePicke
 export default function PayoutManagement() {
     const [view, setView] = useState('payouts'); // 'payouts' or 'instant-requests'
     const [tab, setTab] = useState('upcoming'); // 'upcoming' or 'previous'
-    const [startDate, setStartDate] = useState(startOfWeek(new Date()));
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
     const drivers = [
         { name: 'Wade Warren', id: '#34567', rides: '45', amount: '$50.00', date: '22 March 2025', img: 'https://i.pravatar.cc/100?img=11', instant: true },
