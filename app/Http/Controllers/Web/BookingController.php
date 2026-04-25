@@ -33,7 +33,7 @@ class BookingController extends Controller
         if ($request->has('search')) {
             $search = $request->get('search');
             $query->where(function($q) use ($search) {
-                $q->where('booking_id', 'like', "%{$search}%")
+                $q->where('id', 'like', "%{$search}%")
                   ->orWhereHas('passenger', function($pq) use ($search) {
                       $pq->where('first_name', 'like', "%{$search}%")
                         ->orWhere('last_name', 'like', "%{$search}%")
@@ -83,11 +83,7 @@ class BookingController extends Controller
             'fare' => 'required|numeric',
         ]);
 
-        // Generate a professional unique booking ID (e.g., #48291)
-        $bookingId = str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
-
         $booking = Booking::create([
-            'booking_id' => $bookingId,
             'passenger_id' => $request->passenger_id,
             'driver_id' => $request->driver_id,
             'pickup_location' => $request->pickup_location,
@@ -100,6 +96,6 @@ class BookingController extends Controller
             'payment_status' => 'unpaid',
         ]);
 
-        return redirect()->route('admin.booking.management')->with('status', 'New booking ' . $bookingId . ' has been created successfully!');
+        return redirect()->route('admin.booking.management')->with('status', 'New booking #' . $booking->id . ' has been created successfully!');
     }
 }

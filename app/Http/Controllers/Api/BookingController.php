@@ -61,11 +61,7 @@ class BookingController extends Controller
         }
 
         try {
-            // Generate a unique booking ID (e.g., #48291)
-            $bookingId = '#' . str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
-
             $booking = Booking::create([
-                'booking_id' => $bookingId,
                 'passenger_id' => $request->user()->id,
                 'pickup_location' => $request->pickup_location,
                 'dropoff_location' => $request->dropoff_location,
@@ -186,7 +182,7 @@ class BookingController extends Controller
         if ($request->has('search')) {
             $search = $request->get('search');
             $query->where(function($q) use ($search) {
-                $q->where('booking_id', 'like', "%{$search}%")
+                $q->where('id', 'like', "%{$search}%")
                   ->orWhereHas('passenger', function($pq) use ($search) {
                       $pq->where('first_name', 'like', "%{$search}%")
                         ->orWhere('last_name', 'like', "%{$search}%");
