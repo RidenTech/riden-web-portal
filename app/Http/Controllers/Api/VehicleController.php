@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Admin;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vehicle;
@@ -19,8 +19,8 @@ class VehicleController extends Controller
 
         if ($request->has('search')) {
             $search = $request->get('search');
-            $query->where('vehicle_name', 'like', "%{$search}%")
-                  ->orWhere('plate_number', 'like', "%{$search}%");
+            $query->where('model', 'like', "%{$search}%")
+                  ->orWhere('license_plate', 'like', "%{$search}%");
         }
 
         $vehicles = $query->latest()->paginate($request->get('per_page', 10));
@@ -37,9 +37,9 @@ class VehicleController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'vehicle_name' => 'required|string|max:255',
+            'model' => 'required|string|max:255',
             'vehicle_type' => 'required|string',
-            'plate_number' => 'required|string|unique:vehicles',
+            'license_plate' => 'required|string|unique:vehicles',
             'front_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'back_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
@@ -91,9 +91,9 @@ class VehicleController extends Controller
         $vehicle = Vehicle::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'vehicle_name' => 'sometimes|string|max:255',
+            'model' => 'sometimes|string|max:255',
             'vehicle_type' => 'sometimes|string',
-            'plate_number' => 'sometimes|string|unique:vehicles,plate_number,' . $id,
+            'license_plate' => 'sometimes|string|unique:vehicles,license_plate,' . $id,
             'front_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'back_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
@@ -141,3 +141,4 @@ class VehicleController extends Controller
         ]);
     }
 }
+
