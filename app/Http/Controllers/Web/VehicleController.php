@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vehicle;
 use App\Models\Driver;
 use Illuminate\Http\Request;
 
-class VehicleManagementController extends Controller
+class VehicleController extends Controller
 {
     public function index()
     {
         $vehicles = Vehicle::with('driver')->paginate(10);
-        return response()->json(['status' => 'success', 'data' => $vehicles]);
+        return view('admin.vehicle.index', compact('vehicles'));
     }
 
     public function create()
     {
         $drivers = Driver::all();
-        return response()->json(['status' => 'success', 'data' => ['drivers' => $drivers]]);
+        return view('admin.vehicle.create', compact('drivers'));
     }
 
     public function store(Request $request)
@@ -53,14 +53,14 @@ class VehicleManagementController extends Controller
 
         Vehicle::create($data);
 
-        return response()->json(['status' => 'success', 'message' => 'Vehicle added successfully with images!']);
+        return redirect()->route('admin.vehicle.management')->with('status', 'Vehicle added successfully with images!');
     }
 
     public function edit($id)
     {
         $vehicle = Vehicle::findOrFail($id);
         $drivers = Driver::all();
-        return response()->json(['status' => 'success', 'data' => ['vehicle' => $vehicle, 'drivers' => $drivers]]);
+        return view('admin.vehicle.edit', compact('vehicle', 'drivers'));
     }
 
     public function update(Request $request, $id)
@@ -103,7 +103,7 @@ class VehicleManagementController extends Controller
 
         $vehicle->update($data);
 
-        return response()->json(['status' => 'success', 'message' => 'Vehicle updated successfully!']);
+        return redirect()->route('admin.vehicle.management')->with('status', 'Vehicle updated successfully!');
     }
 
     public function destroy($id)
@@ -120,6 +120,6 @@ class VehicleManagementController extends Controller
 
         $vehicle->delete();
 
-        return response()->json(['status' => 'success', 'message' => 'Vehicle deleted successfully!']);
+        return redirect()->route('admin.vehicle.management')->with('status', 'Vehicle deleted successfully!');
     }
 }

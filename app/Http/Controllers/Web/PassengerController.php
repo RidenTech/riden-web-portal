@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Passenger;
@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class PassengerManagementController extends Controller
+class PassengerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class PassengerManagementController extends Controller
     public function index()
     {
         $passengers = Passenger::latest()->paginate(10);
-        return response()->json(['status' => 'success', 'data' => $passengers]);
+        return view('admin.passenger.index', compact('passengers'));
     }
 
     /**
@@ -24,7 +24,7 @@ class PassengerManagementController extends Controller
      */
     public function create()
     {
-        return response()->json(['status' => 'success', 'data' => []]);
+        return view('admin.passenger.create');
     }
 
     /**
@@ -58,7 +58,7 @@ class PassengerManagementController extends Controller
 
         Passenger::create($data);
 
-        return response()->json(['status' => 'success', 'message' => 'Passenger added successfully.']);
+        return redirect()->route('admin.passenger.management')->with('status', 'Passenger added successfully.');
     }
 
     /**
@@ -67,7 +67,7 @@ class PassengerManagementController extends Controller
     public function show(string $id)
     {
         $passenger = Passenger::findOrFail($id);
-        return response()->json(['status' => 'success', 'data' => $passenger]);
+        return view('admin.passenger.detail', compact('passenger'));
     }
 
     /**
@@ -76,7 +76,7 @@ class PassengerManagementController extends Controller
     public function edit(string $id)
     {
         $passenger = Passenger::findOrFail($id);
-        return response()->json(['status' => 'success', 'data' => $passenger]);
+        return view('admin.passenger.edit', compact('passenger'));
     }
 
     /**
@@ -108,7 +108,7 @@ class PassengerManagementController extends Controller
 
         $passenger->update($data);
 
-        return response()->json(['status' => 'success', 'message' => 'Passenger updated successfully.', 'data' => $passenger]);
+        return redirect()->route('admin.passenger.management')->with('status', 'Passenger updated successfully.');
     }
 
     /**
@@ -119,7 +119,7 @@ class PassengerManagementController extends Controller
         $passenger = Passenger::findOrFail($id);
         $passenger->delete();
 
-        return response()->json(['status' => 'success', 'message' => 'Passenger deleted successfully.']);
+        return redirect()->route('admin.passenger.management')->with('status', 'Passenger deleted successfully.');
     }
 
     /**
@@ -139,6 +139,6 @@ class PassengerManagementController extends Controller
 
         $message = $passenger->status == 'Active' ? 'Passenger unblocked successfully.' : 'Passenger blocked successfully.';
         
-        return response()->json(['status' => 'success', 'message' => $message]);
+        return back()->with('status', $message);
     }
 }

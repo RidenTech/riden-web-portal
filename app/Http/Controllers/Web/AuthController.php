@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     public function showLogin()
     {
-        return response()->json(['status' => 'success', 'message' => 'Please authenticate']);
+        return view('admin.auth.index');
     }
 
     public function login(Request $request)
@@ -24,16 +24,17 @@ class AuthController extends Controller
 
         if (Auth::guard('admin')->attempt(array_merge($credentials, ['deleted_at' => null]), $request->filled('remember'))) {
             $request->session()->regenerate();
-            $admin = Auth::guard('admin')->user();
-            return response()->json(['status' => 'success', 'message' => 'Login successful', 'data' => $admin]);
+            return redirect()->route('admin.dashboard');
         }
 
-        return response()->json(['status' => 'error', 'message' => 'The provided credentials do not match our records.'], 401);
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
     }
 
     public function showRegister()
     {
-        return response()->json(['status' => 'success', 'message' => 'Ready for registration']); 
+        return view('admin.auth.register'); 
     }
 
     public function register(Request $request)
@@ -52,7 +53,7 @@ class AuthController extends Controller
             'phone' => $request->phone,
         ]);
 
-        return response()->json(['status' => 'success', 'message' => 'Registration successful! Please login.']);
+        return redirect()->route('admin.login')->with('status', 'Registration successful! Please login.');
     }
 
     public function logout(Request $request)
@@ -60,12 +61,12 @@ class AuthController extends Controller
         Auth::guard('admin')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return response()->json(['status' => 'success', 'message' => 'Logged out successfully']);
+        return redirect()->route('admin.login')->with('status', 'Logged out successfully');
     }
 
     public function showUpdatePassword()
     {
-        return response()->json(['status' => 'success', 'message' => 'Ready to update password']);
+        return view('admin.auth.reset');
     }
 
     public function updatePassword(Request $request)
@@ -78,13 +79,13 @@ class AuthController extends Controller
         $admin = Auth::guard('admin')->user();
 
         if (!Hash::check($request->current_password, $admin->password)) {
-            return response()->json(['status' => 'error', 'message' => 'Current password does not match.'], 400);
+            return back()->withErrors(['current_password' => 'Current password does not match.']);
         }
 
         $admin->update([
             'password' => Hash::make($request->new_password),
         ]);
 
-        return response()->json(['status' => 'success', 'message' => 'Password updated successfully!']);
+        return back()->with('status', 'Password updated successfully!');
     }
 }

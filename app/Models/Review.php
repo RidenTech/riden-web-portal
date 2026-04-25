@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DriverReview extends Model
+class Review extends Model
 {
+    protected $table = 'driver_reviews';
+
     protected $fillable = [
         'driver_id',
         'passenger_id',

@@ -11,21 +11,48 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('passengers', function (Blueprint $table) {
-            if (Schema::hasColumn('passengers', 'unique_id')) {
-                $table->dropColumn('unique_id');
-            }
-        });
-        Schema::table('drivers', function (Blueprint $table) {
-            if (Schema::hasColumn('drivers', 'unique_id')) {
-                $table->dropColumn('unique_id');
-            }
-        });
-        Schema::table('bookings', function (Blueprint $table) {
-            if (Schema::hasColumn('bookings', 'booking_id')) {
-                $table->dropColumn('booking_id');
-            }
-        });
+        // Drop passengers.unique_id (drop index first for SQLite compatibility)
+        try {
+            Schema::table('passengers', function (Blueprint $table) {
+                if (Schema::hasIndex('passengers', 'passengers_unique_id_unique')) {
+                    $table->dropUnique('passengers_unique_id_unique');
+                }
+            });
+        } catch (\Throwable $e) { /* index may not exist */ }
+
+        try {
+            Schema::table('passengers', function (Blueprint $table) {
+                if (Schema::hasColumn('passengers', 'unique_id')) {
+                    $table->dropColumn('unique_id');
+                }
+            });
+        } catch (\Throwable $e) { /* column may not exist */ }
+
+        // Drop drivers.unique_id
+        try {
+            Schema::table('drivers', function (Blueprint $table) {
+                if (Schema::hasIndex('drivers', 'drivers_unique_id_unique')) {
+                    $table->dropUnique('drivers_unique_id_unique');
+                }
+            });
+        } catch (\Throwable $e) { /* index may not exist */ }
+
+        try {
+            Schema::table('drivers', function (Blueprint $table) {
+                if (Schema::hasColumn('drivers', 'unique_id')) {
+                    $table->dropColumn('unique_id');
+                }
+            });
+        } catch (\Throwable $e) { /* column may not exist */ }
+
+        // Drop bookings.booking_id
+        try {
+            Schema::table('bookings', function (Blueprint $table) {
+                if (Schema::hasColumn('bookings', 'booking_id')) {
+                    $table->dropColumn('booking_id');
+                }
+            });
+        } catch (\Throwable $e) { /* column may not exist */ }
     }
 
     /**

@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Passenger;
+use App\Models\Driver;
 use Illuminate\Http\Request;
 
-class PassengerApiController extends Controller
+class DriverController extends Controller
 {
     /**
-     * List all passengers for Admin
+     * List all drivers for Admin
      */
     public function index(Request $request)
     {
-        $query = Passenger::query();
+        $query = Driver::with(['vehicle']);
 
         if ($request->has('search')) {
             $search = $request->get('search');
@@ -25,24 +25,24 @@ class PassengerApiController extends Controller
             });
         }
 
-        $passengers = $query->latest()->paginate($request->get('per_page', 10));
+        $drivers = $query->latest()->paginate($request->get('per_page', 10));
 
         return response()->json([
             'status' => 'success',
-            'data' => $passengers
+            'data' => $drivers
         ]);
     }
 
     /**
-     * Store new passenger
+     * Store new driver
      */
     public function store(Request $request)
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:passengers',
-            'phone' => 'required|string|unique:passengers',
+            'email' => 'required|email|unique:drivers',
+            'phone' => 'required|string|unique:drivers',
             'password' => 'required|min:8',
         ]);
 
@@ -50,7 +50,7 @@ class PassengerApiController extends Controller
             return response()->json(['status' => 'error', 'errors' => $validator->errors()], 422);
         }
 
-        $passenger = Passenger::create([
+        $driver = Driver::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
@@ -61,57 +61,57 @@ class PassengerApiController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Passenger created successfully',
-            'data' => $passenger
+            'message' => 'Driver created successfully',
+            'data' => $driver
         ], 201);
     }
 
     /**
-     * Show passenger detail
+     * Show driver detail
      */
     public function show($id)
     {
-        $passenger = Passenger::with(['bookings'])->find($id);
+        $driver = Driver::with(['vehicle', 'bookings'])->find($id);
 
-        if (!$passenger) {
-            return response()->json(['status' => 'error', 'message' => 'Passenger not found'], 404);
+        if (!$driver) {
+            return response()->json(['status' => 'error', 'message' => 'Driver not found'], 404);
         }
 
         return response()->json([
             'status' => 'success',
-            'data' => $passenger
+            'data' => $driver
         ]);
     }
 
     /**
-     * Update passenger
+     * Update driver
      */
     public function update(Request $request, $id)
     {
-        $passenger = Passenger::findOrFail($id);
+        $driver = Driver::findOrFail($id);
 
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'first_name' => 'sometimes|string|max:255',
             'last_name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:passengers,email,' . $id,
-            'phone' => 'sometimes|string|unique:passengers,phone,' . $id,
+            'email' => 'sometimes|email|unique:drivers,email,' . $id,
+            'phone' => 'sometimes|string|unique:drivers,phone,' . $id,
         ]);
 
         if ($validator->fails()) {
             return response()->json(['status' => 'error', 'errors' => $validator->errors()], 422);
         }
 
-        $passenger->update($request->only(['first_name', 'last_name', 'email', 'phone']));
+        $driver->update($request->only(['first_name', 'last_name', 'email', 'phone']));
 
         if ($request->filled('password')) {
-            $passenger->password = \Illuminate\Support\Facades\Hash::make($request->password);
-            $passenger->save();
+            $driver->password = \Illuminate\Support\Facades\Hash::make($request->password);
+            $driver->save();
         }
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Passenger updated successfully',
-            'data' => $passenger
+            'message' => 'Driver updated successfully',
+            'data' => $driver
         ]);
     }
 
@@ -120,28 +120,28 @@ class PassengerApiController extends Controller
      */
     public function toggleStatus($id)
     {
-        $passenger = Passenger::findOrFail($id);
-        $passenger->status = ($passenger->status === 'active' ? 'inactive' : 'active');
-        $passenger->save();
+        $driver = Driver::findOrFail($id);
+        $driver->status = ($driver->status === 'active' ? 'inactive' : 'active');
+        $driver->save();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Passenger status updated successfully',
-            'data' => $passenger
+            'message' => 'Driver status updated successfully',
+            'data' => $driver
         ]);
     }
 
     /**
-     * Delete Passenger
+     * Delete Driver
      */
     public function destroy($id)
     {
-        $passenger = Passenger::findOrFail($id);
-        $passenger->delete();
+        $driver = Driver::findOrFail($id);
+        $driver->delete();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Passenger deleted successfully'
+            'message' => 'Driver deleted successfully'
         ]);
     }
 }

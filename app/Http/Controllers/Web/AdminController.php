@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
-class AdminRoleController extends Controller
+class AdminController extends Controller
 {
     /**
      * Display a listing of the admins.
@@ -15,7 +16,7 @@ class AdminRoleController extends Controller
     public function index()
     {
         $admins = Admin::latest()->get();
-        return response()->json(['status' => 'success', 'data' => $admins]);
+        return view('admin.roles.index', compact('admins'));
     }
 
     /**
@@ -23,7 +24,7 @@ class AdminRoleController extends Controller
      */
     public function create()
     {
-        return response()->json(['status' => 'success', 'data' => []]);
+        return view('admin.roles.create');
     }
 
     /**
@@ -58,7 +59,7 @@ class AdminRoleController extends Controller
             'updated_at' => $request->updated_at,
         ]);
 
-        return response()->json(['status' => 'success', 'message' => 'Admin created and invited successfully.']);
+        return redirect()->route('admin.roles.index')->with('status', 'Admin created and invited successfully.');
     }
 
     /**
@@ -67,7 +68,7 @@ class AdminRoleController extends Controller
     public function edit($id)
     {
         $admin = Admin::findOrFail($id);
-        return response()->json(['status' => 'success', 'data' => $admin]);
+        return view('admin.roles.edit', compact('admin'));
     }
 
     /**
@@ -114,7 +115,7 @@ class AdminRoleController extends Controller
 
         $admin->update($data);
 
-        return response()->json(['status' => 'success', 'message' => 'Admin updated successfully.']);
+        return redirect()->route('admin.roles.index')->with('status', 'Admin updated successfully.');
     }
 
     /**
@@ -124,11 +125,11 @@ class AdminRoleController extends Controller
     {
         // Security check: Don't allow deleting yourself
         if (auth()->guard('admin')->id() == $id) {
-            return response()->json(['status' => 'error', 'message' => 'You cannot delete your own account.'], 403);
+            return back()->withErrors(['error' => 'You cannot delete your own account.']);
         }
 
         if ($request->isMethod('get')) {
-             return response()->json(['status' => 'error', 'message' => 'Direct GET deletion is now deprecated for security.'], 405);
+             return back()->withErrors(['error' => 'Direct GET deletion is now deprecated for security.']);
         }
 
         $admin = Admin::findOrFail($id);
@@ -138,6 +139,6 @@ class AdminRoleController extends Controller
             'deleted_at' => $request->deleted_at ?? now()
         ]);
 
-        return response()->json(['status' => 'success', 'message' => 'Admin deleted successfully.']);
+        return redirect()->route('admin.roles.index')->with('status', 'Admin deleted successfully.');
     }
 }

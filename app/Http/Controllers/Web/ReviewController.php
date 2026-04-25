@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Models\DriverReview;
+use App\Models\Review;
 use App\Models\Driver;
 use Illuminate\Http\Request;
 
-class ReviewManagementController extends Controller
+class ReviewController extends Controller
 {
     public function index(Request $request)
     {
@@ -15,7 +15,7 @@ class ReviewManagementController extends Controller
         
         if ($tab === 'drivers') {
             $drivers = Driver::all();
-            $reviews = DriverReview::with('driver')->latest()->get();
+            $reviews = Review::with('driver')->latest()->get();
             
             $totalReviews = $reviews->count();
             $averageRating = $totalReviews > 0 ? number_format($reviews->avg('rating'), 1) : 0;
@@ -39,26 +39,10 @@ class ReviewManagementController extends Controller
                 ];
             }
 
-            return response()->json([
-                'status' => 'success',
-                'tab' => $tab,
-                'data' => [
-                    'drivers' => $drivers,
-                    'reviews' => $reviews,
-                    'stats' => [
-                        'totalReviews' => $totalReviews,
-                        'averageRating' => $averageRating,
-                        'ratingProgress' => $ratingProgress
-                    ]
-                ]
-            ]);
+            return view('admin.reviews.index', compact('tab', 'drivers', 'reviews', 'totalReviews', 'averageRating', 'ratingProgress'));
         }
 
-        return response()->json([
-            'status' => 'success',
-            'tab' => $tab,
-            'data' => []
-        ]);
+        return view('admin.reviews.index', compact('tab'));
     }
 
     public function store(Request $request)
@@ -70,28 +54,21 @@ class ReviewManagementController extends Controller
             'review_text' => 'required|string'
         ]);
 
-        $review = DriverReview::create([
+        $review = Review::create([
             'driver_id' => $request->driver_id,
             'reviewer_name' => $request->reviewer_name,
             'rating' => $request->rating,
             'review_text' => $request->review_text,
         ]);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Review added successfully!',
-            'data' => $review
-        ]);
+        return redirect()->route('admin.reviews.ratings')->with('status', 'Review added successfully!');
     }
 
     public function destroy($id)
     {
-        $review = DriverReview::findOrFail($id);
+        $review = Review::findOrFail($id);
         $review->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Review deleted successfully!'
-        ]);
+        return redirect()->route('admin.reviews.ratings')->with('status', 'Review deleted successfully!');
     }
 }

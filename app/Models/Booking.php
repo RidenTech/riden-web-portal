@@ -16,14 +16,15 @@ class Booking extends Model
         'vehicle_id',
         'pickup_location',
         'dropoff_location',
-        'distance',
-        'duration',
+        'pickup_time',
+        'dropoff_time',
+        'total_trip_distance',
+        'total_trip_duration',
         'fare',
         'payment_method',
         'payment_status',
         'card_last_four',
         'status',
-        'pickup_time',
         'completed_time',
     ];
 

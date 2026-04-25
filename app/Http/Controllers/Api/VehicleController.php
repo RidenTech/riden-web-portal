@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-class VehicleApiController extends Controller
+class VehicleController extends Controller
 {
     /**
      * List all vehicles
