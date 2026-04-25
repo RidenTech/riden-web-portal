@@ -56,8 +56,8 @@ Route::prefix('admin')->group(function () {
 
         // Booking Management
         Route::prefix('bookings')->group(function () {
-            Route::get('/', [App\Http\Controllers\Api\BookingController::class, 'index']);
-            Route::get('/{id}', [App\Http\Controllers\Api\BookingController::class, 'show']);
+            Route::get('/', [App\Http\Controllers\Api\BookingController::class, 'adminIndex']);
+            Route::get('/{id}', [App\Http\Controllers\Api\BookingController::class, 'adminShow']);
             Route::patch('/{id}/status', [App\Http\Controllers\Api\BookingController::class, 'updateStatus']);
         });
 

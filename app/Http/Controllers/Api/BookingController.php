@@ -161,7 +161,7 @@ class BookingController extends Controller
     /**
      * List all bookings for Admin
      */
-    public function index(Request $request)
+    public function adminIndex(Request $request)
     {
         $activeTab = $request->get('tab', 'ongoing');
         
@@ -197,9 +197,9 @@ class BookingController extends Controller
     }
 
     /**
-     * Show booking detail
+     * Show booking detail for Admin
      */
-    public function show($id)
+    public function adminShow($id)
     {
         $booking = Booking::with(['passenger', 'driver.vehicle', 'vehicle'])->find($id);
 
