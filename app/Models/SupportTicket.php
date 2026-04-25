@@ -63,9 +63,9 @@ class SupportTicket extends Model
     public function getUserPhoneAttribute()
     {
         if ($this->user_type === 'driver' && $this->driver) {
-            return $this->driver->phone_number;
+            return $this->driver->phone;
         } elseif ($this->user_type === 'passenger' && $this->passenger) {
-            return $this->passenger->phone_number;
+            return $this->passenger->phone;
         }
         return 'N/A';
     }
