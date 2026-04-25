@@ -49,4 +49,24 @@ class SupportTicket extends Model
         }
         return 'Unknown';
     }
+
+    public function getUserEmailAttribute()
+    {
+        if ($this->user_type === 'driver' && $this->driver) {
+            return $this->driver->email;
+        } elseif ($this->user_type === 'passenger' && $this->passenger) {
+            return $this->passenger->email;
+        }
+        return 'N/A';
+    }
+
+    public function getUserPhoneAttribute()
+    {
+        if ($this->user_type === 'driver' && $this->driver) {
+            return $this->driver->phone_number;
+        } elseif ($this->user_type === 'passenger' && $this->passenger) {
+            return $this->passenger->phone_number;
+        }
+        return 'N/A';
+    }
 }

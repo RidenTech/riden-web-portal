@@ -1,56 +1,57 @@
-<div class="support-table-container">
-    <table class="table support-table">
+<div class="table-responsive">
+    <table class="table table-hover mb-0 support-table">
         <thead>
-            <tr>
-                <th style="border-top-left-radius: 30px;">Date & Time</th>
-                <th>Ticket ID</th>
-                <th>Booking ID</th>
-                <th>Driver Name</th>
-                <th>Complaint Type</th>
-                <th style="border-top-right-radius: 30px;">Status</th>
+            <tr style="background: #FFF5F5;">
+                <th class="py-3">Date & Time</th>
+                <th class="py-3">Ticket ID</th>
+                <th class="py-3">Driver Name</th>
+                <th class="py-3">Complaint Type</th>
+                <th class="py-3">Status</th>
+                <th class="py-3 text-center">Action</th>
             </tr>
         </thead>
         <tbody>
+            @forelse($tickets as $ticket)
             @php
-                $complaints = [
-                    ['date' => '22 March 2025 9:00pm', 'id' => '#34567', 'booking' => '#34567', 'name' => 'Theresa Webb', 'type' => 'Type 1', 'status' => 'Resolved'],
-                    ['date' => '22 March 2025 9:00pm', 'id' => '#34567', 'booking' => '#34567', 'name' => 'Ralph Edwards', 'type' => 'Type 2', 'status' => 'Pending'],
-                    ['date' => '22 March 2025 9:00pm', 'id' => '#34567', 'booking' => '#34567', 'name' => 'Dianne Russell', 'type' => 'Type 3', 'status' => 'Resolved'],
-                    ['date' => '22 March 2025 9:00pm', 'id' => '#34567', 'booking' => '#34567', 'name' => 'Esther Howard', 'type' => 'Type 1', 'status' => 'Pending'],
-                    ['date' => '22 March 2025 9:00pm', 'id' => '#34567', 'booking' => '#34567', 'name' => 'Darlene Robertson', 'type' => 'Type 2', 'status' => 'Resolved'],
-                    ['date' => '22 March 2025 9:00pm', 'id' => '#34567', 'booking' => '#34567', 'name' => 'Cody Fisher', 'type' => 'Type 3', 'status' => 'Pending'],
-                    ['date' => '22 March 2025 9:00pm', 'id' => '#34567', 'booking' => '#34567', 'name' => 'Ronald Richards', 'type' => 'Type 1', 'status' => 'Resolved'],
-                    ['date' => '22 March 2025 9:00pm', 'id' => '#34567', 'booking' => '#34567', 'name' => 'Floyd Miles', 'type' => 'Type 2', 'status' => 'Pending'],
-                    ['date' => '22 March 2025 9:00pm', 'id' => '#34567', 'booking' => '#34567', 'name' => 'Albert Flores', 'type' => 'Type 3', 'status' => 'Resolved'],
-                    ['date' => '22 March 2025 9:00pm', 'id' => '#34567', 'booking' => '#34567', 'name' => 'Marvin McKinney', 'type' => 'Type 1', 'status' => 'Pending'],
+                $ticketData = [
+                    'id' => $ticket->id,
+                    'ticket_id' => $ticket->ticket_id,
+                    'user_name' => $ticket->user_name,
+                    'user_email' => $ticket->user_email,
+                    'user_phone' => $ticket->user_phone,
+                    'booking_id' => $ticket->booking_id,
+                    'complaint_type' => $ticket->complaint_type,
+                    'description' => $ticket->description,
+                    'status' => $ticket->status,
+                    'user_type' => $ticket->user_type
                 ];
             @endphp
-
-            @foreach($complaints as $row)
-            <tr onclick="window.location='{{ route('admin.support.complaints.detail', ['id' => 123456]) }}'" style="cursor: pointer;">
-                <td style="font-weight: 500;">{{ $row['date'] }}</td>
-                <td style="font-weight: 500;">{{ $row['id'] }}</td>
-                <td style="font-weight: 500;">{{ $row['booking'] }}</td>
-                <td style="font-weight: 500;">{{ $row['name'] }}</td>
-                <td style="font-weight: 500;">{{ $row['type'] }}</td>
+            <tr>
+                <td style="font-weight: 500;">{{ $ticket->created_at->format('d F Y g:i a') }}</td>
+                <td style="font-weight: 700; color: #000;">{{ $ticket->ticket_id }}</td>
+                <td style="font-weight: 500;">{{ $ticket->user_name }}</td>
+                <td style="font-weight: 500;">{{ $ticket->complaint_type }}</td>
                 <td>
-                    <span class="status-badge {{ strtolower($row['status']) }}">
-                        {{ $row['status'] }}
+                    <span class="status-badge status-{{ $ticket->status }}">
+                        {{ ucfirst($ticket->status) }}
                     </span>
                 </td>
+                <td class="text-center">
+                    <button class="btn btn-sm btn-light shadow-sm" onclick='viewTicket(@json($ticketData))' style="border-radius: 8px; border: 1px solid #ddd;">
+                        <i class="bi bi-eye-fill text-danger"></i>
+                    </button>
+                </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="6" class="text-center py-5 text-muted">No driver tickets found.</td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 </div>
 
 <!-- Support Pagination -->
-<ul class="pagination-support">
-    <li><a href="#" class="page-btn-support"><i class="bi bi-chevron-left"></i></a></li>
-    <li><a href="#" class="page-btn-support active">1</a></li>
-    <li><a href="#" class="page-btn-support">2</a></li>
-    <li><a href="#" class="page-btn-support">3</a></li>
-    <li><span class="px-1 text-muted">...</span></li>
-    <li><a href="#" class="page-btn-support">5</a></li>
-    <li><a href="#" class="page-btn-support arrow-next"><i class="bi bi-chevron-right"></i></a></li>
-</ul>
+<div class="mt-4">
+    {{ $tickets->appends(request()->query())->links('vendor.pagination.riden') }}
+</div>

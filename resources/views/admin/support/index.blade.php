@@ -70,7 +70,7 @@
             color: #fff;
             padding: 10px 20px;
             border-radius: 12px;
-            font-weight: 700;
+            font-weight: 500;
             border: none;
             display: flex;
             align-items: center;

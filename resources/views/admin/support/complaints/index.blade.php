@@ -60,10 +60,40 @@
             background: #FFEBEB;
             color: #FF2E2E;
         }
-        .status-resolved {
+        .status-resolved, .status-solved {
             background: #EBFBF5;
             color: #2ED47E;
         }
+        .status-rejected {
+            background: #FFF0F0;
+            color: #FF2E2E;
+        }
+        /* Detail Modal Info Cards */
+        .info-card-riden {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+        }
+        .info-card-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: #999;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 5px;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-key { color: #666; font-weight: 500; }
+        .info-val { color: #000; font-weight: 800; }
         /* Modal Styles */
         .modal-riden .modal-content {
             border-radius: 20px;
@@ -142,50 +172,15 @@
             </a>
         </div>
 
-        <!-- Table -->
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead>
-                    <tr style="background: #FFF5F5;">
-                        <th class="py-3">Date & Time</th>
-                        <th class="py-3">Ticket ID</th>
-                        <th class="py-3">Booking ID</th>
-                        <th class="py-3">{{ $activeTab === 'drivers' ? 'Driver Name' : 'Passenger Name' }}</th>
-                        <th class="py-3">Complaint Type</th>
-                        <th class="py-3">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($tickets as $ticket)
-                    <tr>
-                        <td class="py-3">{{ $ticket->created_at->format('d F Y g:i a') }}</td>
-                        <td class="py-3 ticket-id">{{ $ticket->ticket_id }}</td>
-                        <td class="py-3 text-danger fw-bold">#{{ $ticket->booking_id ?? 'N/A' }}</td>
-                        <td class="py-3">{{ $ticket->user_name }}</td>
-                        <td class="py-3">{{ $ticket->complaint_type }}</td>
-                        <td class="py-3">
-                            <form action="{{ route('admin.support.complaints.updateStatus', $ticket->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('PATCH')
-                                <select name="status" onchange="this.form.submit()" class="status-badge status-{{ $ticket->status }}">
-                                    <option value="pending" {{ $ticket->status === 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="resolved" {{ $ticket->status === 'resolved' ? 'selected' : '' }}>Resolved</option>
-                                </select>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="text-center py-5 text-muted">No tickets found for this category.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+        <!-- Table Area -->
+        <div class="mt-2">
+            @if($activeTab === 'drivers')
+                @include('admin.support.complaints.drivers')
+            @else
+                @include('admin.support.complaints.passengers')
+            @endif
         </div>
 
-        <div class="mt-4">
-            {{ $tickets->appends(request()->query())->links('vendor.pagination.riden') }}
-        </div>
     </div>
 </div>
 
@@ -202,64 +197,48 @@
                 <div class="modal-body p-4">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label-riden">Complaint For</label>
+                            <label class="form-label-riden">Ticket For (Category)</label>
                             <select name="user_type" class="form-select form-control-riden" id="userTypeSelect" required>
-                                <option value="driver" {{ $activeTab === 'drivers' ? 'selected' : '' }}>Driver</option>
-                                <option value="passenger" {{ $activeTab === 'passengers' ? 'selected' : '' }}>Passenger</option>
+                                <option value="driver" {{ $activeTab === 'drivers' ? 'selected' : '' }}>Driver Support</option>
+                                <option value="passenger" {{ $activeTab === 'passengers' ? 'selected' : '' }}>Passenger Support</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label-riden">Complaint Type</label>
                             <select name="complaint_type" class="form-select form-control-riden" required>
-                                <option value="Type 1">Behavior Issue</option>
-                                <option value="Type 2">Fare Issue</option>
-                                <option value="Type 3">Technical Problem</option>
-                                <option value="Type 4">Safety Concern</option>
+                                <option value="Behavior Issue">Behavior Issue</option>
+                                <option value="Fare Issue">Fare Issue</option>
+                                <option value="Technical Problem">Technical Problem</option>
+                                <option value="Safety Concern">Safety Concern</option>
                             </select>
                         </div>
                         
-                        <div class="col-md-6 mb-3" id="driverSelectGroup">
-                            <label class="form-label-riden">Select Driver</label>
+                        <div class="col-12 mb-3" id="driverSelectGroup">
+                            <label class="form-label-riden">Select Driver Name</label>
                             <select name="driver_id" class="form-select form-control-riden">
-                                <option value="">Select Driver</option>
+                                <option value="">-- Search and Select Driver --</option>
                                 @foreach($drivers as $driver)
-                                    <option value="{{ $driver->id }}">{{ $driver->first_name }} {{ $driver->last_name }}</option>
+                                    <option value="{{ $driver->id }}">{{ $driver->first_name }} {{ $driver->last_name }} (ID: {{ $driver->id }})</option>
                                 @endforeach
                             </select>
                         </div>
 
-                        <div class="col-md-6 mb-3 d-none" id="passengerSelectGroup">
-                            <label class="form-label-riden">Select Passenger</label>
+                        <div class="col-12 mb-3 d-none" id="passengerSelectGroup">
+                            <label class="form-label-riden">Select Passenger Name</label>
                             <select name="passenger_id" class="form-select form-control-riden">
-                                <option value="">Select Passenger</option>
+                                <option value="">-- Search and Select Passenger --</option>
                                 @foreach($passengers as $passenger)
-                                    <option value="{{ $passenger->id }}">{{ $passenger->first_name }} {{ $passenger->last_name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-riden">Relate to Booking (Optional)</label>
-                            <select name="booking_id" class="form-select form-control-riden">
-                                <option value="">Select Booking</option>
-                                @foreach($bookings as $booking)
-                                    <option value="{{ $booking->id }}">#{{ $booking->id }} - {{ $booking->pickup_location }}</option>
+                                    <option value="{{ $passenger->id }}">{{ $passenger->first_name }} {{ $passenger->last_name }} (ID: {{ $passenger->id }})</option>
                                 @endforeach
                             </select>
                         </div>
 
                         <div class="col-12 mb-3">
-                            <label class="form-label-riden">Description / Content</label>
-                            <textarea name="description" class="form-control form-control-riden" rows="6" placeholder="Enter complaint details here..." required></textarea>
+                            <label class="form-label-riden">Support Content / Description</label>
+                            <textarea name="description" class="form-control form-control-riden" rows="6" placeholder="Type the complaint or support request details here..."></textarea>
                         </div>
 
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-riden">Initial Status</label>
-                            <select name="status" class="form-select form-control-riden">
-                                <option value="pending">Pending</option>
-                                <option value="resolved">Resolved</option>
-                            </select>
-                        </div>
+                        <input type="hidden" name="status" value="pending">
                     </div>
                 </div>
                 <div class="modal-footer border-0 p-4">
@@ -269,6 +248,63 @@
         </div>
     </div>
 </div>
+
+<!-- View Ticket Modal -->
+<div class="modal fade modal-riden" id="viewTicketModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ticket Details: <span id="view_ticket_id"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="updateTicketStatusForm" method="POST">
+                @csrf
+                @method('PATCH')
+                <div class="modal-body p-4">
+                    <div class="row">
+                        <!-- Driver/Passenger Profile Card -->
+                        <div class="col-md-5">
+                            <div class="info-card-riden h-100">
+                                <div class="info-card-title" id="profile_title">User Profile</div>
+                                <div class="info-row"><span class="info-key">Name:</span> <span class="info-val" id="view_user_name"></span></div>
+                                <div class="info-row"><span class="info-key">Email:</span> <span class="info-val" id="view_user_email"></span></div>
+                                <div class="info-row"><span class="info-key">Phone:</span> <span class="info-val" id="view_user_phone"></span></div>
+                                <div class="info-row"><span class="info-key">Booking:</span> <span class="info-val" id="view_booking_id"></span></div>
+                            </div>
+                        </div>
+
+                        <!-- Complaint Details -->
+                        <div class="col-md-7">
+                            <div class="info-card-riden h-100">
+                                <div class="info-card-title">Complaint Details</div>
+                                <div class="mb-3">
+                                    <span class="badge bg-light text-dark p-2" id="view_complaint_type"></span>
+                                </div>
+                                <div id="view_description" style="max-height: 200px; overflow-y: auto; background: #fff; padding: 10px; border-radius: 8px; border: 1px solid #eee;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Status Update Section -->
+                        <div class="col-12 mt-4">
+                            <div class="p-3" style="background: #FFF5F5; border-radius: 15px;">
+                                <label class="form-label-riden">Resolution Status</label>
+                                <select name="status" id="view_status" class="form-select form-control-riden">
+                                    <option value="pending">Pending</option>
+                                    <option value="solved">Solved</option>
+                                    <option value="rejected">Rejected</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-4">
+                    <button type="submit" class="btn-save-ticket">Update & Save Status</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -277,6 +313,7 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 <script>
     $(document).ready(function() {
+        // Initialize Summernote
         $('textarea[name="description"]').summernote({
             placeholder: 'Enter complaint details here...',
             tabsize: 2,
@@ -292,21 +329,42 @@
             ]
         });
 
+        // Handle User Type Selection
         const userTypeSelect = document.getElementById('userTypeSelect');
         const driverGroup = document.getElementById('driverSelectGroup');
         const passengerGroup = document.getElementById('passengerSelectGroup');
 
-        userTypeSelect.addEventListener('change', function() {
-            if (this.value === 'driver') {
-                driverGroup.classList.remove('d-none');
-                passengerGroup.classList.add('d-none');
-            } else {
-                driverGroup.classList.add('d-none');
-                passengerGroup.classList.remove('d-none');
-            }
-        });
+        if(userTypeSelect) {
+            userTypeSelect.addEventListener('change', function() {
+                if (this.value === 'driver') {
+                    driverGroup.classList.remove('d-none');
+                    passengerGroup.classList.add('d-none');
+                } else {
+                    driverGroup.classList.add('d-none');
+                    passengerGroup.classList.remove('d-none');
+                }
+            });
+            userTypeSelect.dispatchEvent(new Event('change'));
+        }
 
-        userTypeSelect.dispatchEvent(new Event('change'));
+        // View Ticket Logic
+        window.viewTicket = function(ticketData) {
+            $('#view_ticket_id').text(ticketData.ticket_id);
+            $('#view_user_name').text(ticketData.user_name);
+            $('#view_user_email').text(ticketData.user_email);
+            $('#view_user_phone').text(ticketData.user_phone);
+            $('#view_booking_id').text('#' + (ticketData.booking_id || 'N/A'));
+            $('#view_complaint_type').text(ticketData.complaint_type);
+            $('#view_description').html(ticketData.description);
+            $('#view_status').val(ticketData.status);
+            $('#profile_title').text(ticketData.user_type === 'driver' ? 'Driver Profile' : 'Passenger Profile');
+            
+            // Set Form Action
+            $('#updateTicketStatusForm').attr('action', '/admin/support-tickets/' + ticketData.id + '/status');
+            
+            // Show Modal
+            $('#viewTicketModal').modal('show');
+        };
     });
 </script>
 @endpush
