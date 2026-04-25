@@ -75,12 +75,6 @@ Route::prefix('admin')->group(function () {
             Route::delete('/reviews-ratings/passenger/{id}', [ReviewController::class, 'destroyPassenger'])->name('admin.reviews.destroyPassenger');
         });
 
-        // Support & Tickets
-        Route::prefix('support')->group(function () {
-            Route::get('/', [App\Http\Controllers\Web\SupportController::class, 'index'])->name('admin.support.index');
-            Route::post('/store', [App\Http\Controllers\Web\SupportController::class, 'store'])->name('admin.support.store');
-            Route::patch('/{id}/status', [App\Http\Controllers\Web\SupportController::class, 'updateStatus'])->name('admin.support.updateStatus');
-        });
 
         Route::middleware(['admin.module:Payment Management'])->get('/drivers-payouts', function () {
             return view('admin.payouts.index');
@@ -97,13 +91,9 @@ Route::prefix('admin')->group(function () {
         // Support Tickets
         Route::middleware(['admin.module:Support Ticket'])->group(function () {
             Route::group(['prefix' => 'support-tickets', 'as' => 'admin.support.'], function () {
-                Route::get('/', function () {
-                    return view('admin.support.complaints.index');
-                })->name('complaints.index');
-
-                Route::get('/{id}', function ($id) {
-                    return view('admin.support.complaints.detail', compact('id'));
-                })->name('complaints.detail');
+                Route::get('/complaints', [App\Http\Controllers\Web\SupportController::class, 'index'])->name('complaints.index');
+                Route::post('/store', [App\Http\Controllers\Web\SupportController::class, 'store'])->name('complaints.store');
+                Route::patch('/{id}/status', [App\Http\Controllers\Web\SupportController::class, 'updateStatus'])->name('complaints.updateStatus');
             });
         });
 

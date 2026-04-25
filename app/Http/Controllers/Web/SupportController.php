@@ -13,9 +13,9 @@ class SupportController extends Controller
 {
     public function index(Request $request)
     {
-        $activeTab = $request->get('tab', 'driver'); // 'driver' or 'passenger'
+        $activeTab = $request->get('tab', 'drivers'); // 'drivers' or 'passengers'
         
-        $query = SupportTicket::where('user_type', $activeTab)
+        $query = SupportTicket::where('user_type', ($activeTab === 'drivers' ? 'driver' : 'passenger'))
             ->with(['driver', 'passenger', 'booking']);
 
         if ($request->has('search')) {
@@ -39,7 +39,7 @@ class SupportController extends Controller
         $passengers = Passenger::orderBy('first_name')->get();
         $bookings = Booking::orderBy('id', 'desc')->take(50)->get();
 
-        return view('admin.support.index', compact('activeTab', 'tickets', 'drivers', 'passengers', 'bookings'));
+        return view('admin.support.complaints.index', compact('activeTab', 'tickets', 'drivers', 'passengers', 'bookings'));
     }
 
     public function store(Request $request)
@@ -65,7 +65,9 @@ class SupportController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('admin.support.index', ['tab' => $request->user_type])
+        $redirectTab = ($request->user_type === 'driver' ? 'drivers' : 'passengers');
+
+        return redirect()->route('admin.support.complaints.index', ['tab' => $redirectTab])
             ->with('status', 'Ticket ' . $ticketId . ' created successfully!');
     }
 
