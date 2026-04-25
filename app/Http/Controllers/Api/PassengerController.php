@@ -201,16 +201,16 @@ class PassengerController extends Controller
     }
 
     /**
-     * Toggle the status of the passenger (Block/Unblock) via API
+     * Consolidated Toggle Status
      */
     public function toggleStatus(Request $request, $id)
     {
         $passenger = Passenger::findOrFail($id);
-        $passenger->status = ($passenger->status == 'Active') ? 'inactive' : 'Active';
+        $currentStatus = strtolower($passenger->status);
+        $passenger->status = ($currentStatus === 'active') ? 'inactive' : 'Active';
         $passenger->save();
 
-        // Optional: Revoke tokens if blocked
-        if ($passenger->status !== 'Active') {
+        if (strtolower($passenger->status) !== 'active') {
             $passenger->tokens()->delete();
         }
 
@@ -222,7 +222,7 @@ class PassengerController extends Controller
     }
 
     /**
-     * Remove the passenger via API
+     * Consolidated Delete Passenger
      */
     public function destroy(Request $request, $id)
     {
@@ -248,6 +248,7 @@ class PassengerController extends Controller
             'message' => 'Logged out successfully'
         ]);
     }
+
     /**
      * List all passengers for Admin
      */
@@ -278,7 +279,7 @@ class PassengerController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:passengers',
@@ -295,7 +296,7 @@ class PassengerController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'password' => Hash::make($request->password),
             'status' => 'active',
         ]);
 
@@ -330,7 +331,7 @@ class PassengerController extends Controller
     {
         $passenger = Passenger::findOrFail($id);
 
-        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'first_name' => 'sometimes|string|max:255',
             'last_name' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:passengers,email,' . $id,
@@ -344,7 +345,7 @@ class PassengerController extends Controller
         $passenger->update($request->only(['first_name', 'last_name', 'email', 'phone']));
 
         if ($request->filled('password')) {
-            $passenger->password = \Illuminate\Support\Facades\Hash::make($request->password);
+            $passenger->password = Hash::make($request->password);
             $passenger->save();
         }
 
@@ -354,34 +355,6 @@ class PassengerController extends Controller
             'data' => $passenger
         ]);
     }
-
-    /**
-     * Toggle Status
-     */
-    public function toggleStatus($id)
-    {
-        $passenger = Passenger::findOrFail($id);
-        $passenger->status = ($passenger->status === 'active' ? 'inactive' : 'active');
-        $passenger->save();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Passenger status updated successfully',
-            'data' => $passenger
-        ]);
-    }
-
-    /**
-     * Delete Passenger
-     */
-    public function destroy($id)
-    {
-        $passenger = Passenger::findOrFail($id);
-        $passenger->delete();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Passenger deleted successfully'
-        ]);
-    }
 }
+
+
