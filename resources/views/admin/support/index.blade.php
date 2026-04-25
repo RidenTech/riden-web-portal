@@ -119,12 +119,7 @@
         
         <!-- Header -->
         <div class="support-header">
-            <div class="d-flex align-items-center">
-                <h2 class="support-title mr-4">Support Ticket</h2>
-                <button class="btn-add-ticket" style="background: #FF2E2E; padding: 12px 25px;" data-bs-toggle="modal" data-bs-target="#addTicketModal">
-                    <i class="bi bi-plus-lg"></i> Add Ticket
-                </button>
-            </div>
+            <h2 class="support-title">Support Ticket</h2>
             <div class="header-actions d-flex align-items-center">
                 <div class="riden-global-search" style="width: 300px;">
                     <form action="{{ route('admin.support.index') }}" method="GET">
@@ -136,6 +131,13 @@
                     </form>
                 </div>
             </div>
+        </div>
+
+        <!-- NEW HIGH-VISIBILITY BUTTON POSITION -->
+        <div class="d-flex justify-content-end mb-3">
+            <button class="btn btn-danger btn-lg shadow-sm" style="background: #FF2E2E; border: none; border-radius: 12px; font-weight: 800; padding: 15px 40px;" data-bs-toggle="modal" data-bs-target="#addTicketModal">
+                <i class="bi bi-plus-circle-fill mr-2"></i> CREATE NEW TICKET
+            </button>
         </div>
 
         <!-- Tabs -->
