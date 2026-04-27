@@ -11,26 +11,36 @@ class SupportTicketController extends Controller
 {
     /**
      * List tickets for the authenticated user (Driver or Passenger)
+     * For Admins, this allows viewing all tickets if user_type is not provided.
      */
     public function index(Request $request)
     {
         try {
             $user = $request->user();
-            $userType = $request->get('user_type'); // Expecting 'driver' or 'passenger'
+            $userType = $request->get('user_type'); // 'driver' or 'passenger'
 
-            if (!$userType) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'user_type parameter is required'
-                ], 400);
-            }
+            $query = SupportTicket::with(['driver', 'passenger', 'booking']);
 
-            $query = SupportTicket::where('user_type', $userType);
-
-            if ($userType === 'driver') {
-                $query->where('driver_id', $user->id);
+            // If user_type is provided, filter by it
+            if ($userType) {
+                $query->where('user_type', $userType);
+                
+                // If it's not an admin, filter by their own ID
+                if (!($user instanceof \App\Models\Admin)) {
+                    if ($userType === 'driver') {
+                        $query->where('driver_id', $user->id);
+                    } else {
+                        $query->where('passenger_id', $user->id);
+                    }
+                }
             } else {
-                $query->where('passenger_id', $user->id);
+                // If no user_type provided, ONLY admins can see everything
+                if (!($user instanceof \App\Models\Admin)) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'user_type parameter is required for non-admin users'
+                    ], 400);
+                }
             }
 
             $tickets = $query->latest()->paginate(15);
