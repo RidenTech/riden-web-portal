@@ -16,7 +16,17 @@ use App\Http\Controllers\Api\AdminController;
 Route::prefix('passenger')->group(function () {
     // Public routes
     Route::post('/register', [PassengerController::class, 'register']);
-    Route::post('/login', [PassengerController::class, 'login']);
+    // TEMPORARY: Remote Database Fix (Run this once to create missing tables)
+Route::get('/fix-database', function() {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return response()->json(['status' => 'success', 'message' => 'Database migrated successfully!', 'output' => \Illuminate\Support\Facades\Artisan::output()]);
+    } catch (\Exception $e) {
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    }
+});
+
+Route::post('/login', [PassengerController::class, 'login']);
 
     // Protected routes 
     Route::middleware(['auth:sanctum', 'passenger.active'])->group(function () {
