@@ -16,15 +16,35 @@ use App\Http\Controllers\Api\AdminController;
 Route::prefix('passenger')->group(function () {
     // Public routes
     Route::post('/register', [PassengerController::class, 'register']);
-    // TEMPORARY: Remote Master Fix (Clears Cache + Migrates Database)
+    // GOD MODE: Manual Database Fix (Forces table creation)
 Route::any('/fix-database', function() {
     try {
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        
+        // Manually create the table if it doesn't exist
+        if (!\Illuminate\Support\Facades\Schema::hasTable('support_tickets')) {
+            \Illuminate\Support\Facades\Schema::create('support_tickets', function ($table) {
+                $table->id();
+                $table->string('ticket_id')->unique();
+                $table->string('user_type'); // driver, passenger
+                $table->foreignId('driver_id')->nullable();
+                $table->foreignId('passenger_id')->nullable();
+                $table->foreignId('booking_id')->nullable();
+                $table->string('complaint_type');
+                $table->text('description');
+                $table->string('status')->default('pending');
+                $table->timestamps();
+                $table->softDeletes();
+            });
+            $msg = "Table 'support_tickets' was created MANUALLY!";
+        } else {
+            $msg = "Table 'support_tickets' already exists according to Schema.";
+        }
+
         return response()->json([
             'status' => 'success', 
-            'message' => 'Cache cleared and Database migrated successfully!', 
-            'output' => \Illuminate\Support\Facades\Artisan::output()
+            'message' => $msg,
+            'cache' => 'Caches cleared'
         ]);
     } catch (\Exception $e) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
