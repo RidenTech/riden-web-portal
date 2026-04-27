@@ -16,11 +16,16 @@ use App\Http\Controllers\Api\AdminController;
 Route::prefix('passenger')->group(function () {
     // Public routes
     Route::post('/register', [PassengerController::class, 'register']);
-    // TEMPORARY: Remote Database Fix (Run this once to create missing tables)
-Route::get('/fix-database', function() {
+    // TEMPORARY: Remote Master Fix (Clears Cache + Migrates Database)
+Route::any('/fix-database', function() {
     try {
+        \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        return response()->json(['status' => 'success', 'message' => 'Database migrated successfully!', 'output' => \Illuminate\Support\Facades\Artisan::output()]);
+        return response()->json([
+            'status' => 'success', 
+            'message' => 'Cache cleared and Database migrated successfully!', 
+            'output' => \Illuminate\Support\Facades\Artisan::output()
+        ]);
     } catch (\Exception $e) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
