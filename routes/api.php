@@ -106,10 +106,10 @@ Route::prefix('admin')->group(function () {
 
         // Roles & Permissions
         Route::prefix('roles')->group(function () {
-            Route::get('/', [App\Http\Controllers\Api\AdminController::class, 'index']);
-            Route::post('/', [App\Http\Controllers\Api\AdminController::class, 'store']);
-            Route::patch('/{id}', [App\Http\Controllers\Api\AdminController::class, 'update']);
-            Route::delete('/{id}', [App\Http\Controllers\Api\AdminController::class, 'destroy']);
+            Route::get('/', [App\Http\Controllers\Api\AdminController::class, 'getRoles']);
+            Route::post('/', [App\Http\Controllers\Api\AdminController::class, 'storeRole']);
+            Route::patch('/{id}', [App\Http\Controllers\Api\AdminController::class, 'updateRole']);
+            Route::delete('/{id}', [App\Http\Controllers\Api\AdminController::class, 'destroyRole']);
         });
 
         // Support Ticket Management (Admin)
@@ -140,9 +140,9 @@ Route::prefix('admin')->group(function () {
             
             // Promo Management
             Route::prefix('promo')->group(function () {
-                Route::get('/', [App\Http\Controllers\Api\AdminController::class, 'index']);
-                Route::get('/{id}', [App\Http\Controllers\Api\AdminController::class, 'show']);
-                Route::post('/', [App\Http\Controllers\Api\AdminController::class, 'store']);
+                Route::get('/', [App\Http\Controllers\Api\AdminController::class, 'getPromos']);
+                Route::get('/{id}', [App\Http\Controllers\Api\AdminController::class, 'getPromo']);
+                Route::post('/', [App\Http\Controllers\Api\AdminController::class, 'storePromo']);
             });
         });
     });
