@@ -41,10 +41,38 @@ Route::any('/fix-database', function() {
             $msg = "Table 'support_tickets' already exists according to Schema.";
         }
 
+        // --- SEED TEST DATA ---
+        if (\App\Models\SupportTicket::count() === 0) {
+            \App\Models\SupportTicket::create([
+                'ticket_id' => '#'.rand(10000,99999),
+                'user_type' => 'passenger',
+                'passenger_id' => 1,
+                'complaint_type' => 'Payment Issue',
+                'description' => 'I was charged twice for my last ride.',
+                'status' => 'pending'
+            ]);
+            \App\Models\SupportTicket::create([
+                'ticket_id' => '#'.rand(10000,99999),
+                'user_type' => 'driver',
+                'driver_id' => 1,
+                'complaint_type' => 'App Crash',
+                'description' => 'The app keeps closing when I accept a ride.',
+                'status' => 'pending'
+            ]);
+        }
+
+        if (\App\Models\Review::count() === 0) {
+            \App\Models\Review::create([
+                'driver_id' => 1, 'passenger_id' => 1, 'rating' => 5, 
+                'review_text' => 'Excellent service and safe driving!'
+            ]);
+        }
+
         return response()->json([
             'status' => 'success', 
             'message' => $msg,
-            'cache' => 'Caches cleared'
+            'cache' => 'Caches cleared',
+            'seeding' => 'Seed data was also injected for Reviews and Support Tickets'
         ]);
     } catch (\Exception $e) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
