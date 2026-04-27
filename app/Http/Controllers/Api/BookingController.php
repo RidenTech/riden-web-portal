@@ -216,6 +216,52 @@ class BookingController extends Controller
     }
 
     /**
+     * Create a new booking from the Admin Portal
+     */
+    public function adminStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'passenger_id' => 'required|exists:passengers,id',
+            'pickup_location' => 'required|string|max:500',
+            'dropoff_location' => 'required|string|max:500',
+            'pickup_time' => 'required|date',
+            'fare' => 'required|numeric|min:0',
+            'payment_method' => 'required|string',
+            'vehicle_id' => 'nullable|exists:vehicles,id',
+            'driver_id' => 'nullable|exists:drivers,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $booking = Booking::create([
+                'passenger_id' => $request->passenger_id,
+                'driver_id' => $request->driver_id,
+                'vehicle_id' => $request->vehicle_id,
+                'pickup_location' => $request->pickup_location,
+                'dropoff_location' => $request->dropoff_location,
+                'pickup_time' => $request->pickup_time,
+                'fare' => $request->fare,
+                'payment_method' => $request->payment_method,
+                'status' => 'pending',
+                'distance' => $request->distance ?? '0.0 km',
+                'duration' => $request->duration ?? '0 min',
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Booking created successfully by Admin',
+                'data' => $booking->load(['passenger', 'driver'])
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
      * Cancel or Update Status
      */
     public function updateStatus(Request $request, $id)

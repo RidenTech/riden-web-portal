@@ -136,6 +136,7 @@ Route::prefix('admin')->group(function () {
         // Booking Management
         Route::prefix('bookings')->group(function () {
             Route::get('/', [App\Http\Controllers\Api\BookingController::class, 'adminIndex']);
+            Route::post('/', [App\Http\Controllers\Api\BookingController::class, 'adminStore']);
             Route::get('/{id}', [App\Http\Controllers\Api\BookingController::class, 'adminShow']);
             Route::patch('/{id}/status', [App\Http\Controllers\Api\BookingController::class, 'updateStatus']);
         });
