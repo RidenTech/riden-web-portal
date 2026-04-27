@@ -42,6 +42,13 @@ Route::prefix('passenger')->group(function () {
             Route::get('/', [App\Http\Controllers\Api\ReviewController::class, 'index']); // Get their own reviews or driver reviews
             Route::post('/store', [App\Http\Controllers\Api\ReviewController::class, 'store']); // Review a driver
         });
+
+        // Support Ticket APIs
+        Route::prefix('support')->group(function () {
+            Route::get('/', [App\Http\Controllers\Api\SupportTicketController::class, 'index']);
+            Route::post('/create', [App\Http\Controllers\Api\SupportTicketController::class, 'store']);
+            Route::get('/{id}', [App\Http\Controllers\Api\SupportTicketController::class, 'show']);
+        });
     });
 });
 
@@ -105,11 +112,11 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{id}', [App\Http\Controllers\Api\AdminController::class, 'destroy']);
         });
 
-        // Support Tickets
+        // Support Ticket Management (Admin)
         Route::prefix('support')->group(function () {
-            Route::get('/', [App\Http\Controllers\Api\AdminController::class, 'index']);
-            Route::get('/{id}', [App\Http\Controllers\Api\AdminController::class, 'show']);
-            Route::post('/{id}/reply', [App\Http\Controllers\Api\AdminController::class, 'reply']);
+            Route::get('/', [App\Http\Controllers\Api\SupportTicketController::class, 'index']); // Use index for listing all
+            Route::get('/{id}', [App\Http\Controllers\Api\SupportTicketController::class, 'show']);
+            Route::patch('/{id}/status', [App\Http\Controllers\Web\SupportController::class, 'updateStatus']); // Link to existing status logic
         });
 
         // Reviews & Ratings
