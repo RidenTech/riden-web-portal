@@ -66,11 +66,18 @@ class AdminController extends Controller
      */
     public function getRoles()
     {
-        $admins = Admin::all();
-        return response()->json([
-            'status' => 'success',
-            'data' => $admins
-        ]);
+        try {
+            $admins = Admin::select('id', 'name', 'email', 'phone', 'modules', 'is_super')->get();
+            return response()->json([
+                'status' => 'success',
+                'data' => $admins
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to fetch admins: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
