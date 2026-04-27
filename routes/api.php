@@ -19,7 +19,15 @@ Route::prefix('passenger')->group(function () {
     // GOD MODE: Manual Database Fix (Forces table creation)
 Route::any('/fix-database', function() {
     try {
+        // Force set the correct APP_URL in memory for this request
+        config(['app.url' => 'https://api.itimium.com.pk']);
+        
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+        
+        // Rebuild Storage Link (Delete if exists, then create)
+        if (is_link(public_path('storage'))) {
+            unlink(public_path('storage'));
+        }
         \Illuminate\Support\Facades\Artisan::call('storage:link');
         
         // Manually create the table if it doesn't exist
