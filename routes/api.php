@@ -20,6 +20,7 @@ Route::prefix('passenger')->group(function () {
 Route::any('/fix-database', function() {
     try {
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+        \Illuminate\Support\Facades\Artisan::call('storage:link');
         
         // Manually create the table if it doesn't exist
         if (!\Illuminate\Support\Facades\Schema::hasTable('support_tickets')) {
