@@ -41,38 +41,40 @@ Route::any('/fix-database', function() {
             $msg = "Table 'support_tickets' already exists according to Schema.";
         }
 
-        // --- SEED TEST DATA ---
-        if (\App\Models\SupportTicket::count() === 0) {
-            \App\Models\SupportTicket::create([
-                'ticket_id' => '#'.rand(10000,99999),
-                'user_type' => 'passenger',
-                'passenger_id' => 1,
-                'complaint_type' => 'Payment Issue',
-                'description' => 'I was charged twice for my last ride.',
-                'status' => 'pending'
-            ]);
-            \App\Models\SupportTicket::create([
-                'ticket_id' => '#'.rand(10000,99999),
-                'user_type' => 'driver',
-                'driver_id' => 1,
-                'complaint_type' => 'App Crash',
-                'description' => 'The app keeps closing when I accept a ride.',
-                'status' => 'pending'
-            ]);
+        // --- FULL DASHBOARD SEEDER ---
+        
+        // 1. Seed Passengers
+        if (\App\Models\Passenger::count() === 0) {
+            \App\Models\Passenger::create(['name' => 'John Doe', 'email' => 'john@example.com', 'phone' => '1234567890', 'password' => bcrypt('password'), 'status' => 'active']);
+            \App\Models\Passenger::create(['name' => 'Jane Smith', 'email' => 'jane@example.com', 'phone' => '0987654321', 'password' => bcrypt('password'), 'status' => 'active']);
         }
 
+        // 2. Seed Drivers
+        if (\App\Models\Driver::count() === 0) {
+            \App\Models\Driver::create(['name' => 'Driver One', 'email' => 'driver1@example.com', 'phone' => '5551112222', 'password' => bcrypt('password'), 'status' => 'active']);
+            \App\Models\Driver::create(['name' => 'Driver Two', 'email' => 'driver2@example.com', 'phone' => '5553334444', 'password' => bcrypt('password'), 'status' => 'active']);
+        }
+
+        // 3. Seed Vehicles
+        if (\App\Models\Vehicle::count() === 0) {
+            \App\Models\Vehicle::create(['driver_id' => 1, 'vehicle_name' => 'Toyota Corolla', 'vehicle_model' => '2022', 'vehicle_number' => 'ABC-123', 'vehicle_color' => 'White', 'status' => 'active']);
+        }
+
+        // 4. Seed Support Tickets
+        if (\App\Models\SupportTicket::count() === 0) {
+            \App\Models\SupportTicket::create(['ticket_id' => '#'.rand(1000,9999), 'user_type' => 'passenger', 'passenger_id' => 1, 'complaint_type' => 'Payment', 'description' => 'Double charge on trip', 'status' => 'pending']);
+            \App\Models\SupportTicket::create(['ticket_id' => '#'.rand(1000,9999), 'user_type' => 'driver', 'driver_id' => 1, 'complaint_type' => 'App Issue', 'description' => 'App keeps crashing', 'status' => 'pending']);
+        }
+
+        // 5. Seed Reviews
         if (\App\Models\Review::count() === 0) {
-            \App\Models\Review::create([
-                'driver_id' => 1, 'passenger_id' => 1, 'rating' => 5, 
-                'review_text' => 'Excellent service and safe driving!'
-            ]);
+            \App\Models\Review::create(['driver_id' => 1, 'passenger_id' => 1, 'rating' => 5, 'review_text' => 'Very professional driver!']);
         }
 
         return response()->json([
             'status' => 'success', 
-            'message' => $msg,
-            'cache' => 'Caches cleared',
-            'seeding' => 'Seed data was also injected for Reviews and Support Tickets'
+            'message' => 'FULL DASHBOARD SEEDED!',
+            'cache' => 'All server caches cleared successfully'
         ]);
     } catch (\Exception $e) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
